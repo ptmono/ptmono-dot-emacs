@@ -1,0 +1,93 @@
+2012-01-11  ptmono  <ptmono@naver.com>
+
+	* init.el: No log
+
+	* init.el:
+	Added the modes related qt. To set qt recently cc-mode required. It
+	conflict with csharp-mode. Currently csharp-mode is disabled.
+
+2011-03-09  ptmono  <ptmono@naver.com>
+
+	* init.el: *** empty log message ***
+
+2010-09-28  ptmono  <ptmono@naver.com>
+
+	* init.el: Added gcal to use google calendar.
+	Added etc/gcal-config.el.
+
+2009-09-16  ptmono  <ptmono@naver.com>
+
+	* init.el: no
+
+2009-09-16  ptmono  <ptmono@gmail.com>
+
+	* init.el: no
+
+2009-08-20  ptmono  <ptmono@gmail.com>
+
+	* init.el: *** empty log message ***
+
+	* init.el: default font configuration
+
+	* init.el: bug fix
+
+2009-08-13  ptmono  <ptmono@gmail.com>
+
+	* init.el: *** empty log message ***
+
+2009-07-29  ptmono  <ptmono@gmail.com>
+
+	* init.el: templary
+
+	* init.el:
+	공동적으로 사용되는 변수와 함수를 d-library 로 옴겼다.
+
+2009-07-28  ptmono  <ptmono@gmail.com>
+
+	* init.el: Added js2-mode
+
+2009-07-22  ptmono  <ptmono@gmail.com>
+
+	* init.el: add cclookup
+
+2009-07-15  ptmono  <ptmono@gmail.com>
+
+	* init.el:  - I doing that porting emacs
+
+	 - htmlize package is added.
+
+2009-07-07  ptmono  <ptmono@gmail.com>
+
+	* init.el: iswitchb-mode is usefull
+
+2009-07-05  ptmono  <ptmono@gmail.com>
+
+	* init.el: for pymacs
+
+2009-06-22  ptmono  <ptmono@gmail.com>
+
+	* init.el: add d-latex.el. The functions to test latex.
+
+	* init.el:
+	process의 sleep-for 문제로 버젼 업데이트를 하였다.
+
+2009-06-18  ptmono  <ptmono@gmail.com>
+
+	* init.el: To load d-temp.el
+
+2009-06-18  ptmono  <ptmono@localhost>
+
+	* init.el: To load d-temp.el
+
+2009-06-07  ptmono  <ptmono@localhost>
+
+	* init.el: aaaaaiii
+
+	* init.el: it's aaaaaaaa.
+
+	* init.el: it' 3rd time
+
+	* init.el: it's first time.
+
+	* init.el: New file.
+

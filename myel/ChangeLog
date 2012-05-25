@@ -1,0 +1,348 @@
+2012-01-11  ptmono  <ptmono@gmail.com>
+
+	* d-worknote2.el: Fixed d-citation section problem.
+
+2012-01-05  ptmono  <ptmono@gmail.com>
+
+	* d-worknote2.el:
+	Fixed that d-worknote-section/getAndChageAnchorWhichInLine does not insert
+	anchor.
+
+	* d-citation.el: Fixed section facility
+
+2011-12-02  ptmono  <ptmono@gmail.com>
+
+	* d-worknote2.el:
+	A method which can insert title and document number into the header is
+	added.
+
+2011-12-02  ptmono  <ptmono@naver.com>
+
+	* d-worknote2.el:
+	A method which can insert title and document number into the header is
+	added.
+
+2011-12-01  ptmono  <ptmono@naver.com>
+
+	* d-worknote2.el: nolog
+
+2011-07-18  ptmono  <ptmono@naver.com>
+
+	* d-citation.el:
+	The position of sction anchor is changed. So we need to modify
+	d-citation-inter* functions.
+
+	* d-worknote2.el: Added some functions for section
+
+2011-07-17  ptmono  <ptmono@naver.com>
+
+	* myel.el:
+	d-insert-time will return same value. That is useful to the ciatoin number.
+
+	* d-worknote2.el:
+	Added Tag handling section. d-worknote-create-tag can arrange the tags.
+
+	* d-worknote2.el: nolog
+
+2011-06-30  ptmono  <ptmono@naver.com>
+
+	* d-citation.el, d-library.el: nolog
+
+	* d-library.el: *** empty log message ***
+
+	* d-library.el: Added d-libs-replace-regexp
+
+2011-02-12  ptmono  <ptmono@naver.com>
+
+	* myel.el: d-demonoid-down use start-process
+
+2011-02-09  ptmono  <ptmono@naver.com>
+
+	* d-citation.el: Fixed d-citation-inter. minor-mode toggle problem.
+
+2011-01-11  ptmono  <ptmono@naver.com>
+
+	* d-citation.el: Added d-citation-anchor-absolute
+
+2011-01-10  ptmono  <ptmono@naver.com>
+
+	* d-search.el: New file.
+
+2010-12-23  ptmono  <ptmono@naver.com>
+
+	* myel.el: Bug fixed.
+
+2010-12-07  ptmono  <ptmono@naver.com>
+
+	* myel.el: *** empty log message ***
+
+	* myel.el: Filed
+
+2010-11-27  ptmono  <ptmono@naver.com>
+
+	* d-library.el: d-w3m-wating move to emacs-w3m-config.el
+
+2010-10-20  ptmono  <ptmono@naver.com>
+
+	* myel.el:
+	d-terminal function has a problem in shell-mode. Fixed this with
+	shell-command-to-string "pwd"
+
+2010-09-16  ptmono  <ptmono@naver.com>
+
+	* myel.el: error
+
+2010-08-31  ptmono  <ptmono@naver.com>
+
+	* myel.el: Fixed d-terminal
+
+2010-08-10  ptmono  <ptmono@naver.com>
+
+	* d-library.el: Added d-insert-times
+
+2010-07-06  ptmono  <ptmono@naver.com>
+
+	* d-library.el: Added functions for ~/myscript/screenshot.sh.
+	The functions are duplicated from d-citation.el.
+
+2010-05-06  ptmono  <ptmono@naver.com>
+
+	* d-library.el: Added d-libs-string-create-zero-prefix
+
+2010-03-26  ptmono  <ptmono@naver.com>
+
+	* d-worknote2.el: Added show
+
+2010-03-02  ptmono  <ptmono@naver.com>
+
+	* d-worknote2.el:
+	d-worknote-firefox-get-url can either with title or not with prefix.
+
+2010-02-01  ptmono  <ptmono@naver.com>
+
+	* d-library.el: add d-libs-string-delete-whitespace
+
+2010-01-24  ptmono  <ptmono@naver.com>
+
+	* d-citation.el: Bug fixed for less than pointer 11
+
+2010-01-22  ptmono  <ptmono@naver.com>
+
+	* d-worknote2.el:
+	Add prefix for d-worknote-tag-ref-number. Use C-u C-c d i r to insert another
+	tags.
+
+2010-01-08  ptmono  <ptmono@naver.com>
+
+	* d-worknote2.el: d-worknote-file-info bug fix
+
+2010-01-07  ptmono  <ptmono@naver.com>
+
+	* d-worknote2.el: Added d-worknote-file-info
+
+	* d-library.el: Added d-libs-check-beginning-of-line
+
+2009-12-29  ptmono  <ptmono@naver.com>
+
+	* d-citation.el: Added some comment to d-citation-inter-anchor-get
+
+2009-12-13  ptmono  <ptmono@naver.com>
+
+	* d-worknote2.el: Add a comment
+
+2009-12-13  ptmono  <ptmono@naver.com>
+
+	* d-worknote2.el: Add a comment
+
+2009-11-30  ptmono  <ptmono@naver.com>
+
+	* d-citation.el: Added inter facility
+
+	하나의 페이지에는 section이 존재합니다. 보통 interlinks 은 이 section을 citation
+	합니다. 그리고 See more CITATION 같은식으로 표시되것죠.
+
+	<example>
+	 * a
+
+	 * b
+
+	 ** cc
+
+	 * dd
+	</example>
+	같이 sections이 있습니다. dd에서 작업을 하다 내부 citation을 두어야 겠습니다.
+	cc를 citation 한다고 합시다. "C-u C-c d c inter" 을 누르면 outline-mode의 모습이
+	나타납니다. 이제 원하는 section이나 ref를 골라서 C-m 해주면 citation이 만들어
+	집니다.
+
+	See worknote2.muse#0911270802
+
+2009-09-27  ptmono  <ptmono@gmail.com>
+
+	* d-library.el: d-notify-desktop moves to myel.el
+
+	* myel.el: d-notify-desktop is moved from d-library.el
+
+	The reason is that d-notify-desktop requires python-config.
+
+	* d-library.el:
+	Added d-notify-desktop. It provides an way to use pynotify.
+
+	* myel.el:
+	d-ebook-index-create is added. The function will create the index of ebooks.
+
+2009-09-27  ptmono  <ptmono@localhost>
+
+	* d-library.el:
+	Added d-notify-desktop. It provides an way to use pynotify.
+
+	* myel.el:
+	d-ebook-index-create is added. The function will create the index of ebooks.
+
+2009-09-26  ptmono  <ptmono@localhost>
+
+	* myel.el: Bug fix d-find-file-tag
+
+	"linux."을 읽을 때 "linux..muse"를 읽어오는 현상이 있었다. 이를 수정하였다.
+
+	* myel.el: Improve d-find-file-tag
+
+2009-08-31  ptmono  <ptmono@localhost>
+
+	* d-citation.el: Added two function
+	 - d-citation-anchor
+	 - d-citation-planner-note-with-title
+
+2009-08-24  ptmono  <ptmono@localhost>
+
+	* d-worknote2.el: DONE: paragraphs. above 2line, below 1line
+	and
+	fixed character width problem
+
+2009-08-16  ptmono  <ptmono@localhost>
+
+	* d-library.el: *** empty log message ***
+
+2009-08-13  ptmono  <ptmono@localhost>
+
+	* d-library.el: New file.
+
+2009-07-29  ptmono  <ptmono@localhost>
+
+	* d-citation.el:
+	screenshot 에서 번호를 리턴하는 함수가 제대로 동작하지 않았다. 원인은
+	d-dir-emacs 값을 init.el에서 불러오지 못하는데 있었다. 해결을 위해 d-dir-emacs 와
+	d-windowp 를 d-library.el 로 옴겼다. 그리고 screenshot 에 d-library.el 을 load
+	하는 명령어를 추가하였다.
+
+2009-07-28  ptmono  <ptmono@localhost>
+
+	* d-citation.el:
+	기존에 image를 삽입 할때 ../imgs/image880.jpg 형식이 이용되었다. 이것은 ../imgs
+	폴더가 존재해야만 이미지를 볼 수가 있다. ~/imgs/ 형식은 emacs 내에서 그림을 보는
+	것은 상관이 없지만, muse-publish-this-file 을 이용하여 html로 본다면 그림을 볼
+	수가 없다. 그림의 링크가 ~/imgs 로 바로 나타나기 때문이다.
+
+	이를 수정하기 위해 d-dir-imgs와 d-dir-files 변수를 도입했다. 둘 모두
+	d-dir-emacs를 사용한다. 이를 위해 ~/.emacs.d/imgs 와 ~/.emacs.d/files symbolic
+	link를 만들었다.
+
+2009-07-17  ptmono  <ptmono@localhost>
+
+	* d-worknote2.el: I add two function to deal lastest images
+
+	 - d-worknote-img-resize-percent
+	 - d-worknote-img-delete
+
+	* d-citation.el: I don't know.
+
+	* d-worknote2.el: New file.
+
+2009-07-04  ptmono  <ptmono@localhost>
+
+	* myel.el: outline-mode heading ;;; and not ;;. So ; is added.
+
+2009-06-22  ptmono  <ptmono@localhost>
+
+	* d-latex.el: New file.
+
+2009-06-18  ptmono  <ptmono@localhost>
+
+	* d-temp.el: This is a page to print a title from command-line.
+
+	This is first version. Use fun d-temp-title-print.
+
+	* d-temp.el: New file.
+
+2009-06-18  ptmono  <ptmono@localhost>
+
+	* d-temp.el: This is a page to print a title from command-line.
+
+	This is first version. Use fun d-temp-title-print.
+
+	* d-temp.el: New file.
+
+2009-06-17  ptmono  <ptmono@localhost>
+
+	* d-citation.el: Added d-citation-max-number-plus-one
+
+	      This function is for ~/myscript/screenshot.sh
+
+	* d-citation.el: New file.
+
+2009-06-14  ptmono  <ptmono@localhost>
+
+	* myel.el: fixed d-terminal
+
+2009-06-13  ptmono  <ptmono@localhost>
+
+	* myel.el:
+	emacs에서 konsole을 시작하는 함수를 동작하게 하였다. --nofork를 사용하였다.
+
+2009-03-21  ptmono  <ptmono@localhost>
+
+	* myel.el: test 임
+
+	* myel.el: New file.
+
+2009-03-04  ptmono  <ptmono@gmail.com>
+
+	* d-citation.el (d-citation): fixed citation problem in worknote
+
+2009-02-05  ptmono  <ptmono@localhost.localdomain>
+
+	* d-worknote2.el (d-worknote-firefox-get-url): tagging from firefox
+
+2009-02-01  ptmono  <ptmono@localhost.localdomain>
+
+	* d-worknote2.el (d-worknote-tag-ref-number): added for tagging.
+
+2008-12-22  ptmono  <ptmono@localhost>
+
+	* myel.el (d-terminal): added
+
+2008-10-19  ptmono  <ptmono@localhost.localdomain>
+
+	* d-worknote2.el (d-worknote-create-note-header):
+	d-worknote-create-tag will create a buffer in view-mode.
+	d-worknote-create-note-header and d-worknote-create-tag use same
+	buffer. The function didn't control the buffer in view-mode. It is
+	fixed.
+
+2008-10-11  ptmono  <ptmono@localhost.localdomain>
+
+	* d-w3m-ytn.el: This program helps to see the news of ytn.
+
+2008-10-02  ptmono  <ptmono@localhost.localdomain>
+
+	* d-tag.el (d-tag-contents-lists): d-worknote-create-tag requires
+	this function
+	(d-tag-region-point-list): see doc
+
+	* d-worknote2.el (d-worknote-create-tag): To parse tag
+
+2008-01-14  ptmono  <ptmono@gmail.com>
+
+	* d-worknote2.el (d-worknote-window-selecter): see doc
+
+

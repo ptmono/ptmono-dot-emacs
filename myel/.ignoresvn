@@ -1,0 +1,8 @@
+*~
+*.elc
+*#
+mytest3.pdf
+missfont.log
+mytest3.dvi
+mytest3.log
+mytest3.aux

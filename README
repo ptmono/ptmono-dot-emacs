@@ -1,0 +1,31 @@
+
+files
+-----
+
+ - init.el	: init file of emacs
+ - ChangeLog
+ - bookmarks
+ - dal-worknote.elc	: init.el requires this file. I lose the source.
+
+
+directories
+-----------
+
+ - config : It contains configuration and modification of emacs packages
+   such as muse, emacs-w3m, erc.
+ - myel : It contains convenient tools written by me.
+ - cvs	: It contains emacs packages downloaded by the version control systems.
+ - etc	: It contains emacs packages downloaded by files.
+ - info	: texinfo documents
+
+
+Using
+-----
+
+cvs, etc, info contains many files which is not modified by me. So I
+archived each directory. Each directory contains 'packages.tar.gz' file.
+Just extract the file.
+
+$ git clone https://ptmono@code.google.com/p/ptmono-dot-emacs/ .emacs.d
+$ python init.py
+
