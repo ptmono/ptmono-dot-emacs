@@ -1,0 +1,767 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("projectb.el"
+ (filename . "~/Desktop/Documents/works/0cvs/trunk/dotemacs.d/myel/projectb.el")
+ (front-context-string . ";; Convenient te")
+ (rear-context-string)
+ (position . 1))
+("d-sikuli.el"
+ (filename . "~/.emacs.d/myel/d-sikuli.el")
+ (front-context-string . "\n  (d-sikuli/sho")
+ (rear-context-string . "\n  (interactive)")
+ (position . 2522))
+("shell-config.el"
+ (filename . "~/.emacs.d/config/shell-config.el")
+ (front-context-string . "\n    (\"^FAIL!  :")
+ (rear-context-string . "Added to Qt test")
+ (position . 299))
+("autocomplete-config.el"
+ (filename . "~/.emacs.d/config/autocomplete-config.el")
+ (front-context-string . "\n(add-to-list 'l")
+ (rear-context-string)
+ (position . 1))
+("yasnippet-config.el"
+ (filename . "~/.emacs.d/config/yasnippet-config.el")
+ (front-context-string . "\n(provide 'yasni")
+ (rear-context-string . "update-on-save)\n")
+ (position . 1242))
+("auto-complete-config.el"
+ (filename . "~/.emacs.d/config/auto-complete-config.el")
+ (front-context-string . "\n(add-to-list 'l")
+ (rear-context-string)
+ (position . 1))
+("autoinsert-config.el"
+ (filename . "~/.emacs.d/config/autoinsert-config.el")
+ (front-context-string . ";; This program ")
+ (rear-context-string . "eywords: tools\n\n")
+ (position . 134))
+("ppf-web"
+ (filename . "~/public_html/0ttd/0ppf2/ppf/")
+ (front-context-string . ".htaccess\n  -rwx")
+ (rear-context-string . "56 Jan 12 01:07 ")
+ (position . 529))
+("android-config.el"
+ (filename . "~/.emacs.d/config/android-config.el")
+ (front-context-string)
+ (rear-context-string . "uire 'android)\n\n")
+ (position . 434))
+("jdee-config.el"
+ (filename . "~/.emacs.d/config/jdee-config.el")
+ (front-context-string . "\n	    (append\n	 ")
+ (rear-context-string . " auto-mode-alist")
+ (position . 651))
+("cedet-config.el"
+ (filename . "~/.emacs.d/config/cedet-config.el")
+ (front-context-string . ";; Load CEDET.\n;")
+ (rear-context-string)
+ (position . 1))
+("ca_gtk_play_for_widget"
+ (filename . "/usr/local/src/cvs/libcanberra/src/canberra-gtk.c")
+ (front-context-string . "int ca_gtk_play_")
+ (rear-context-string . " on error.\n */\n\n")
+ (position . 16419))
+("ca_context_play_full"
+ (filename . "/usr/local/src/cvs/libcanberra/src/common.c")
+ (front-context-string . "ca_context_play_")
+ (rear-context-string . " ret;\n}\n\n/**\n * ")
+ (position . 15867))
+("ca_finish_callback_t"
+ (filename . "/usr/local/src/cvs/libcanberra/src/canberra.h.in")
+ (front-context-string . "ca_finish_callba")
+ (rear-context-string . "ontext;\n\n/**\n * ")
+ (position . 14855))
+("d-clear.el"
+ (filename . "~/.emacs.d/myel/d-clear.el")
+ (front-context-string)
+ (rear-context-string . "register))))\n\n\n\n")
+ (position . 4710))
+("muse-publish-config.el"
+ (filename . "~/.emacs.d/config/muse-publish-config.el")
+ (front-context-string . "\n(require 'plann")
+ (rear-context-string)
+ (position . 1))
+("d-last.el"
+ (filename . "~/.emacs.d/myel/d-last.el")
+ (front-context-string)
+ (rear-context-string)
+ (position . 3))
+("study.py"
+ (filename . "~/plans/study.py")
+ (front-context-string . "\ndef foo(hello, ")
+ (rear-context-string)
+ (position . 1))
+("moz-config.el"
+ (filename . "~/.emacs.d/config/moz-config.el")
+ (front-context-string . ";* C-c C-l: save")
+ (rear-context-string . "nd switch to it\n")
+ (position . 126))
+("js2-config.el"
+ (filename . "~/.emacs.d/config/js2-config.el")
+ (front-context-string)
+ (rear-context-string . "oz-minor-mode)\n\n")
+ (position . 248))
+("cc-config.el"
+ (filename . "~/.emacs.d/config/cc-config.el")
+ (front-context-string . "\n\n(defvar font-l")
+ (rear-context-string)
+ (position . 1))
+("logview-config.el"
+ (filename . "~/.emacs.d/config/logview-config.el")
+ (front-context-string . "(add-to-list 'lo")
+ (rear-context-string . "use-emphasis-3)\n")
+ (position . 1342))
+("gcal-config.el"
+ (filename . "~/.emacs.d/config/gcal-config.el")
+ (front-context-string . ";===============")
+ (rear-context-string . "r 'w3m-buffer)\n\n")
+ (position . 215))
+("nxhtml-config.el"
+ (filename . "~/.emacs.d/config/nxhtml-config.el")
+ (front-context-string . "(load \"~/.emacs.")
+ (rear-context-string)
+ (position . 1))
+("dalsoo"
+ (filename . "~/works/emacsPorting/worknote.muse")
+ (front-context-string . "set WshShell = W")
+ (rear-context-string . "it.\n\n''' objecs\n")
+ (position . 13092))
+("xp"
+ (filename . "/media/sdb1/emacsd/cygwin/home/ptmono/")
+ (front-context-string . ".emacs.d\n  drwxr")
+ (rear-context-string . "010-03-29 20:44 ")
+ (position . 414))
+("d-alarm.el"
+ (filename . "~/.emacs.d/myel/d-alarm.el")
+ (front-context-string . "tual d-alarm act")
+ (rear-context-string . " text)\n  \"The ac")
+ (position . 336))
+("ropemacs-config.el"
+ (filename . "~/.emacs.d/config/ropemacs-config.el")
+ (front-context-string . "\n;; ropemacs req")
+ (rear-context-string)
+ (position . 1))
+("alias.muse"
+ (filename . "~/plans/alias.muse")
+ (front-context-string)
+ (rear-context-string . "','uutss123'])\n\n")
+ (position . 91))
+("t"
+ (filename . "~/works/hackxp/src/testd/distribute/hello.py")
+ (front-context-string)
+ (rear-context-string . "int \"hello.py\"\n\n")
+ (position . 75))
+("abbrev-config.el"
+ (filename . "~/.emacs.d/config/abbrev-config.el")
+ (front-context-string)
+ (rear-context-string . "nfig.el을 보세요.\n\n\n")
+ (position . 476))
+("cclookup-config.el"
+ (filename . "~/.emacs.d/config/cclookup-config.el")
+ (front-context-string . "(setq cclookup-d")
+ (rear-context-string . " \"etc/pymacs\"))\n")
+ (position . 56))
+("dalsoonn"
+ (filename . "~/plans/test.muse")
+ (front-context-string . "\nIt's possible t")
+ (rear-context-string . "lled correctly.\n")
+ (position . 422))
+("d-citation.el"
+ (filename . "~/.emacs.d/myel/d-citation.el")
+ (front-context-string . ";;;요구사항\n;기본적으로 m")
+ (rear-context-string)
+ (position . 1))
+("subprocess"
+ (front-context-string . "\n17.1 Subprocess")
+ (rear-context-string . ":: > subprocess\n")
+ (position . 233136)
+ (filename . "/usr/local/share/info/python-lib")
+ (info-node . "subprocess")
+ (handler . Info-bookmark-jump))
+("d-latex.el"
+ (filename . "~/.emacs.d/myel/d-latex.el")
+ (front-context-string . "(other-window 1)")
+ (rear-context-string . "-buffer t t)\n;  ")
+ (position . 1570))
+("d-temp.el"
+ (filename . "~/.emacs.d/myel/d-temp.el")
+ (front-context-string . "(defvar d-temp-t")
+ (rear-context-string)
+ (position . 1))
+("works"
+ (filename . "~/works/")
+ (front-context-string . "060315_dica.muse")
+ (rear-context-string . "006-06-05 22:12 ")
+ (position . 232))
+("etc-config.el"
+ (filename . "~/.emacs.d/config/etc-config.el")
+ (front-context-string . "\n;--------------")
+ (rear-context-string)
+ (position . 1))
+("0ppf"
+ (filename . "~/public_html/0ttd/0ppf/")
+ (front-context-string . "config\n  -rw-rw-")
+ (rear-context-string . "009-04-28 19:47 ")
+ (position . 248))
+("ppf"
+ (filename . "~/works/ppf/")
+ (front-context-string . "DOM and xml and ")
+ (rear-context-string . "009-02-04 14:12 ")
+ (position . 646))
+("myscript"
+ (filename . "~/myscript/")
+ (front-context-string . "alert\n  drwxrwxr")
+ (rear-context-string . "008-06-22 01:32 ")
+ (position . 233))
+("dired-config.el"
+ (filename . "~/.emacs.d/config/dired-config.el")
+ (front-context-string . "\n(defvar d-dired")
+ (rear-context-string)
+ (position . 1))
+("init.el"
+ (filename . "~/.emacs.d/init.el")
+ (front-context-string . ";;; 0810281513 k")
+ (rear-context-string)
+ (position . 1))
+("pystartup.py"
+ (filename . "~/myscript/pystartup.py")
+ (front-context-string)
+ (rear-context-string . "e execfile(lib)\n")
+ (position . 46))
+("kor.el"
+ (filename . "~/.emacs.d/config/kor.el")
+ (front-context-string . ";;; for korean 이")
+ (rear-context-string)
+ (position . 1))
+("m2"
+ (front-context-string . "other sources.\n\n")
+ (rear-context-string . "nections, among\n")
+ (position . 221024)
+ (filename . "/usr/local/share/info/python-lib")
+ (info-node . "struct")
+ (handler . Info-bookmark-jump))
+("j"
+ (front-context-string . "\n5.6 Efficient a")
+ (rear-context-string . "Types:: > array\n")
+ (position . 113240)
+ (filename . "/usr/local/share/info/python-lib")
+ (info-node . "array")
+ (handler . Info-bookmark-jump))
+("d-w3m-ytn.el"
+ ((filename . "~/.emacs.d/myel/d-w3m-ytn.el")
+  (front-context-string . "; I decide to cr")
+  (rear-context-string . "8\n;;; purpose\n;\n")
+  (position . 29)))
+("d-worknote2.el"
+ (filename . "~/.emacs.d/myel/d-worknote2.el")
+ (front-context-string . "  \"The function ")
+ (rear-context-string . "exp end-regexp)\n")
+ (position . 4539))
+("d-tag.el"
+ (filename . "~/.emacs.d/myel/d-tag.el")
+ (front-context-string . "\n;==============")
+ (rear-context-string)
+ (position . 1))
+("w"
+ ((filename . "~/tmp/python/aa.py")
+  (front-context-string)
+  (rear-context-string . "thlon64.tar.bz2'")
+  (position . 615)))
+("movienfo.py"
+ ((filename . "~/myscript/movienfo.py")
+  (front-context-string . "#!/usr/bin/pytho")
+  (rear-context-string)
+  (position . 1)))
+("wornote.muse"
+ ((filename . "~/plans/worknote.muse")
+  (front-context-string . "  (set (make-loc")
+  (rear-context-string . "  (interactive)\n")
+  (position . 120486)))
+("temp.muse"
+ ((filename . "~/plans/temp.muse")
+  (front-context-string . "* Introduction\n문")
+  (rear-context-string)
+  (position . 1)))
+("auctex-config.el"
+ (filename . "~/.emacs.d/config/auctex-config.el")
+ (front-context-string . "(load \"preview-l")
+ (rear-context-string . "ex.el\" nil t t)\n")
+ (position . 29))
+("d-search.el"
+ ((filename . "~/.emacs.d/myel/d-search.el")
+  (front-context-string . ";---------------")
+  (rear-context-string)
+  (position . 1)))
+("find-config.el"
+ ((filename . "~/.emacs.d/config/find-config.el")
+  (front-context-string . "\n    (let ((map ")
+  (rear-context-string . "find-ls-option))")
+  (position . 2568)))
+("movie.muse"
+ ((filename . "~/plans/movie.muse")
+  (front-context-string . " **list of note*")
+  (rear-context-string)
+  (position . 1)))
+("d-library.el"
+ ((filename . "~/.emacs.d/myel/d-library.el")
+  (front-context-string . "\n(require 'w3m)\n")
+  (rear-context-string)
+  (position . 1)))
+("xorg.conf"
+ ((filename . "/su:root@localhost.localdomain:/etc/X11/xorg.conf")
+  (front-context-string . "\n# Xorg configur")
+  (rear-context-string)
+  (position . 1)))
+("hardware.muse"
+ ((filename . "~/plans/hardware.muse")
+  (front-context-string . " **list of note*")
+  (rear-context-string)
+  (position . 1)))
+("auth.el"
+ ((filename . "~/.emacs.d/config/auth.el")
+  (front-context-string . "(defun dal-curre")
+  (rear-context-string)
+  (position . 1)))
+("hac"
+ ((filename . "/media/data/hac/")
+  (front-context-string . "1353817068.jpg\n ")
+  (rear-context-string . "8K Jun 10 00:10 ")
+  (position . 218)))
+(".emacs-w3m"
+ ((filename . "~/.emacs-w3m")
+  (front-context-string . "(defcustom w3m-s")
+  (rear-context-string)
+  (position . 1)))
+("lcd"
+ ((filename . "~/plans/hardware.muse")
+  (front-context-string . "LTA260W2, LC260X")
+  (rear-context-string . " 뿌리겠다는 이야기 이다.\n\n")
+  (position . 5378)))
+("bbdb-config.el"
+ ((filename . "~/.emacs.d/config/bbdb-config.el")
+  (front-context-string . "(require 'bbdb)\n")
+  (rear-context-string)
+  (position . 1)))
+("job.muse"
+ ((filename . "~/plans/job.muse")
+  (front-context-string . " **List of note*")
+  (rear-context-string)
+  (position . 1)))
+("security.muse"
+ ((filename . "~/plans/security.muse")
+  (front-context-string . "* Cracker\n - htt")
+  (rear-context-string . "note**\n<notes>\n\n")
+  (position . 28)))
+("security"
+ ((filename . "/media/data/ebooks/computers/security/")
+  (front-context-string . "Addison Wesley -")
+  (rear-context-string . "6M Jan 17  2006 ")
+  (position . 7336)))
+("sercurity"
+ ((filename . "/media/data/ebooks/computers/security/")
+  (front-context-string . "Security.Warrior")
+  (rear-context-string . "6M Jan 17  2006 ")
+  (position . 7758)))
+(".newsrc.eld"
+ ((filename . "~/.newsrc.eld")
+  (front-context-string . "(setq gnus-topic")
+  (rear-context-string . "e.philatelie\"))\n")
+  (position . 23839)))
+("policyNotting.muse"
+ ((filename . "~/plans/policyNotting.muse")
+  (front-context-string)
+  (rear-context-string . "aq'로 들어가게 될 것이다.")
+  (position . 427)))
+("packages"
+ ((filename . "/usr/src/packages/")
+  (front-context-string . "1_python\n  -rw-r")
+  (rear-context-string . "0K Apr 23 09:38 ")
+  (position . 219)))
+("data"
+ ((filename . "/media/data/")
+  (front-context-string . "111.txt\n  -rwxr-")
+  (rear-context-string . "13 Apr 26 23:19 ")
+  (position . 201)))
+("wontae.muse"
+ ((filename . "~/plans/wontae.muse")
+  (front-context-string . "te#wontae : note")
+  (rear-context-string . "e**\n<notes>\n\n\nNo")
+  (position . 31)))
+("gnus-config.el"
+ ((filename . "~/.emacs.d/config/gnus-config.el")
+  (front-context-string)
+  (rear-context-string)
+  (position . 12)))
+("functions.muse"
+ ((filename . "~/plans/functions.muse")
+  (front-context-string)
+  (rear-context-string . " list of note.\n\n")
+  (position . 177)))
+("outline-config.el"
+ ((filename . "~/.emacs.d/config/outline-config.el")
+  (front-context-string)
+  (rear-context-string . "quire 'foldout))")
+  (position . 48)))
+("dal-library.el"
+ ((filename . "/home/ptmono/.emacs.d/myel/d-library.el")
+  (front-context-string . "(defun dal-w3m-w")
+  (rear-context-string)
+  (position . 1)))
+("directories"
+ (filename . "/tmp/0-incoming/directories/")
+ (front-context-string . "구타유발자들 (2006)\n  ")
+ (rear-context-string . "009-05-02 00:27 ")
+ (position . 239))
+("p"
+ ((filename . "~/Desktop/Documents/projects/Poffice/main.muse")
+  (front-context-string . "어떠한 주제가 주어진다면 다음")
+  (rear-context-string . "한 그림을 그려놓고 있는가?\n")
+  (position . 362)))
+("project.muse"
+ ((filename . "~/plans/project.muse")
+  (front-context-string . "\n\n.#1  plan proj")
+  (rear-context-string . ".01]])\n\n* Notes\n")
+  (position . 141)))
+("texlive"
+ ((filename . "/usr/local/texlive/2007/")
+  (front-context-string . "bin\n  drwxr-xr-x")
+  (rear-context-string . "0K May 11 01:43 ")
+  (position . 213)))
+("lc"
+ ((filename . "~/plans/linuxCommands.muse")
+  (front-context-string)
+  (rear-context-string . "을 설치했는지 알려면: -ql")
+  (position . 36)))
+("ec"
+ ((filename . "~/plans/emacsCommands.muse")
+  (front-context-string . "h : move between")
+  (rear-context-string . "ters. Use G c\n\n\n")
+  (position . 663)))
+("tools.muse"
+ ((filename . "~/plans/tools.muse")
+  (front-context-string . " **List of note*")
+  (rear-context-string)
+  (position . 1)))
+("INSTALL.CVS"
+ ((filename . "/usr/src/cvs/emacs/INSTALL.CVS")
+  (front-context-string . "\n\n	      Buildin")
+  (rear-context-string . "nse conditions.\n")
+  (position . 131)))
+("keyword"
+ ((filename . "~/plans/worknote.muse")
+  (front-context-string . "\n\n\n#0704281046 m")
+  (rear-context-string . "rds : bookmark, ")
+  (position . 180256)))
+("delicious.el"
+ ((filename . "~/.emacs.d/etc/delicious-el/delicious.el")
+  (front-context-string . "/url?url=%s\" del")
+  (rear-context-string . "ormat \"http://%s")
+  (position . 31612)))
+("delicioapi.el"
+ ((filename . "~/.emacs.d/etc/delicious-el/delicioapi.el")
+  (front-context-string . ";; Created 25 Oc")
+  (rear-context-string . "wjsullivan.net>\n")
+  (position . 168)))
+("remember-config.el"
+ ((filename . "~/.emacs.d/config/remember-config.el")
+  (front-context-string . ";---------------")
+  (rear-context-string)
+  (position . 1)))
+("category.muse"
+ ((filename . "~/plans/category.muse")
+  (front-context-string . "\n[[emacsPackages")
+  (rear-context-string)
+  (position . 1)))
+("emacs-w3m-config.el"
+ ((filename . "~/.emacs.d/config/emacs-w3m-config.el")
+  (front-context-string . "(defalias 'w3m-v")
+  (rear-context-string . "L at point\")))\n\n")
+  (position . 1034)))
+("nntp"
+ ((filename . "/usr/share/info/python-lib")
+  (front-context-string . "File: python-lib")
+  (rear-context-string)
+  (position . 172230)
+  (info-node . "NNTP Objects")))
+("python-config.el"
+ ((filename . "~/.emacs.d/config/python-config.el")
+  (front-context-string)
+  (rear-context-string . "er-and-window))\n")
+  (position . 1466)))
+("books.muse"
+ ((filename . "~/plans/books.muse")
+  (front-context-string . "* books\n\n - [[/m")
+  (rear-context-string . "r를\n이용하고 있다.\n\n\n\n\n")
+  (position . 1512)))
+("todo.muse"
+ ((filename . "~/plans/todo.muse")
+  (front-context-string . " **List of note*")
+  (rear-context-string)
+  (position . 1)))
+("config"
+ ((filename . "~/.emacs.d/config/")
+  (front-context-string)
+  (rear-context-string . "mber-config.elc\n")
+  (position . 1877)))
+("movie2"
+ ((filename . "/media/data/movie/")
+  (front-context-string)
+  (rear-context-string . "도스도전기 전집(完).zip\n")
+  (position . 1558)))
+("emacsCommands.muse"
+ ((filename . "~/plans/emacsCommands.muse")
+  (front-context-string . "* Info\n\nC-c C-b ")
+  (rear-context-string)
+  (position . 1)))
+("color-theme-config.el"
+ ((filename . "~/.emacs.d/config/color-theme-config.el")
+  (front-context-string . ";---------------")
+  (rear-context-string . "und \"white\"))))\n")
+  (position . 5441)))
+("worknote"
+ ((filename . "~/plans/elispWorknote.el")
+  (front-context-string . "                ")
+  (rear-context-string . "nil \" - \" \"\\n\")\n")
+  (position . 242033)))
+("worknote.py"
+ ((filename . "~/plans/worknote.py")
+  (front-context-string . " --> body(id,[fi")
+  (rear-context-string . "\n --> head(id)\n\n")
+  (position . 6660)))
+("test.py"
+ (filename . "~/public_html/0ttd/aaa/test.py")
+ (front-context-string . "#!/usr/bin/pytho")
+ (rear-context-string)
+ (position . 1))
+("test.tex"
+ ((filename . "~/Desktop/Documents/notes/physics/electrodynamics/test2/test.tex")
+  (front-context-string . "%% LyX 1.3 creat")
+  (rear-context-string)
+  (position . 1)))
+("config-custom.el"
+ ((filename . "/home/ptmono/.emacs.d/config/config-custom.el")
+  (front-context-string . ";---------------")
+  (rear-context-string)
+  (position . 1)))
+("worknote.el"
+ ((filename . "/home/ptmono/plans/worknote.el")
+  (front-context-string . "(add-to-list 'mu")
+  (rear-context-string)
+  (position . 1)))
+("dal-citation.el"
+ ((filename . "/home/ptmono/.emacs.d/myel/dal-citation.el")
+  (front-context-string . ";;;요구사항\n;기본적으로 m")
+  (rear-context-string)
+  (position . 1)))
+("Face Attributes"
+ ((filename . "/usr/src/cvs/emacs/info/elisp")
+  (front-context-string . "File: elisp,  No")
+  (rear-context-string)
+  (position . 144256)
+  (info-node . "Face Attributes")))
+("dal-worknote2.el"
+ ((filename . "/home/ptmono/.emacs.d/myel/dal-worknote2.el")
+  (front-context-string)
+  (rear-context-string)
+  (position . 3)))
+("erc-config.el"
+ ((filename . "/home/ptmono/.emacs.d/config/erc-config.el")
+  (front-context-string . "\n;;; auto join\n\n")
+  (rear-context-string)
+  (position . 1)))
+(".bashrc"
+ ((filename . "/home/ptmono/.bashrc")
+  (front-context-string)
+  (rear-context-string . "macs/src/emacs'\n")
+  (position . 701)))
+("dal-search.el"
+ ((filename . "/home/ptmono/.emacs.d/myel/dal-search.el")
+  (front-context-string . ";---------------")
+  (rear-context-string)
+  (position . 1)))
+(".emacs"
+ ((filename . "/home/ptmono/.emacs")
+  (front-context-string . "  \"citation\"\n  \"")
+  (rear-context-string . "g\"\n  \"external\"\n")
+  (position . 1236)))
+("ebook3"
+ ((filename . "/media/hdb1/ebook2/")
+  (front-context-string . "Absolute Beginne")
+  (rear-context-string . "96 Sep 11 21:54 ")
+  (position . 227)))
+("worknote.muse"
+ ((filename . "/home/ptmono/plans/worknote.muse")
+  (front-context-string)
+  (rear-context-string . "더 좋다면 더욱 빠를 것이다\n")
+  (position . 29184)))
+("elispWorknote.el"
+ ((filename . "/home/ptmono/plans/elispWorknote.el")
+  (front-context-string . "publish 후 생성되는 버")
+  (rear-context-string . "0610312226 muse-")
+  (position . 159317)))
+(".gnus"
+ ((filename . "~/.gnus")
+  (front-context-string)
+  (rear-context-string . " %(에 적용해 버렸다.\n\n\n")
+  (position . 10542)))
+("1"
+ (filename . "~/.emacs.d/config/keybinding.el")
+ (front-context-string)
+ (rear-context-string . " \"\\M-o\" cm-map)\n")
+ (position . 11876))
+("2"
+ ((filename . "/usr/share/info/sed")
+  (front-context-string . "File: sed.info, ")
+  (rear-context-string)
+  (position . 4373)
+  (info-node . "Invoking sed")))
+("citation.el"
+ ((filename . "~/.emacs.d/myel/d-citation.el")
+  (front-context-string . ";;;요구사항\n;기본적으로 m")
+  (rear-context-string)
+  (position . 1)))
+("ebooks"
+ ((filename . "/media/data/ebooks/computers/")
+  (front-context-string . "  drwxr-xr-x  4 ")
+  (rear-context-string . "2Nd Edition.pdf\n")
+  (position . 5297)))
+("ebooks2"
+ ((filename . "~/.mldonkey/incoming/directories/")
+  (front-context-string . "Absolute Beginne")
+  (rear-context-string . "96 Sep 11 21:54 ")
+  (position . 251)))
+("elintr"
+ ((filename . "/usr/share/info/eintr")
+  (front-context-string . "* Practicing Eva")
+  (rear-context-string . "  What is Lisp?\n")
+  (position . 1524)
+  (info-node . "Top")))
+("elisp"
+ ((filename . "/usr/share/info/elisp")
+  (front-context-string . "\n            (un")
+  (rear-context-string . "(mark-marker))))")
+  (position . 16204)
+  (info-node . "Excursions")))
+("emacs"
+ ((filename . "~/.emacs.d/")
+  (front-context-string . "Makefile\n  drwxr")
+  (rear-context-string . "60 Jun  5 20:57 ")
+  (position . 215)))
+("emacs.muse"
+ ((filename . "/home/ptmono/plans/emacs.muse")
+  (front-context-string . "* Related Links\n")
+  (rear-context-string)
+  (position . 1)))
+("external.el"
+ ((filename . "/home/ptmono/.emacs.d/config/external.el")
+  (front-context-string . "\n\n(push '(\"\\\\.ht")
+  (rear-context-string . "n-associations)\n")
+  (position . 1719)))
+("font"
+ ((filename . "/home/ptmono/notes/0605281842.muse")
+  (front-context-string . "\nFootnotes: \n[1]")
+  (rear-context-string . "-m-0-iso8859-1\n\n")
+  (position . 12769)))
+("html"
+ ((filename . "~/public_html/plans/")
+  (front-context-string . "2006.03.27.html\n")
+  (rear-context-string . "22 Jun 23 10:31 ")
+  (position . 302)))
+("incoming"
+ ((filename . "/tmp/0-incoming/")
+  (front-context-string)
+  (rear-context-string . "-21 00:23 files\n")
+  (position . 299)))
+("index.muse"
+ ((filename . "/home/ptmono/plans/index.muse")
+  (front-context-string . "* Introduction\n목")
+  (rear-context-string)
+  (position . 1)))
+("keybinding.el"
+ ((filename . "/home/ptmono/.emacs.d/config/keybinding.el")
+  (front-context-string . "; See more /home")
+  (rear-context-string)
+  (position . 1)))
+("linux.muse"
+ ((filename . "/home/ptmono/plans/linux.muse")
+  (front-context-string . "#C0  _ what is G")
+  (rear-context-string . "[[2006.07.08]])\n")
+  (position . 1395)))
+("movie"
+ ((filename . "/tmp/0-movie/")
+  (front-context-string)
+  (rear-context-string . "0K Nov  5 13:17 ")
+  (position . 215)))
+("muse-config.el"
+ ((filename . "~/.emacs.d/config/muse-config.el")
+  (front-context-string . "\n; 위의 highlighti")
+  (rear-context-string . "sub-sections)))\n")
+  (position . 12851)))
+("myel.el"
+ ((filename . "/home/ptmono/.emacs.d/myel/myel.el")
+  (front-context-string)
+  (rear-context-string . "rowse-url url)))")
+  (position . 2014)))
+("note"
+ ((filename . "/home/ptmono/plans/hackEmacsW3m.muse")
+  (front-context-string . "w3m-goto-url ('U")
+  (rear-context-string . "보이긴 보인다.\n\n - C: ")
+  (position . 425)))
+("planner-config.el"
+ ((filename . "/home/ptmono/.emacs.d/config/planner-config.el")
+  (front-context-string . ";---------------")
+  (rear-context-string)
+  (position . 1)))
+("regular"
+ ((filename . "/usr/share/info/regex.info.gz")
+  (front-context-string . "\n* Syntax Bits::")
+  (rear-context-string . "pression Syntax\n")
+  (position . 1948)
+  (info-node . "Top")))
+("site-lisp"
+ ((filename . "/usr/local/share/emacs/site-lisp/")
+  (front-context-string . "auctex\n  -rw-r--")
+  (rear-context-string . "96 Jul 17 02:19 ")
+  (position . 222)))
+("task"
+ ((filename . "/home/ptmono/plans/font.muse")
+  (front-context-string . "\n\n\n\n\n\n* Tasks\n\n#")
+  (rear-context-string . "지 못하는 현상이 발생되었다.")
+  (position . 1620)))
+("task1"
+ ((filename . "/home/ptmono/.Xdefaults")
+  (front-context-string . "-*-*-*-14-*-*-*-")
+  (rear-context-string . "01:-*-gulimbdf-*")
+  (position . 884)))
+("test"
+ ((filename . "/tmp/test/")
+  (front-context-string . "aaa\n  -rw-rw-r--")
+  (rear-context-string . "96 Nov 21 00:55 ")
+  (position . 213)))
+("test.muse"
+ ((filename . "/tmp/test/test.muse")
+  (front-context-string . "aaaaaaaaaaaaa\n\n#")
+  (rear-context-string)
+  (position . 1)))
+("test2"
+ ((filename . "/tmp/test.muse")
+  (front-context-string)
+  (rear-context-string . "\n\n\n1\n2\n3\n4\n5\n6\n7")
+  (position . 84)))
+("today"
+ ((filename . "/home/ptmono/plans/2006.07.23.muse")
+  (front-context-string . "#B0  _ citation의")
+  (rear-context-string . "iary\n\n\n* Tasks\n\n")
+  (position . 20)))
+("windowsDoc"
+ ((filename . "/media/hda1/Documents and Settings/Administrator/My Documents/")
+  (front-context-string . "수강신청\n  drwxr-xr-")
+  (rear-context-string . "92 Nov 23  2005 ")
+  (position . 257)))
+("working.muse"
+ ((filename . "/home/ptmono/plans/working.muse")
+  (front-context-string . "* Introduction\n\n")
+  (rear-context-string)
+  (position . 1)))
+)

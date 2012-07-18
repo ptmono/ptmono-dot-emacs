@@ -1,0 +1,25 @@
+
+(setq aa "==> 120616, 0, python scrapping and google app engine")
+(setq bb "==> 0")
+
+(clrhash d-job/hashTable)
+(puthash "1206121451" (list "1206121451" "title1" "120518" "1" "content1") d-job/hashTable)
+(puthash "1206121452" (list "1206121452" "title2" "120511" "1" "content1") d-job/hashTable)
+(puthash "1206121453" (list "1206121453" "title3" "120518" "1" "content1") d-job/hashTable)
+(puthash "1206121454" (list "1206121454" "title4" "120518" "0" "content1") d-job/hashTable)
+(puthash "1206121455" (list "1206121455" "title5" "120511" "2" "content1") d-job/hashTable)
+(puthash "1206121456" (list "1206121456" "title6" "120520" "2" "content1") d-job/hashTable)
+(puthash "1206121457" (list "1206121457" "title7" "120520" "3" "content1") d-job/hashTable)
+
+
+
+(deftest "d-job-hash"
+  (let* ((anchor "1206121147")
+	 (value (list "0" "1" "2" "3")))
+    (puthash anchor value d-job/info-hashTable)
+    (assert-equal (d-job-hash/getCommon anchor 0) "0")
+    (remhash anchor d-job/info-hashTable)
+    ))
+
+
+(clrhash d-job/hashTable)
