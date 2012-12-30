@@ -1,0 +1,21 @@
+* d-w-show don't compile following
+
+ FONTPATTER: should have the form of a standard X font name, except the last two
+fields 'fontset-ALIAS'.
+
+It generates
+
+\begin{quote}
+\begin{description}
+\item[FONTPATTER] \mbox{}
+should have the form of a standard X font name, except the last two
+fields 'fontset-ALIAS'.
+\end{quote}
+
+\begin{quote}
+\begin{verbatim}
+-*-fixed-medium-r-normal-*-24-*-*-*-*-*-fontset-24
+\end{verbatim}
+\end{quote}
+\end{description}
+
