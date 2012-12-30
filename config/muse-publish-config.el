@@ -1,3 +1,17 @@
+;;; === How to add markup strings ?
+;;; --------------------------------------------------------------
+;; Let's see an example. We want to chage "^@ section" to work. We will do
+;; that
+;;  1. Add the regexp into d-muse-publish-markup-regexps
+;;  2. Add the function into d-muse-latex-markup-functions
+;;  3. Create the function
+;; The style specify the regexp and the function alist. The style is
+;; defined by the function 'muse-define-style.
+
+
+;;; === Test environment
+;;; --------------------------------------------------------------
+;; Use elispWorknote.el#1212210233
 
 (require 'planner-publish)
 
@@ -30,8 +44,8 @@
                    :strings   'd-muse-html-markup-strings
                    :before    'planner-publish-prepare-buffer
                    :after     'planner-publish-finalize-buffer
-                   :header    'muse-html-header
-                   :footer    'muse-html-footer
+                   :header    'd-muse-html-header
+                   :footer    'd-muse-html-footer
 		   :style-sheet 'd-muse-html-style-sheet)
 
 (muse-define-style "d-latex"
@@ -79,8 +93,11 @@
     (1280 "^\\.#[0-9]+\\s-*" 0 note)
     (3200 planner-date-regexp 0 link)
     ;; <--In planner-mode end
-    (3500 "^\\([A-Z]+\\): " 0 dtag)
-
+    (1999"^Footnotes:?\\s-*" 0 d-fn-sep)
+    (2099 "\\[\\([1-9][0-9]*\\)\\]" 0 d-footnote)
+    (7501 "^\\([A-Z]+\\): " 0 dtag)
+    ;;(7508 "^\\(\\@+\\)\\s-+" 0 d-note-section)
+    (8508 "^\\(\\@+\\)\\s-+" 0 dsection)
     )
   "List of markup rules for publishing my muse pages.
 For more on the structure of this list, see `muse-publish-markup-regexps'."
@@ -96,7 +113,10 @@ For more on the structure of this list, see `muse-publish-markup-regexps'."
 (defcustom d-muse-publish-markup-functions
   '((task . planner-publish-markup-task)
     (note . planner-publish-markup-note)
-    (dtag . d-muse-publish-markup-dtag))
+    (dtag . d-muse-publish-markup-dtag)
+    (d-fn-sep . d-muse-publish-markup-fn-sep)
+    (d-footnote  . d-muse-html-markup-footnote)
+    )
     "An alist of style types to custom functions for that kind of text.
 For more on the structure of this list, see
 `muse-publish-markup-functions'."
@@ -127,6 +147,44 @@ See `muse-publish-markup-tags' for more information."
 
 ;;; === For html
 ;;; --------------------------------------------------------------
+(defcustom d-muse-html-header
+  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
+<html>
+  <head>
+    <title><lisp>
+  (concat (muse-publishing-directive \"title\")
+          (let ((author (muse-publishing-directive \"author\")))
+            (if (not (string= author (user-full-name)))
+                (concat \" (by \" author \")\"))))</lisp></title>
+    <meta name=\"generator\" content=\"muse.el\">
+    <meta http-equiv=\"<lisp>muse-html-meta-http-equiv</lisp>\"
+          content=\"<lisp>muse-html-meta-content-type</lisp>\">
+    <lisp>
+      (let ((maintainer (muse-style-element :maintainer)))
+        (when maintainer
+          (concat \"<link rev=\\\"made\\\" href=\\\"\" maintainer \"\\\">\")))
+    </lisp><lisp>
+      (muse-style-element :style-sheet muse-publishing-current-style)
+    </lisp>
+  </head>
+  <body>
+    <h1><lisp>
+  (muse-publishing-directive \"title\")
+  </lisp></h1>
+    <!-- Page published by Emacs Muse begins here -->\n"
+  "muse-html-header is modifed."
+  :type 'string
+  :group 'd-muse-html)
+
+(defcustom d-muse-html-footer "
+<!-- Page published by Emacs Muse ends here -->
+  </body>
+</html>\n"
+  "muse-html-footer is modified."
+  :type 'string
+  :group 'd-muse-html)
+
+
 (defcustom d-muse-html-markup-strings
   '((planner-begin-nested-section . "<div class=\"section\">")
     (planner-end-nested-section   . "</div>")
@@ -265,18 +323,118 @@ An example of using <link> is as follows.
   :group 'd-muse-publish)
 
 
+;; To modify footnote modify muse-publish-markup-fn-sep and
+;; d-muse-html-markup-footnote
+(defun d-muse-publish-markup-fn-sep ()
+  (delete-region (match-beginning 0) (match-end 0))
+  ;(muse-insert-markup (muse-markup-text 'fn-sep)))
+  )
+
+
+(defun d-muse-html-markup-footnote ()
+  (cond
+   ((get-text-property (match-beginning 0) 'muse-link)
+    nil)
+   ((= (muse-line-beginning-position) (match-beginning 0))
+    (prog1
+        (let ((text (match-string 1)))
+          (muse-insert-markup
+           (concat "<p class=\"footnote\">"
+                   "<a class=\"footnum\" name=\"fn." text
+                   "\" href=\"#fnr." text "\">"
+                   text ".</a>")))
+      (save-excursion
+        (save-match-data
+          (let* ((beg (goto-char (match-end 0)))
+                 (end (and (search-forward "\n\n" nil t)
+                           (prog1
+                               (copy-marker (match-beginning 0))
+                             (goto-char beg)))))
+            (while (re-search-forward (concat "^["
+                                              muse-regexp-blank
+                                              "]+\\([^\n]\\)")
+                                      end t)
+              (replace-match "\\1" t)))))
+      (replace-match "")))
+   (t (let ((text (match-string 1)))
+        (muse-insert-markup
+         (concat "<sup><a class=\"footref\" name=\"fnr." text
+                 "\" href=\"#fn." text "\">"
+                 text "</a></sup>")))
+      (replace-match ""))))
+
+(defun d-muse-publish-markup-footnote ()
+  "Scan ahead and snarf up the footnote body."
+  (cond
+   ((get-text-property (match-beginning 0) 'muse-link)
+    nil)
+   ((= (muse-line-beginning-position) (match-beginning 0))
+    "")
+   (t
+    (let ((footnote (save-match-data
+                      (string-to-number (match-string 1))))
+          (oldtext (match-string 0))
+          footnotemark)
+      (delete-region (match-beginning 0) (match-end 0))
+      (save-excursion
+        (when (re-search-forward (format "^\\[%d\\]\\s-+" footnote) nil t)
+          (let* ((start (match-beginning 0))
+                 (beg (goto-char (match-end 0)))
+                 (end (save-excursion
+                        (if (search-forward "\n\n" nil t)
+                            (copy-marker (match-beginning 0))
+                          (goto-char (point-max))
+                          (skip-chars-backward "\n")
+                          (point-marker)))))
+            (while (re-search-forward
+                    (concat "^[" muse-regexp-blank "]+\\([^\n]\\)")
+                    end t)
+              (replace-match "\\1" t))
+            (let ((footnotemark-cmd (muse-markup-text 'footnotemark))
+                  (footnotemark-end-cmd (muse-markup-text 'footnotemark-end)))
+              (if (string= "" footnotemark-cmd)
+                  (setq footnotemark
+                        (concat (muse-markup-text 'footnote)
+                                (muse-publish-escape-specials-in-string
+                                 (buffer-substring-no-properties beg end)
+                                 'footnote)
+                                (muse-markup-text 'footnote-end)))
+                (setq footnotemark (format footnotemark-cmd footnote
+                                           footnotemark-end-cmd))
+                (unless muse-publish-footnotes
+                  (set (make-local-variable 'muse-publish-footnotes)
+                       (make-vector 256 nil)))
+                (unless (aref muse-publish-footnotes footnote)
+                  (setq footnotemark
+                        (concat
+                         footnotemark
+                         (concat (format (muse-markup-text 'footnotetext)
+                                         footnote)
+                                 (buffer-substring-no-properties beg end)
+                                 (muse-markup-text 'footnotetext-end))))
+                  (aset muse-publish-footnotes footnote footnotemark))))
+            (goto-char end)
+            (skip-chars-forward "\n")
+            (delete-region start (point))
+            (set-marker end nil))))
+      (if footnotemark
+          (muse-insert-markup footnotemark)
+        (insert oldtext))))))
+
+
+
 ;;; === For latex
 ;;; --------------------------------------------------------------
 (defcustom d-muse-latex-markup-functions
   '((table . muse-latex-markup-table)
     (dtag  . d-muse-publish-markup-dtag)
+    (dsection . d-muse-publish-markup-dnotesection)
     )
   "An alist of style types to custom functions for that kind of text.
 For more on the structure of this list, see
 `muse-publish-markup-functions'."
   :type '(alist :key-type symbol :value-type function)
   :group 'muse-latex)
-
 
 
 (defcustom d-muse-latex-header
@@ -421,6 +579,10 @@ regions."
 
 (add-to-list 'd-planner-publish-markup-tags (quote ("br13" nil nil nil d-muse-publish-br13-tag)))
 
+(add-to-list 'muse-latex-markup-strings (quote (section2 . "\\section*{")))
+
+(add-to-list 'muse-latex-markup-strings (quote (section5 . "\\sectionnn*{")))
+
 
 ;;; === Used functions
 ;;; --------------------------------------------------------------
@@ -471,6 +633,32 @@ regions."
 (defun d-muse-publish-br13-tag (beg end)
   (delete-region beg end)
   (muse-insert-markup (muse-markup-text 'line-break13)))
+
+
+(defun d-muse-publish-markup-dnotesection ()
+  (let* ((len (length (match-string 1)))
+         (start (muse-markup-text
+                 (cond ((= len 1) 'section2)
+                       ((= len 2) 'subsection)
+                       ((= len 3) 'subsubsection)
+                       (t 'section-other))
+                 len))
+         (end   (muse-markup-text
+                 (cond ((= len 1) 'section-end)
+                       ((= len 2) 'subsection-end)
+                       ((= len 3) 'subsubsection-end)
+                       (t 'section-other-end))
+                 len)))
+    (delete-region (match-beginning 0) (match-end 0))
+    (muse-insert-markup start)
+    (end-of-line)
+    (when end
+      (muse-insert-markup end))
+    (forward-line 1)
+    (unless (eq (char-after) ?\n)
+      (insert "\n"))
+    (muse-publish-section-close len)))
+
 
 (provide 'd-muse-publish)
 

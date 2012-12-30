@@ -261,7 +261,6 @@
 		"#tag " tag \n
 		"#category " category \n)
 
-
 ;;; === For lisp
 ;;; --------------------------------------------------------------
 ;; ddtest를 쓰기를 웠했는데요. lisp-mode에서 abbrev로 사용할 수가 없었습니다.
@@ -333,10 +332,11 @@
 		nil
 		'(setq str (skeleton-read "Comment: "))
 		'(when (string= str "") (setq str " - "))
-		'(setq v1 (make-string (- fill-column 12) ?-))
+		'(setq v1 (make-string (- fill-column 12) ?_))
 		"### === " str \n
 		"### " v1 \n
 		> _)
+
 
 (d-def-skeleton "python" ddmain
     nil
@@ -398,18 +398,33 @@
 		)
 
 
-(d-def-skeleton "python" ddtestclass
+(d-def-skeleton "python" ddtest
 		nil
 		'(setq str (skeleton-read "Name: "))
+		"#!/usr/bin/python"\n
+		"# coding: utf-8"\n
+		\n
+		"from unittest import TestCase"\n
+		\n
+		\n
 		"class Test_" str "(TestCase):" \n
 		"@classmethod" \n
-		"def setUpClass(cls): pass" \n
+		"def setUpClass(cls):" \n
+		>"pass" \n
 		"@classmethod" \n
-		"def tearDownClass(cls): pass" \n
-		"def setUp(self): pass" \n
-		"def tearDown(self): pass" \n
+		"def tearDownClass(cls):" \n
+		>"pass" \n
+		"def setUp(self):" \n
+		>"pass" \n
+		"def tearDown(self):" \n
+		>"pass" \n
 		_)
 
+
+(d-def-skeleton "python" dddocsec
+		nil
+		\n
+		_">>>")
 
 ;;; === Csharp
 ;;; --------------------------------------------------------------
@@ -464,24 +479,24 @@ the if condition."
   "#!/usr/bin/python"\n
   "# coding: utf-8"\n)
 
-
-(d-def-python-skeleton ddsec
-    nil
-  '(setq str (skeleton-read "Comment: "))
-  '(when (string= str "") (setq str " - "))
-  '(setq v1 (make-string (- fill-column 4) ?=))
-  '(setq v2 (- fill-column 10 (length str)))
-  "#" v1
-  '(newline)
-  "### "
-  str
-  (make-string (- (* 2(ceiling v2 2)) 
-		  (if (eq (mod (length str) 2) 1) 1 0)) ?\ )
-  "###"
-  '(newline)
-  "#" v1
-  '(newline)
-  )
+;; Conflict to d-defskeleton. Why?
+;; (d-def-python-skeleton ddsec
+;;     nil
+;;   '(setq str (skeleton-read "Comment: "))
+;;   '(when (string= str "") (setq str " - "))
+;;   '(setq v1 (make-string (- fill-column 4) ?=))
+;;   '(setq v2 (- fill-column 10 (length str)))
+;;   "#" v1
+;;   '(newline)
+;;   "### "
+;;   str
+;;   (make-string (- (* 2(ceiling v2 2)) 
+;; 		  (if (eq (mod (length str) 2) 1) 1 0)) ?\ )
+;;   "###"
+;;   '(newline)
+;;   "#" v1
+;;   '(newline)
+;;   )
 
 (d-def-python-skeleton ddmain
     nil
@@ -641,6 +656,11 @@ the if condition."
 		> _ ?\n
 		\n
 		"#endif")
+
+(d-def-skeleton "c++" ddqde
+		nil
+		> "qDebug() << ")
+
 
 (defun d-cc-abbr/get-filename()
   (upcase (replace-regexp-in-string "\\." "_" (buffer-name))))

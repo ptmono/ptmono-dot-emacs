@@ -422,9 +422,8 @@ planner에서만 잘 적용되는 것 같다.
 
 
 
-;======================================================================
-;;; Change underline color                                          ;;;
-;======================================================================
+;;; === Change underline color
+;;; --------------------------------------------------------------
 ;; Just redefine the face 'underline'.
 ;; Muse uses the function muse-colors-underlined.
 
@@ -637,11 +636,6 @@ planner에서만 잘 적용되는 것 같다.
 	(set-buffer-modified-p nil)
 	(kill-buffer del)))))
 (ad-activate 'muse-project-publish)
-
-
-
-
-
 
 
 ;;; === Etc

@@ -81,6 +81,14 @@ and increase d-print-info-subpage value one"
   (Info-history-back)
   (forward-char))
 
+
+(defun d-open-with-browse ()
+  ""
+  (interactive)
+  (if current-prefix-arg
+      (d-open-with-chrome-cvs)
+    (d-open-with-firefox)))
+
 ;; To open current page with firefox in w3m-mode and muse-mode
 (defun d-open-with-firefox ()
   "open current page of w3m or muse with firefox"
@@ -99,6 +107,31 @@ and increase d-print-info-subpage value one"
   (interactive)
   (let* ((url (or (w3m-print-current-url) (muse-link-at-point))))
     (browse-url-kde url)))
+
+
+(defvar browse-url-chromium-cvs-program "chrome-cvs")
+
+;;;###autoload
+(defun browse-url-chrome-cvs (url &optional new-window)
+  "Ask the Chromium WWW browser to load URL.
+Default to the URL around or before point.  The strings in
+variable `browse-url-chromium-arguments' are also passed to
+Chromium."
+  (interactive (browse-url-interactive-arg "URL: "))
+  (setq url (browse-url-encode-url url))
+  (let* ((process-environment (browse-url-process-environment)))
+    (apply 'start-process
+	   (concat "chrome-cvs " url) nil
+	   browse-url-chromium-cvs-program
+	   (append
+	    browse-url-chromium-arguments
+	    (list url)))))
+
+(defun d-open-with-chrome-cvs ()
+  "open current page of w3m or muse with firefox"
+  (interactive)
+  (let* ((url (or (w3m-print-current-url) (muse-link-at-point))))
+    (browse-url-chrome-cvs url)))
 
 
 ;;; === To use d-planner-search-notes on anywhere
@@ -161,7 +194,8 @@ and increase d-print-info-subpage value one"
 	shme
 	msg)
     (cond ((string-match "demonoid" url)
-	   (search-forward "Click here to download"))
+	   ;(search-forward "Click here to download"))
+	   (search-forward "Download the torrent"))
 	  ((string-match "ebookshare.net" url)
 	   (search-forward "Download This Torrent"))
 	  ((string-match "h33t.com" url)
@@ -461,7 +495,7 @@ returns a file name created"
   (interactive)
   (message "Listing ebooks")
   (let* ((buf-name "*Ebook*")
-	 (args "find /tmp/0-incoming/directories/ /media/data/ebooks/ /media/winda/0ebooks/ /tmp/0-incoming/files/ /media/data/0-incoming/ /media/data100/0ebook/ /media/data50/0ebooks/ \\( -iregex \".*\\(pdf\\|chm\\|rar\\|zip\\|djvu\\|tgz\\|gz\\|bz2\\|7z\\)\" \\) -exec ls -lhd {} \\; > ~/ebook_list &"))
+	 (args "find /media/data100/0ebook/ /mnt/data50/ /media/data/ebooks/ /media/data/0-incoming/ /media/data100/0ebook/ /media/data50/0ebooks/ \\( -iregex \".*\\(pdf\\|chm\\|rar\\|zip\\|djvu\\|tgz\\|gz\\|bz2\\|7z\\)\" \\) -exec ls -lhd {} \\; > ~/ebook_list &"))
     (if (get-buffer buf-name)
 	(kill-buffer buf-name))
     (save-window-excursion

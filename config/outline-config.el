@@ -18,7 +18,115 @@
     ("javascript" "^\\(var\\|function\\|\\$\\)\\|\t*function")
     ("semantic" d-keybinding/semantic-tag)
     ("outline" d-keybinding/outline)
+    ("cpp" "^[A-z]\\|^//")
+    ("autoit" "[ ]*Func .+")
     ))
+
+
+;;; === Heading search
+;;; --------------------------------------------------------------
+
+(defvar d-section-tag/infos-table nil) ;(start end title)
+(defvar d-section-tag/words nil)
+(defvar d-section-tag/section-regexp
+  "^*+\\s-+\\(.+\\)\\|^\\.#+[A-z]?[0-9]+\\s-+\\(.+\\)\\|^[@\f]+\\s-+\\(.+\\)")
+(defvar d-section-tag/cached-buffer-infos nil
+  "This buffer is already cached.")	;(buffer-file-name point-max)
+
+(defun strip-text-properties(txt)
+  (set-text-properties 0 (length txt) nil txt)
+  txt)
+
+(defun d-section-tag/createTable ()
+  (let* (title
+	 table
+	 start
+	 end
+	 set)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward d-section-tag/section-regexp  nil t)
+	(setq set nil)
+	(setq title (strip-text-properties (match-string 1)))
+	;; FIXME: why not just 1 ?
+	(unless title
+	  (setq title (strip-text-properties (match-string 2)))
+	  (unless title
+	    (setq title (strip-text-properties (match-string 3)))))
+	
+	(setq start (match-beginning 0))
+	(setq end (match-end 0))
+	(setq set (list start end title))
+	(setq table (cons set table))
+	)
+      (setq d-section-tag/infos-table table))))
+
+(defun d-section-tag/createWordList ()
+  ;; If you want to speed up, merge with d-section-tag/createTable.
+  (let* ((table d-section-tag/infos-table)
+	 element
+	 result
+	 title)
+    (while table
+      (setq element (car table))
+      (setq table (cdr table))
+
+      (setq title (nth 2 element))
+      (setq result (append result (split-string title))))
+    (setq d-section-tag/words (delete-dups result))))
+
+(defun d-section-tag/setCachedInfos ()
+  (setq d-section-tag/cached-buffer-infos
+	(list (buffer-file-name) (point-max))))
+
+(defun d-section-tag/cache ()
+  (d-section-tag/createTable)
+  (d-section-tag/createWordList)
+  (d-section-tag/setCachedInfos)
+)
+
+(defun d-section-tag/init ()
+  (let* ((cached-buffer-file-name (if d-section-tag/cached-buffer-infos
+				      (nth 0 d-section-tag/cached-buffer-infos)
+				    nil))
+	 (cached-point-max (if d-section-tag/cached-buffer-infos
+			       (nth 1 d-section-tag/cached-buffer-infos)
+			     nil)))
+    (if (equal cached-point-max (point-max))
+	(unless (equal cached-buffer-file-name (buffer-file-name))
+	  (d-section-tag/cache))
+      (d-section-tag/cache))))
+
+(defun d-section-tag/find()
+  (interactive)
+  (d-section-tag/init)
+  (setq outline-regexp d-section-tag/section-regexp)
+  (let* ((str (completing-read "Search: " d-section-tag/words)))
+    (d-section-tag/showOnly str)))
+
+(defun d-section-tag/showOnly(str)
+  (show-all)
+  (hide-body)
+  (let* ((table d-section-tag/infos-table)
+	 element
+	 title
+	 start
+	 end)
+    (while table
+      (setq element (car table))
+      (setq table (cdr table))
+      
+      (setq title (nth 2 element))
+      (unless (string-match-p str title)
+	(setq start (nth 0 element))
+	(setq end (nth 1 element))
+	(outline-flag-region (- start 1) end t)
+	))))
+    
+
+;;; === Keybinding and eassist way
+;;; --------------------------------------------------------------
+
 (require 'outline)
 (defvar d-keybinding/initp nil)
 
@@ -48,6 +156,8 @@
   (require 'eassist)
   (define-key cm-map "m" 'eassist-list-methods)              ; List methods. It from cedet
   (define-key cm-map "j" 'semantic-ia-fast-jump)
+
+  (define-key cm-map "w" 'd-section-tag/find)        ; Forward - same level
   ;; outline-regexp를 바꾸고 다시 원상복구하는 문제가 있는데요. 그건 다시 원래의
   ;; mode를 실행해주면 됩니다. lisp-mode 에서 바꾸었으면 M-x lisp-mode 해주면
   ;; 됩니다. 각 모드에서 outline-regexp 를 지정해주고 있습니다.
@@ -102,8 +212,5 @@
       (if (symbolp regexp)
 	  (funcall regexp)
 	(setq outline-regexp regexp)))))
-
-
-
 
 

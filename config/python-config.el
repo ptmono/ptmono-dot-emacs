@@ -20,8 +20,6 @@
 ;;(load-library "pycomplete.el")
 ;; It has a problem. conflict with ropemacs. So moved to ropemacs-config.el
 
-
-
 ;; In XEmacs syntax highlighting should be enabled automatically.  In GNU
 ;; Emacs you may have to add these lines to your ~/.emacs file:
 ;;    (global-font-lock-mode t)
@@ -45,6 +43,8 @@
     ("ignore" "#doctest: +IGNORE_EXCEPTION_DETAIL")
     ("ellipsis" "#doctest: +ELLIPSIS")
     ("pdb" "import pdb, sys; pdb.Pdb(stdin=sys.__stdin__,stdout=sys.__stdout__).set_trace()")
+    ("docsec" d-python/insert/docsec)
+    ("ddsec" d-python/insert/docsec)
     )
   "")
 
@@ -52,7 +52,25 @@
   (interactive)
   (let* ((key (completing-read "Choose : " d-python-key-insert-alist))
 	 (value (car (cdr (assoc key d-python-key-insert-alist)))))
-    (insert value)))
+    (if (stringp value)
+	(insert value)
+      (funcall value))))
+
+(defun d-python/insert/docsec ()
+  (let* ((title (read-string "Section: "))
+	 (len (length title))
+	 ;(bottom (make-string (+ 4 len) ?\_)))
+	 (bottom (make-string (- fill-column 16) ?_)))
+    (newline)
+    (newline)
+    (indent-for-tab-command)
+    (insert (concat "### === " title))
+    (newline)
+    (indent-for-tab-command)
+    (insert (concat "### " bottom))
+    (newline)
+    (indent-for-tab-command)
+    (insert ">>> ")))
 
 
 ;;; === For folding
@@ -85,7 +103,8 @@
   ; (hide-body)
   (show-paren-mode 1)
 
-  (flymake-mode)
+  (if (d-not-windowp)
+      (flymake-mode))
 )
 
 
@@ -108,7 +127,8 @@
 
 ;; Let's use python of windows in windows
 (when (d-windowp)
-  (setq python-python-command "c:/Python27/python.exe")
+  ;(setq python-python-command "c:/Python27/python.exe")
+  (setq python-python-command "c:/Program Files (x86)/IronPython 2.7/ipy.exe")
   )
 
 ; from http://www.emacswiki.org/emacs/PythonMode
@@ -252,85 +272,196 @@
 
 
 
+;;; === nosetests
+;;; --------------------------------------------------------------
+;; - Use commands M-x d-nosetest-doctest, M-x d-nosetest-unittest
+;; - We can use on dual monitor. M-x d-nosetest/toggle-dualp
+;; - To use new frame. M-x d-nosetest/toggle-newFramep
+;; - Restore the windows with M-x d-test-restore that binded with C-c d r.
 
-;;; nose test
+(defvar d-nosetest/testBuffername "*nosetest*")
+(defvar d-nosetest/targetBuffername nil)
+(defvar d-nosetest/command nil "Full command. It require to create 'd-test.")
+(defvar d-nosetest/command-doctest (if (d-not-windowp)
+				       (concat "nosetests --with-doctest")
+				     (concat "ipy.exe -m doctest")))
+(defvar d-nosetest/command-unittest "nosetests")
 
-(defvar d-python-nosetest/test-buffer-name nil)
-(defvar d-python-nosetest/base-buffer-name nil)
-(defvar d-python-nosetest/nose-command nil)
-(defvar d-python-nosetest/nose-open-new-frame nil)
+(defvar d-nosetest/newFramep nil)
+(defvar d-nosetest/dualp nil "If t, we use dual monitor mode.")
+(defvar d-nosetest/windows-register ?R)
 
-(defun d-python-nosetest/toggle-new-frame()
+(defun d-nosetest/toggle-newFramep()
   (interactive)
-  (setq d-python-nosetest/nose-open-new-frame
-	(not d-python-nosetest/nose-open-new-frame)))
+  (setq d-nosetest/newFramep
+	(not d-nosetest/newFramep))
+  (if d-nosetest/newFramep
+      (message "t")
+    (message "nil")))
 
-(defun d-python-set-nosetest ()
-  "The function will init the envronment of nosetest for the
-current file."
+(defun d-nosetest/toggle-dualp()
   (interactive)
+  (setq d-nosetest/dualp
+	(not d-nosetest/dualp))
+  (if d-nosetest/dualp
+      (message "t")
+    (message "nil")))
+
+(defun d-nosetest/restoreWindow()
+  (interactive)
+  (jump-to-register d-nosetest/windows-register))
+
+(defun d-nosetest/set (type)
   (let* ((buffer-name (buffer-name))
-	 (test-buffer-name "*nosetest*")
-	 (nose-command (concat "nosetests --with-doctest " buffer-name)))
-    (setq d-python-nosetest/test-buffer-name "*nosetest*")
-    (setq d-python-nosetest/base-buffer-name buffer-name)
-    (setq d-python-nosetest/nose-command nose-command)
-    (save-window-excursion
-      (condition-case nil
-	  (kill-buffer test-buffer-name)
-	(error nil))
-      (shell test-buffer-name)
-      (defun d-test ()
-	""
-	(interactive)
-	(if d-python-nosetest/nose-open-new-frame
-	    (switch-to-buffer-other-frame d-python-nosetest/test-buffer-name)
-	  (switch-to-buffer-other-window d-python-nosetest/test-buffer-name))
-	(end-of-buffer)
-	(insert d-python-nosetest/nose-command)
+	 (test-buffer-name d-nosetest/testBuffername)
+	 (nose-command-only (if (equal type "doctest")
+				d-nosetest/command-doctest
+			      d-nosetest/command-unittest))
+	 (nose-command (concat nose-command-only " " buffer-name))
+	 (frame (selected-frame))
+	 (window (selected-window)))
+
+    (setq d-nosetest/command nose-command)
+    (condition-case nil
+	(d-nosetest/resetTestShell)
+      (error nil))
+
+    (defun d-test ()
+      ""
+      (interactive)
+
+      (let* ((frame (selected-frame))
+	     (window (selected-window))
+	     )
+	(window-configuration-to-register d-nosetest/windows-register)
+	;; Frame determination
+	(d-nosetest/openTestShell)
+      
+	(goto-char (point-max))
+	(insert d-nosetest/command)
 	(comint-send-input)
-	(unless d-python-nosetest/nose-open-new-frame
-	  (switch-to-buffer-other-window d-python-nosetest/base-buffer-name))
-	)
-      )
+
+	;; Restore cursor
+	(select-frame-set-input-focus frame)
+	(select-window window)))
+
+    (defun d-test-restore ()
+      (d-nosetest/restoreWindow))
+
+    ;; Restore cursor
+    (select-frame-set-input-focus frame)
+    (select-window window)
     ))
 
-(defun d-python-set-nosetest-unit ()
-  "The function will init the envronment of nosetest for the
-current file."
-  (interactive)
-  (let* ((buffer-name (buffer-name))
-	 (test-buffer-name "*nosetest*")
-	 (nose-command (concat "nosetests " buffer-name)))
-    (setq d-python-nosetest/test-buffer-name "*nosetest*")
-    (setq d-python-nosetest/base-buffer-name buffer-name)
-    (setq d-python-nosetest/nose-command nose-command)
-    (save-window-excursion
+(defun d-nosetest/resetTestShell ()
+  (let* ((frame (d-nosetest/isFrame d-nosetest/testBuffername))
+	 (window (d-nosetest/isWindow d-nosetest/testBuffername)))
+
+    (cond 
+     ;; We will use test frame on dual monitor.
+     (d-nosetest/dualp
+      (if frame
+	  (progn
+	    (select-frame-set-input-focus frame)
+	    (kill-buffer d-nosetest/testBuffername)
+	    (shell d-nosetest/testBuffername))
+	(d-nosetest/createTestFrame)))
+     ;; If window on frame, just re-create testBuffer.
+     (window
+      (select-window (get-buffer-window d-nosetest/testBuffername))
+      (kill-buffer d-nosetest/testBuffername)
+      (shell d-nosetest/testBuffername))
+     ;; other
+     (t
       (condition-case nil
-	  (kill-buffer test-buffer-name)
+	  (kill-buffer d-nosetest/testBuffername)
 	(error nil))
-      (shell test-buffer-name)
-      (defun d-test ()
-	""
-	(interactive)
-	(if d-python-nosetest/nose-open-new-frame
-	    (switch-to-buffer-other-frame d-python-nosetest/test-buffer-name)
-	  (switch-to-buffer-other-window d-python-nosetest/test-buffer-name))
-	(end-of-buffer)
-	(insert d-python-nosetest/nose-command)
-	(comint-send-input)
-	(unless d-python-nosetest/nose-open-new-frame
-	  (switch-to-buffer-other-window d-python-nosetest/base-buffer-name))
-	)
-      )
+      (shell d-nosetest/testBuffername))
+     )))
+	
+	     
+
+(defun d-nosetest/openTestShell ()
+  (cond (d-nosetest/dualp
+	 (select-frame-set-input-focus (d-nosetest/isFrame d-nosetest/testBuffername)))
+	(d-nosetest/newFramep
+	 (switch-to-buffer-other-frame d-nosetest/testBuffername))
+	(t
+	 (if (d-nosetest/isWindow d-nosetest/testBuffername)
+	     ;; It is used if test window exists.
+	     (select-window (get-buffer-window d-nosetest/testBuffername))
+	   (switch-to-buffer-other-window d-nosetest/testBuffername)))))
+    
+
+(defun d-nosetest/isFrame (buffername)
+  (let* ((frames (visible-frame-list))
+	 (is-frame nil)
+	 frame
+	 frame-name)
+    (while (and frames (not is-frame))
+      (setq frame (car frames))
+      (setq frames (cdr frames))
+
+      (setq frame-name (frame-parameter frame 'name))
+      (if (equal frame-name buffername)
+	  (setq is-frame frame)))
+    is-frame))
+
+(defun d-nosetest/isWindow (buffername)
+  (let* ((windows (window-list))
+	 (is-window nil)
+	 window
+	 buffer-name)
+    (while (and windows (not is-window))
+      (setq window (car windows))
+      (setq windows (cdr windows))
+
+      (setq buffer-name (buffer-name (window-buffer window)))
+      (if (equal buffer-name buffername)
+	  (setq is-window window)))
+    is-window))
+
+(defun d-nosetest/isBuffer (buffername)
+  (let* ((buffers (buffer-list))
+	 (is-buffer nil)
+	 buffer
+	 buffer-name)
+    (while (and buffers (not is-buffer))
+      (setq buffer (car buffers))
+      (setq buffers (cdr buffers))
+
+      (setq buffer-name (buffer-name buffer))
+      (if (equal buffer-name buffername)
+	  (setq is-buffer buffer)))
+    is-buffer))
+
+(defun d-nosetest/createTestFrame ()
+  (let* ((frame (make-frame-command)))
+    (set-frame-parameter frame 'left 1918)
+    (set-frame-parameter frame 'top 1201)
+    (set-frame-parameter frame 'height 46)
+    (set-frame-parameter frame 'width 131)
+    (select-frame-set-input-focus frame)
+    (d-nosetest/createTestBuffer)
     ))
+
+(defun d-nosetest/createTestBuffer ()
+  (if (d-nosetest/isBuffer "*nosetest*")
+      (switch-to-buffer "*nosetest*")
+    (shell "*nosetest*")))
+
 
 (defun d-nosetest-doctest ()
-  (d-python-set-nosetest))
+  (interactive)
+  (d-nosetest/set "doctest"))
+(defun d-nosetest-unittest ()
+  (interactive)
+  (d-nosetest/set "unittest"))
 
-(defalias 'd-nosetest-doctest 'd-python-set-nosetest)
-(defalias 'd-nosetest-unittest 'd-python-set-nosetest-unit)
-
+(defalias 'd-python-set-nosetest-doctest 'd-nosetest-doctest)
+(defalias 'd-python-set-nosetest-unittest 'd-nosetest-unittest)
+  
+	
 
 ;;; === For etc
 ;;; --------------------------------------------------------------

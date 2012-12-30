@@ -77,13 +77,21 @@ determines this value.")
       ;; For mingw32-g++.exe
       (setenv "PATH" (concat "C:\\MinGW\\bin\\" ";" (getenv "PATH")))
       ;; For cl.exe
-      (setenv "MS_VC" "C:\\Program\ Files\ \(x86\)\\Microsoft\ Visual\ Studio 10.0\\VC\\bin\\")
+      (setenv "MS_VC" "\"C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\bin\\\"")
       (setenv "PATH" (concat "C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\VC\\bin\\amd64\\" ";" (getenv "PATH")))
+      ;; For ironpython. ipy and pyc
+      (setenv "PATH" (concat "C:\\Program Files (x86)\\IronPython 2.7" ";"
+			     ;; For pyc
+			     "C:\\Program Files (x86)\\IronPython 2.7\\Tools\\Scripts" ";"
+			     (getenv "PATH")))
+      (setenv "pyc" "ipy \"C:\\Program Files (x86)\\IronPython 2.7\\Tools\\Scripts\\pyc.py\"")
+      (setenv "PYC_CMD" "\"C:\\Program Files (x86)\\IronPython 2.7\\Tools\\Scripts\\pyc.py\"")
+      ;; For python
       (setenv "PYTHONPATH" (concat cygwin-home "/lib/python2.6/site-packages"))
       (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/myscript/pystartup.py")))
       (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/.emacs.d/cvs/ropemacs/ropemacs")))
       (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/.emacs.d/cvs/ropemode/ropemode")))
-      (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/.emacs.d/etc/pymacs")))
+      (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/.emacs.d/etyc/pymacs")))
       (setenv "PYTHONSTARTUP" (concat cygwin-home "/myscript/pystartup.py"))
       (setq exec-path (cons cygwin-bin exec-path))
   
@@ -145,6 +153,7 @@ function will provide the shell to use Visual C++ compiler."
 ;(setq load-path (cons (expand-file-name (concat d-dir-emacs "")) load-path))
 (add-to-list 'load-path d-dir-emacs)
 (add-to-list 'load-path (concat d-dir-emacs "etc"))
+(add-to-list 'load-path (concat d-dir-emacs "etc2"))
 (add-to-list 'load-path (concat d-dir-emacs "config"))
 (add-to-list 'load-path (concat d-dir-emacs "myel"))
 
@@ -254,7 +263,7 @@ function will provide the shell to use Visual C++ compiler."
   "dired-config.el"
   "kor.el" ; for korean env and font
   "moz-config" ; for firefox mozrepl module
-  "js2-config"
+  "javascript-config.el"
   "lua-config"
   "gcal-config"
   "buff-menu-config"
@@ -269,6 +278,8 @@ function will provide the shell to use Visual C++ compiler."
   ;"cclookup-config" ; for c++ doc
   "abbrev-config"
   "shell-config.el"
+  "autoit-config.el"
+  "ppf-config.el"
 
   ;;; myel folder
   ;; I written tools for me.
@@ -285,6 +296,7 @@ function will provide the shell to use Visual C++ compiler."
   "d-temp"
   ;"d-last"
   "d-sikuli"
+  "d-job"
  ))
 
 (unless (d-windowp)
@@ -400,3 +412,4 @@ function will provide the shell to use Visual C++ compiler."
   (require 'csharp-mode)
   (find-file "~/tmp/csharp/test.cs")
   )
+(put 'scroll-left 'disabled nil)

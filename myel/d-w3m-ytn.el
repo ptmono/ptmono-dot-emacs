@@ -70,7 +70,7 @@ value re-searched")
     (d-w3m-waiting)
     (re-search-forward d-w3m-ytn-viewing-point-regexp nil t)
     (recenter 1)
-    (next-line 12)
+
     (w3m-next-anchor)
     (d-w3m-ytn-minor-mode)))
 
@@ -113,7 +113,8 @@ value re-searched")
 	(progn
 	  (w3m-browse-url (concat base-url "?page=" (number-to-string (+ (string-to-number cur-page-num) 1))))
 	  (d-w3m-waiting)
-	  (re-search-forward d-w3m-ytn-viewing-point-regexp nil t)
+	  ;(re-search-forward d-w3m-ytn-viewing-point-regexp nil t)
+	  (re-search-forward "^[^ ]" nil t)
 	  (recenter 1))
       (error (message "d-w3m-ytn-next is used in w3m-mode")))))
 
@@ -145,4 +146,7 @@ returns nil. Other is t"
 	t
       nil)))
 
+
+(defun d-w3m-ytn/isVod ()
+  )
 

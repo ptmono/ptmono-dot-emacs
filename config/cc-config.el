@@ -395,19 +395,40 @@ Includes support for Qt code (signal, slots and alikes)."
 
 ;;; === Tools
 ;;; --------------------------------------------------------------
+(defvar d-scons/test-buffer "*test*")
+
 (defun d-scons-set ()
   "Set scons test environemnt of current directory."
   (interactive)
   (condition-case nil
-      (kill-buffer "*test*")
+      (kill-buffer d-scons/test-buffer)
     (error nil))
-  (shell "*test*")
+  (shell d-scons/test-buffer)
   (defun d-test ()
     (interactive)
-    (split-window-vertically)
-    (other-window 1)
-    (switch-to-buffer "*test*" nil nil)
-    (insert "scons; build/Test")
-    (comint-send-input)
+    (if current-prefix-arg
+	(d-scons/test-in-new-frame)
+      (d-scons/test-in-current-frame))
     )
   )
+
+(defun d-scons/test-in-new-frame ()
+  (let* ((frame (make-frame-command)))
+    (select-frame-set-input-focus frame)
+    (modify-frame-parameters frame (x-parse-geometry "80x100+120+0"))
+    
+    (switch-to-buffer d-scons/test-buffer)
+    (goto-char (point-max))
+    (comint-send-input)
+    (insert "scons; build/Test")
+    (comint-send-input)
+    ))
+    
+(defun d-scons/test-in-current-frame ()
+  (split-window-vertically)
+  (other-window 1)
+  (switch-to-buffer d-scons/test-buffer nil nil)
+  (goto-char (point-max))
+  (comint-send-input)
+  (insert "scons; build/Test")
+  (comint-send-input))

@@ -4,3 +4,8 @@ zip:
 
 unzip:
 	python init.py extract
+
+
+commit_imgs:
+	python init.py commitImgs
+

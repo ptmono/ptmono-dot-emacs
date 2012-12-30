@@ -4,9 +4,9 @@
 ;; CEDET component (including EIEIO) gets activated by another 
 ;; package (Gnus, auth-source, ...).
 
+;; (if (d-windowp)
+;;     (load-file "~/.emacs.d/etc/cedet-1.1/common/cedet.el")
 (load-file "~/.emacs.d/cvs/cedet/common/cedet.el")
-;;(load-file "~/.emacs.d/etc/cedet-1.0/common/cedet.el")
-
 
 ;; Enable EDE (Project Management) features
 ;(global-ede-mode 1)

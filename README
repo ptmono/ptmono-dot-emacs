@@ -27,5 +27,5 @@ archived each directory. Each directory contains 'packages.tar.gz' file.
 Just extract the file.
 
 $ git clone https://ptmono@code.google.com/p/ptmono-dot-emacs/ .emacs.d
-$ python init.py
+$ make unzip # extract 3rd modules
 

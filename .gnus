@@ -232,6 +232,9 @@
 	(any "NaverPopularNewsWorld@localhost" "mail.news.np_world")
 	(any "NaverPopularNewsPolitics@localhost" "mail.news.np_politics")
 
+	;; etc
+	(any "gnome-kr@googlegroups.com" "mail.gnome-kr")
+
 	;; For program error log
 	(any "error_log@localhost" "mail.system.error")
 	(any "ptmono@localhost"

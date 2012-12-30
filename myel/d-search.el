@@ -39,7 +39,7 @@
 
 (defvar d-search-url-alist
   '(("naver" "http://search.naver.com/search.naver?where=nexearch&query=%s&frm=t1&sm=top_hty" "found")
-    ("naverDic" "http://dic.naver.com/search.naver?where=dic&sm=tab_jum&query=%s" "본문시작")
+    ("naverDic" "http://dic.naver.com/search.naver?where=dic&sm=tab_jum&query=%s" "지식백과 검색")
     ("dict.org" "http://www.dict.org/bin/Dict?Form=Dict2&Database=*&Query=%s" nil)
     ("googleDefine" "http://www.google.com/search?num=50&q=define:%s&btnG=Search")
     ("google" "http://www.google.com/search?num=50&q=%s&btnG=Search")

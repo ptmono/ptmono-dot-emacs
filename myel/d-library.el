@@ -313,6 +313,9 @@ of character is the width of character. The function
 character as the unit of pixel.
 
 It is possible that the values of geometry are \"84x100\" \"+300\"
+
+Problem:
+ - Does not do in maximum mode.
 "
   (modify-frame-parameters (window-frame (frame-selected-window)) (x-parse-geometry geometry)))
 
@@ -363,8 +366,6 @@ shell-command-read-minibuffer is used for completion"
 	 (directory (file-name-directory file))
 	 (command (shell-command-read-minibuffer "! on : " directory)))
     (message (shell-command-to-string (concat command " " file)))))
-
-(provide 'd-library)
 
 
 ;;; === Screenshot
@@ -478,4 +479,6 @@ shell-command-read-minibuffer is used for completion"
   (let* ((filename (concat "~/plans/" d-worknote-name ".muse")))
     (find-file "~/plans/worknote2.muse"))
   )
+
+(provide 'd-library)
 

@@ -21,12 +21,14 @@
 
 (defun goto-work ()
   (interactive)
-  (find-file "~/public_html/0ttd/0ppf2/server/"))
+  (find-file "~/works/0cvs/trunk/eManual3/"))
 
 (goto-work)
 
 ;;(load-file "/home/ptmono/works/0cvs/trunk/ppf/tools/ppf.el")
 ;;(find-file "~/public_html/0ttd/0ppf2/ppf/")
 ;;(find-file "~/works/0cvs/trunk/ppf/tools/")
+
+
 
 (provide 'projectb)

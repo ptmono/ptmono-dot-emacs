@@ -3,6 +3,8 @@
 
 (define-abbrev-table 'Custom-mode-abbrev-table '())
 
+(define-abbrev-table 'autoit-mode-abbrev-table '())
+
 (define-abbrev-table 'awk-mode-abbrev-table
   '(
    ))
@@ -25,6 +27,20 @@
 
 (define-abbrev-table 'completion-list-mode-abbrev-table '())
 
+(define-abbrev-table 'conf-colon-mode-abbrev-table '())
+
+(define-abbrev-table 'conf-javaprop-mode-abbrev-table '())
+
+(define-abbrev-table 'conf-ppd-mode-abbrev-table '())
+
+(define-abbrev-table 'conf-space-mode-abbrev-table '())
+
+(define-abbrev-table 'conf-unix-mode-abbrev-table '())
+
+(define-abbrev-table 'conf-windows-mode-abbrev-table '())
+
+(define-abbrev-table 'conf-xdefaults-mode-abbrev-table '())
+
 (define-abbrev-table 'csharp-mode-abbrev-table
   '(
    ))
@@ -39,9 +55,17 @@
 
 (define-abbrev-table 'dig-mode-abbrev-table '())
 
+(define-abbrev-table 'eassist-mode-abbrev-table '())
+
+(define-abbrev-table 'elk-test-mode-abbrev-table '())
+
+(define-abbrev-table 'elk-test-result-mode-abbrev-table '())
+
 (define-abbrev-table 'ell-mode-abbrev-table '())
 
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table '())
+
+(define-abbrev-table 'erc-list-menu-mode-abbrev-table '())
 
 (define-abbrev-table 'erc-mode-abbrev-table '())
 
@@ -67,6 +91,8 @@
 (define-abbrev-table 'grep-mode-abbrev-table '())
 
 (define-abbrev-table 'gud-mode-abbrev-table '())
+
+(define-abbrev-table 'help-mode-abbrev-table '())
 
 (define-abbrev-table 'html-mode-abbrev-table '())
 
@@ -102,11 +128,20 @@
 
 (define-abbrev-table 'log-view-mode-abbrev-table '())
 
+(define-abbrev-table 'lua-mode-abbrev-table
+  '(
+    ("else" "else" lua-indent-line 0)
+    ("elseif" "elseif" lua-indent-line 0)
+    ("end" "end" lua-indent-line 0)
+   ))
+
 (define-abbrev-table 'message-mode-abbrev-table '())
 
 (define-abbrev-table 'muse-mode-abbrev-table
   '(
    ))
+
+(define-abbrev-table 'nxml-mode-abbrev-table '())
 
 (define-abbrev-table 'objc-mode-abbrev-table
   '(
@@ -139,6 +174,8 @@
     ("ddignore" "doctest: +IGNORE_EXCEPTION_DETAIL" nil 1)
    ))
 
+(define-abbrev-table 'qt-pro-mode-abbrev-table '())
+
 (define-abbrev-table 'select-tags-table-mode-abbrev-table '())
 
 (define-abbrev-table 'sgml-mode-abbrev-table
@@ -149,6 +186,8 @@
 
 (define-abbrev-table 'smime-mode-abbrev-table '())
 
+(define-abbrev-table 'snippet-mode-abbrev-table '())
+
 (define-abbrev-table 'special-mode-abbrev-table '())
 
 (define-abbrev-table 'speedbar-mode-abbrev-table '())
@@ -156,6 +195,8 @@
 (define-abbrev-table 'texinfo-mode-abbrev-table '())
 
 (define-abbrev-table 'text-mode-abbrev-table '())
+
+(define-abbrev-table 'vc-git-log-view-mode-abbrev-table '())
 
 (define-abbrev-table 'vc-svn-log-view-mode-abbrev-table '())
 

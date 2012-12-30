@@ -62,11 +62,14 @@
 (global-set-key [?\C-c ?d ?6] (lambda () (interactive) (d-worknote-window-selecter 6)))
 (global-set-key [?\C-c ?d ?7] (lambda () (interactive) (d-worknote-window-selecter 7)))
 (global-set-key [?\C-c ?d ?8] (lambda () (interactive) (d-worknote-window-selecter 8)))
-(global-set-key [?\C-c ?d ?r] 'd-worknote-create-tag)
+;; Fixme: Change the keybinding of d-worknote-create-tag. We use the key
+;; with d-nosetest/set.
+;(global-set-key [?\C-c ?d ?r] 'd-worknote-create-tag)
 
 ;;; etc
 (global-set-key [?\C-c ?d ?t] 'd-find-file-tag)
 (global-set-key [?\C-c ?d ?e] 'd-test)
+(global-set-key [?\C-c ?d ?r] 'd-test-restore)
 (global-set-key [?\C-c ?d ?v] 'view-mode)
 
 
@@ -97,7 +100,8 @@
 ;(global-set-key [?\C-c ?d ?s] (lambda () (interactive) (d-search "php")))
 (global-set-key [?\C-c ?d ?s] (lambda () (interactive) (d-search "naverDic")))
 ;(global-set-key [?\C-c ?2] (lambda () (interactive) (d-search "dict.org")))
-(global-set-key [?\C-c ?2] (lambda () (interactive) (d-search "googleDefine")))
+;(global-set-key [?\C-c ?2] (lambda () (interactive) (d-search "googleDefine")))
+(global-set-key [?\C-c ?2] (lambda () (interactive) (d-search "pinvoke")))
 (global-set-key [?\C-c ?3] (lambda () (interactive) (d-search "msdn")))
 ;(global-set-key [?\C-c ?3] (lambda () (interactive) (d-search "googlePythonGroup")))
 (global-set-key [?\C-c ?4] (lambda () (interactive) (d-search "google")))
@@ -138,7 +142,7 @@
 
   (define-key w3m-mode-map [?n] (lambda () (interactive) (scroll-up 24)))
   (define-key w3m-mode-map [?p] (lambda () (interactive) (scroll-up -24)))
-  (define-key w3m-mode-map [?\C-c ?m ?o] 'd-open-with-firefox)
+  (define-key w3m-mode-map [?\C-c ?m ?o] 'd-open-with-browse)
   (define-key w3m-mode-map [?\C-c ?m ?d] 'd-demonoid-down)
   (define-key w3m-mode-map [?\C-c ?m ?f] 'find-dired-ebooks)
 )

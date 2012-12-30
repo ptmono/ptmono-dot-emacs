@@ -2,7 +2,32 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("gcal-config.el"
+(("javascript-config.el"
+ (filename . "~/.emacs.d/config/javascript-config.el")
+ (front-context-string)
+ (rear-context-string . "--interactive\")\n")
+ (position . 201))
+("ppf-config.el"
+ (filename . "/media/cvs/Documents/works/0cvs/trunk/dotemacs.d/config/ppf-config.el")
+ (front-context-string . "(defvar d-ppf/el")
+ (rear-context-string)
+ (position . 1))
+("muse-publish-config.el"
+ (filename . "~/.emacs.d/config/muse-publish-config.el")
+ (front-context-string . "\n               ")
+ (rear-context-string . "use-latex-header")
+ (position . 2024))
+("ppf.el"
+ (filename . "~/Desktop/Documents/ppf/tools/ppf.el")
+ (front-context-string)
+ (rear-context-string . "\n\n(provide 'ppf)")
+ (position . 15343))
+("projectb.el"
+ (filename . "~/.emacs.d/myel/projectb.el")
+ (front-context-string . "    ;;(setq url ")
+ (rear-context-string . "td/0ppf2/ppf/\")\n")
+ (position . 175))
+("gcal-config.el"
  (filename . "~/.emacs.d/config/gcal-config.el")
  (front-context-string . ";===============")
  (rear-context-string . "r 'w3m-buffer)\n\n")

@@ -276,4 +276,22 @@ case-fold-search t).
 	    (cons poi (list (point)))))
       nil)))
 
+
+;;; === Indexing the files for tags
+;;; --------------------------------------------------------------
+;; TODO: Consider this work
+
+;; key: 1206110202, value ((start end) content)
+(defvar d-tag/hash (make-hash-table :test 'equal))
+
+(defun d-tag/addToHash (path)
+)
+
+(defun d-tag/addToHashFromFile (filename)
+  (with-temp-buffer
+    (insert-file-contents filename)
+    ))
+    
+
+
 (provide 'd-tag)

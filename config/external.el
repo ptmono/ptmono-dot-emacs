@@ -27,6 +27,9 @@
     )
   (push '("\\.ps$" . "evince %s") extview-application-associations)
   (push '("\\.pdf$" . "evince %s") extview-application-associations)
+  ;; (push '("\\.ps$" . "okular %s") extview-application-associations)
+  ;; (push '("\\.pdf$" . "okular %s") extview-application-associations)
+
   (push '("\\.djvu$" . "djview4 %s") extview-application-associations)
   (push '("\\.chm$" . "kchmviewer %s") extview-application-associations)
   (push '("\\.mp3$" . "xmms %s") extview-application-associations)
@@ -189,3 +192,26 @@
       (append '(("CMakeLists\\.txt\\'" . cmake-mode)
 		("\\.cmake\\'" . cmake-mode))
 	      auto-mode-alist))
+
+;;; === Uniquify
+;;; --------------------------------------------------------------
+;; Makefile, Makefile<2> will be Makefile|samdol, Makefile|ppf
+;; See emacsModes.muse#1212110326
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'reverse)
+(setq uniquify-separator "/")
+(setq uniquify-after-kill-buffer-p t) ; rename after killing uniquified
+(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+
+
+;;; === nsis-mode
+;;; --------------------------------------------------------------
+;; from http://nsis.sourceforge.net/Nsi-mode_for_emacs
+
+
+(autoload 'nsis-mode "nsis-mode" "NSIS mode" t)
+(setq auto-mode-alist (append '(("\\.\\([Nn][Ss][Ii]\\)$" .
+                                 nsis-mode)) auto-mode-alist))
+(setq auto-mode-alist (append '(("\\.\\([Nn][Ss][Hh]\\)$" .
+                                 nsis-mode)) auto-mode-alist))
+

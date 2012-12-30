@@ -50,6 +50,12 @@ class Cmds:
                 p = Popen(cmd, shell=True)
                 out, err = p.communicate()
 
+    @staticmethod
+    def commitImgs():
+        cmd = "svn status imgs_xp |awk '{print $2}' |xargs -I {} svn add {}"
+        p = Popen(cmd, shell=True)
+        out, err = p.communicate()
+
     def setPython():
         print "-----------------------------------------------"
         print "-----------------------------------------------"

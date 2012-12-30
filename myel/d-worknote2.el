@@ -55,21 +55,14 @@
 
 
 (defvar d-worknote-current-register ?R)
-
-(defvar d-worknote-name 
-  (if (d-windowp)
-      "worknote_xp"
-    "worknote2"))
-
+(defvar d-worknote-name (if (d-windowp) "worknote_xp" "worknote2"))
 (defvar d-worknote-name-with-extension (concat d-worknote-name ".muse"))
-
 (defvar d-worknote-name-full 
   (if (d-windowp)
       (concat "c:/emacsd/cygwin/home/ptmono/plans/" d-worknote-name-with-extension)
     (concat d-home "/plans/" d-worknote-name-with-extension)))
 
 (defvar d-worknote-list (list d-worknote-name-full))
-
 (defvar d-worknote-mode nil)
 
 
@@ -202,6 +195,19 @@ todo:
 ;    (set-text-properties (match-beginning 0)
 ;			 (match-end 0)
 ;			 '(face planner-note-headline-face))))
+
+
+(defun d-worknote/note ()
+  "Open worknote for web browsers. I think it also in contains
+oswk."
+  (interactive)
+  ;; Hide all exist frame for alt-tab
+  (dolist (aa (frame-list))
+    (iconify-frame aa))
+  (let* ((frame (make-frame-command)))
+    (select-frame-set-input-focus frame)
+    (modify-frame-parameters frame (x-parse-geometry "80x100-20+0"))
+    (find-file d-worknote-name-full)))
 
 
 ;;; === Tag handling
@@ -351,6 +357,7 @@ the case.
     (if diff-monthp
 	(insert content))))
 
+;; The anchor start #. e.g) #1206121731
 (defun d-worknote-convert-anchor-to-date (anchor)
   (let* (year
 	 month
@@ -1067,6 +1074,7 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
   (let* ((img-name (concat d-home "imgs/image" (number-to-string (d-citation-max-number)) ".jpg")))
     (if (y-or-n-p "Really? ")
 	(shell-command-to-string (concat "rm " img-name)))))
+
 
 
 ;;; === Dired

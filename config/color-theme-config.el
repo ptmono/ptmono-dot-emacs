@@ -144,6 +144,10 @@ other ones; I hope you like it."
      (widget-inactive ((t (:foreground "dim gray" :background "black"))))
      (dictionary-button-face ((t (:bold t :foreground "white"))))
      (mumamo-background-chunk-submode1 ((t (:background "#040910"))))
+     (rst-level-1-face ((t (:background "white" :foreground "black"))))
+     (rst-level-2-face ((t (:background "white" :foreground "black"))))
+     (rst-level-3-face ((t (:background "white" :foreground "black"))))
+
      
      
      ;; xhtml
