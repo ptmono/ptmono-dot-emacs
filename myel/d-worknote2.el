@@ -1314,5 +1314,52 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
 ;; 		     (re-search-forward "2")))))
 	  
 
+;;; === Inserting with key
+;;; --------------------------------------------------------------
+(defvar d-worknote-key-insert-alist
+  '(("docskip" "#doctest: +SKIP")
+    ("docignore" "#doctest: +IGNORE_EXCEPTION_DETAIL")
+    ("docellipsis" "#doctest: +ELLIPSIS")
+     ;; Alias
+    ("skip" "#doctest: +SKIP")
+    ("ignore" "#doctest: +IGNORE_EXCEPTION_DETAIL")
+    ("ellipsis" "#doctest: +ELLIPSIS")
+    ("pdb" "import pdb, sys; pdb.Pdb(stdin=sys.__stdin__,stdout=sys.__stdout__).set_trace()")
+    ("docsec" d-worknote/insert/docsec)
+    ("ddsec" d-worknote/insert/docsec)
+    ("report" d-worknote/insert/report-temp)
+    )
+  "")
+
+(defun d-worknote/insert ()
+  (interactive)
+  (let* ((key (completing-read "Choose : " d-worknote-key-insert-alist))
+	 (value (car (cdr (assoc key d-worknote-key-insert-alist)))))
+    (if (stringp value)
+	(insert value)
+      (funcall value))))
+
+(defun d-worknote/insert/docsec ()
+  (let* ((title (read-string "Section: "))
+	 (len (length title))
+	 ;(bottom (make-string (+ 4 len) ?\_)))
+	 (bottom (make-string (- fill-column 16) ?_)))
+    (newline)
+    (newline)
+    (indent-for-tab-command)
+    (insert (concat "### === " title))
+    (newline)
+    (indent-for-tab-command)
+    (insert (concat "### " bottom))
+    (newline)
+    (indent-for-tab-command)
+    (insert ">>> ")))
+
+(defun d-worknote/insert/report-temp ()
+  (insert (concat (d-create-citation) "\nREPORT: " )))
+
+
+
+
 (provide 'd-worknote2)
 

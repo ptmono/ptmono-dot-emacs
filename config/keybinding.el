@@ -283,9 +283,9 @@
 
 ;;; ropemacs
 ; ropemacs-mode define C-c d as rope-show-doc. It comflict my configurations.
-(unless (d-windowp)
-  (define-key ropemacs-local-keymap [?\C-c ?d] nil)
-  )
+;; (unless (d-windowp)
+;;   (define-key ropemacs-local-keymap [?\C-c ?d] nil)
+;;   )
 ; and ropemacs-mode use C-x p, C-c r prefix in python-mode
 
 
@@ -352,6 +352,7 @@
 (define-key muse-mode-map [?\M-p] (lambda () (interactive) (forward-paragraph -1)))
 
 
+(define-key muse-mode-map [?\C-c ?i] 'd-worknote/insert)
 ;;; === Outline-mode
 ;;; --------------------------------------------------------------
 ;; Outline-minor-mode key mape

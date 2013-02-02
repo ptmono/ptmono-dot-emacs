@@ -312,7 +312,7 @@
   (jump-to-register d-nosetest/windows-register))
 
 (defun d-nosetest/set (type)
-  (let* ((buffer-name (buffer-name))
+  (let* ((buffer-name (file-name-nondirectory (buffer-file-name)))
 	 (test-buffer-name d-nosetest/testBuffername)
 	 (nose-command-only (if (equal type "doctest")
 				d-nosetest/command-doctest

@@ -321,6 +321,24 @@ Problem:
 
 
 
+
+
+;;; === Text
+;;; --------------------------------------------------------------
+(defun d-append-to-file (text file)
+  "To insert file, we can use the function append-to-file. This
+use the region of current buffer. I need a direct way."
+  (with-temp-buffer
+    (insert text)
+    (append-to-file (point-min) (point-max) file)))
+
+
+(defun strip-text-properties(txt)
+  (set-text-properties 0 (length txt) nil txt)
+      txt)
+
+
+
 ;;; === File
 ;;; --------------------------------------------------------------
 (defun d-file-trash ()

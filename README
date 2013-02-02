@@ -26,6 +26,6 @@ cvs, etc, info contains many files which is not modified by me. So I
 archived each directory. Each directory contains 'packages.tar.gz' file.
 Just extract the file.
 
-$ git clone https://ptmono@code.google.com/p/ptmono-dot-emacs/ .emacs.d
+$ git clone https://github.com/ptmono/ptmono-dot-emacs.git .emacs.d
 $ make unzip # extract 3rd modules
 

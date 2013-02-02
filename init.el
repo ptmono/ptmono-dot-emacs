@@ -91,7 +91,7 @@ determines this value.")
       (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/myscript/pystartup.py")))
       (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/.emacs.d/cvs/ropemacs/ropemacs")))
       (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/.emacs.d/cvs/ropemode/ropemode")))
-      (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/.emacs.d/etyc/pymacs")))
+      (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/.emacs.d/cvs/Pymacs")))
       (setenv "PYTHONSTARTUP" (concat cygwin-home "/myscript/pystartup.py"))
       (setq exec-path (cons cygwin-bin exec-path))
   
@@ -187,7 +187,7 @@ function will provide the shell to use Visual C++ compiler."
 
 
 (add-to-list 'load-path (concat d-dir-emacs "etc/rfcview"))
-(add-to-list 'load-path (concat d-dir-emacs "etc/pymacs"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/Pymacs"))
 (add-to-list 'load-path (concat d-dir-emacs "etc/python-mode"))
 ;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode"))
 ;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/completion"))
