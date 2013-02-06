@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("javascript-config.el"
+(("autocomplete-config.el"
+ (filename . "~/.emacs.d/config/autocomplete-config.el")
+ (front-context-string . "\n(add-to-list 'l")
+ (rear-context-string)
+ (position . 1))
+("javascript-config.el"
  (filename . "~/.emacs.d/config/javascript-config.el")
  (front-context-string)
  (rear-context-string . "--interactive\")\n")
@@ -54,9 +59,9 @@
  (position . 336))
 ("ropemacs-config.el"
  (filename . "~/.emacs.d/config/ropemacs-config.el")
- (front-context-string . "\n;; ropemacs req")
- (rear-context-string)
- (position . 1))
+ (front-context-string . "\n\n;If you want t")
+ (rear-context-string . "efix \"C-c C-p\")\n")
+ (position . 1916))
 ("alias.muse"
  (filename . "~/plans/alias.muse")
  (front-context-string)
@@ -400,10 +405,10 @@
   (position . 172230)
   (info-node . "NNTP Objects")))
 ("python-config.el"
- ((filename . "~/.emacs.d/config/python-config.el")
-  (front-context-string)
-  (rear-context-string . "er-and-window))\n")
-  (position . 1466)))
+ (filename . "~/.emacs.d/config/python-config.el")
+ (front-context-string . "(cons '(\"\\\\.py$\"")
+ (rear-context-string . "auto-mode-alist ")
+ (position . 516))
 ("books.muse"
  ((filename . "~/plans/books.muse")
   (front-context-string . "* books\n\n - [[/m")

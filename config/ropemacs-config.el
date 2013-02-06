@@ -40,12 +40,13 @@
 ;;--------------------------------------------------------------------------------  
 
 
-(pymacs-load "ropemacs" "rope-")
-
 ; ropemacs may redefine some standard Emacs and your custom key bindings. To
 ; prevent
 (setq ropemacs-enable-shortcuts nil)
 (setq ropemacs-local-prefix "C-c C-p")
+
+(pymacs-load "ropemacs" "rope-")
+
 
 
 ;If you want to load ropemacs only when you really need it, you can use
@@ -60,9 +61,4 @@
 ;    (setq ropemacs-confirm-saving 'nil)
 ;  )
 ;  (global-set-key "\C-xpl" 'load-ropemacs)
-
-
-;; To enable completion in python-mode
-;; Use 'completion-at-point instead 'py-complete.
-(load-library "pycomplete.el")
 

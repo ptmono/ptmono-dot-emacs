@@ -280,6 +280,7 @@
 (define-key python-mode-map [?\C-c ?e ?p] 'flymake-goto-prev-error)
 
 (define-key python-mode-map [?\C-c ?i]  'd-python/insert)
+(define-key python-mode-map [tab]  'py-complete)
 
 ;;; ropemacs
 ; ropemacs-mode define C-c d as rope-show-doc. It comflict my configurations.
@@ -287,7 +288,39 @@
 ;;   (define-key ropemacs-local-keymap [?\C-c ?d] nil)
 ;;   )
 ; and ropemacs-mode use C-x p, C-c r prefix in python-mode
+;; ropemacs keys are disabled. Redefine
+(define-key python-mode-map [?\C-c ?r ?d]  'rope-show-doc)
+(define-key python-mode-map [?\C-c ?r ?f]  'rope-find-occurrences)
+(define-key python-mode-map [?\C-c ?r ?g]  'rope-goto-definition)
+(define-key python-mode-map [?\C-c ?r ?f]  'rope-find-occurrences)
+(define-key python-mode-map [?\C-c ?r ?p]  'rope-pop-mark)
+(define-key python-mode-map [?\C-c ?r ?d]  'rope-introduce-factory)
+(define-key python-mode-map [?\C-c ?r ?i]  'rope-inline)
+(define-key python-mode-map [?\C-c ?r ?l]  'rope-extract-variable)
+(define-key python-mode-map [?\C-c ?r ?m]  'rope-extract-method)
+(define-key python-mode-map [?\C-c ?r ?o]  'rope-organize-imports)
+(define-key python-mode-map [?\C-c ?r ?r]  'rope-rename)
+(define-key python-mode-map [?\C-c ?r ?s]  'rope-change-signature)
+(define-key python-mode-map [?\C-c ?r ?u]  'rope-use-function)
+(define-key python-mode-map [?\C-c ?r ?v]  'rope-move)
+(define-key python-mode-map [?\C-c ?r ?x]  'rope-restructure)
+(define-key python-mode-map [?\C-c ?r ?1 ?p]  'rope-module-to-package)
+(define-key python-mode-map [?\C-c ?r ?1 ?r]  'rope-rename-current-module)
+(define-key python-mode-map [?\C-c ?r ?1 ?v]  'rope-move-current-module)
 
+(define-key python-mode-map [?\C-c ?r ?n ?c]  'rope-generate-class)
+(define-key python-mode-map [?\C-c ?r ?n ?f]  'rope-generate-function)
+(define-key python-mode-map [?\C-c ?r ?n ?m]  'rope-generate-module)
+(define-key python-mode-map [?\C-c ?r ?n ?p]  'rope-generate-package)
+(define-key python-mode-map [?\C-c ?r ?n ?v]  'rope-generate-variable)
+(define-key python-mode-map [?\C-c ?r ?a ?/]  'rope-code-assist)
+(define-key python-mode-map [?\C-c ?r ?a ??]  'rope-lucky-assist)
+(define-key python-mode-map [?\C-c ?r ?a ?c]  'rope-show-calltip)
+(define-key python-mode-map [?\C-c ?r ?a ?d]  'rope-show-doc)
+(define-key python-mode-map [?\C-c ?r ?a ?f]  'rope-find-occurrences)
+(define-key python-mode-map [?\C-c ?r ?a ?g]  'rope-goto-definition)
+(define-key python-mode-map [?\C-c ?r ?a ?i]  'rope-find-implementations)
+(define-key python-mode-map [?\C-c ?r ?a ?j]  'rope-jump-to-global)
 
 
 ;;; === Info

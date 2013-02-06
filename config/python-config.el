@@ -1,10 +1,102 @@
 
+;; Add in init.el. There is a compile error when auto compiling.
+;; (when (d-not-windowp)
+;;   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-home "myscript/pystartup.py")))
+;;   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/ropemacs/ropemacs")))
+;;   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/ropemode/ropemode")))
+;;   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/Pymacs")))
+;;   ;; To add pycomplete.py
+;;   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/python-mode/completion")))
+;;   (setenv "PYTHONSTARTUP" (concat d-dir-emacs "myscript/pystartup.py")))
+
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/"))
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/completion/"))
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/devel/"))
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/extensions/"))
+(setq py-install-directory (concat d-dir-emacs "cvs/python-mode"))
+
+
+;;; === For pymacs
+;;; --------------------------------------------------------------
+
+;(load-library "python-mode.el")
+(autoload 'pymacs-apply "pymacs")
+(autoload 'pymacs-call "pymacs")
+(autoload 'pymacs-eval "pymacs" nil t)
+(autoload 'pymacs-exec "pymacs" nil t)
+(autoload 'pymacs-load "pymacs" nil t)
+;;(eval-after-load "pymacs"                                                                                                        
+;;  '(add-to-list 'pymacs-load-path YOUR-PYMACS-DIRECTORY"))                                            
+
+;;; === For ipython and python shell
+;;; --------------------------------------------------------------
+;; Added in init.el
+;(add-to-list 'load-path (concat d-dir-emacs "cvs/ipython/docs/emacs/"))
+(require 'ipython)
+(setq ipython-completion-command-string "print(';'.join(get_ipython().complete('%s', '%s')[1])) #PYTHON-MODE SILENT\n")
+
+;; Let's use python of windows in windows
+(when (d-windowp)
+  ;(setq python-python-command "c:/Python27/python.exe")
+  (setq python-python-command "c:/Program Files (x86)/IronPython 2.7/ipy.exe")
+  )
+
+; from http://www.emacswiki.org/emacs/PythonMode
+; The definition in ipython.el is wrong.
+
+;; To collect output we have to modify ipyton.bat. Add -u option
+;; @C:\Python27\python.exe C:\Python27\scripts\ipython.py %* to
+;; @C:\Python27\python.exe -u C:\Python27\scripts\ipython.py %*
+;; See more worknote_xp.muse#1102150621
+(when (d-windowp)
+  (setq ipython-command "C:\Python27\scripts\ipython.bat")
+  )
+;(setq py-python-command-args '("--autocall" "0"))
+;; Default is ("-i" "-colors" "LightBG")
+;(setq py-python-command-args '("-pylab" "-colors" "LightBG"))
+
+; To completion
+;(setq ipython-completion-command-string "print(';'.join(__IP.Completer.all_completions('%s')))\n")
+
+;(require 'comint)
+;(define-key comint-mode-map [(meta p)]
+;  'comint-previous-matching-input-from-input)
+;(define-key comint-mode-map [(meta n)]
+;  'comint-next-matching-input-from-input)
+;(define-key comint-mode-map [(control meta n)]
+;  'comint-next-input)
+;(define-key comint-mode-map [(control meta p)]
+;  'comint-previous-input)
+
+;;; To solve ipython color problem with color-theme
+;; In 'M-x py-shell' with ipython, the color of default content is black.
+;; My default background color is also black. ipython.el uses the output
+;; of ipython.py(?). It has the format of ansi color. To determine the
+;; color of ansi format, ipython.el use ansi-color.el. The variable
+;; ansi-color-names-vector defines the color of ansi format.
+(custom-set-variables
+ '(ansi-color-names-vector ["ligth-gray" "red" "green" "yellow" "blue" "magenta" "cyan" "white"]))
+
+
+
+
 ;;; === For python-mode
 ;;; --------------------------------------------------------------
 ;; python-mode do not include the functions of completion.
+(require 'python-mode)
+(setq py-complete-function 'ipython-complete
+      py-shell-complete-function 'ipython-complete
+      py-shell-name "ipython"
+      py-which-bufname "IPython")
+(setq py-use-local-default t)
+(setq py-shell-local-path "/media/cvs/Documents/works/0cvs/trunk/dotemacs.d/cvs/ipython/ipython.py")
+(setq py-shell-name "ipython")	 ;For version 6.1.1 of python-mode
+
+;; python-mode 6.1.1 defines ipython-completion-command-string as nil.
+;; We need this it defined in ipython.el
 
 
-(load-library "python-mode.el")
+
 
 (setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
 (setq interpreter-mode-alist (cons '("python" . python-mode)
@@ -26,10 +118,39 @@
 ;;    (setq font-lock-maximum-decoration t)
 
 
-;;; abbrev
+;;; = abbrev
 ;; python.el에 포함되어 있습니다. 이유는 모르겠지만, 시작시 로드하지 않아서 여기에
 ;; 붙여요.
 ;; Moved to abbrev-config.el
+
+
+;;; === Completion
+;;; --------------------------------------------------------------
+;; To enable completion in python-mode
+;; Use 'completion-at-point instead 'py-complete.
+(load-library "pycomplete.el")
+(require 'pycomplete)
+
+
+;;; === For anything-ipython
+;;; --------------------------------------------------------------
+
+; The package requres anything. el file contains following
+;---------------
+;; Tested on emacs23.1 with python2.6, ipython-9.1 and python-mode.el.
+;; This file fix also normal completion (tab without anything) in the ipython-shell.
+;; This file reuse some code of ipython.el.
+;---------------
+; current emacs version is 23.0.95.1
+
+;(require 'anything)
+;(require 'anything-ipython)
+
+;(add-hook 'python-mode-hook #'(lambda ()
+;                                (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
+;(add-hook 'ipython-shell-hook #'(lambda ()
+;                                  (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
+
 
 
 ;;; === Inserting with key
@@ -108,84 +229,6 @@
 )
 
 
-
-;;; === For pymacs
-;;; --------------------------------------------------------------
-
-;(load-library "python-mode.el")
-(autoload 'pymacs-apply "pymacs")
-(autoload 'pymacs-call "pymacs")
-(autoload 'pymacs-eval "pymacs" nil t)
-(autoload 'pymacs-exec "pymacs" nil t)
-(autoload 'pymacs-load "pymacs" nil t)
-;;(eval-after-load "pymacs"                                                                                                        
-;;  '(add-to-list 'pymacs-load-path YOUR-PYMACS-DIRECTORY"))                                                                       
-
-;;; === For ipython and python shell
-;;; --------------------------------------------------------------
-(require 'ipython)
-
-;; Let's use python of windows in windows
-(when (d-windowp)
-  ;(setq python-python-command "c:/Python27/python.exe")
-  (setq python-python-command "c:/Program Files (x86)/IronPython 2.7/ipy.exe")
-  )
-
-; from http://www.emacswiki.org/emacs/PythonMode
-; The definition in ipython.el is wrong.
-
-;; To collect output we have to modify ipyton.bat. Add -u option
-;; @C:\Python27\python.exe C:\Python27\scripts\ipython.py %* to
-;; @C:\Python27\python.exe -u C:\Python27\scripts\ipython.py %*
-;; See more worknote_xp.muse#1102150621
-(when (d-windowp)
-  (setq ipython-command "C:\Python27\scripts\ipython.bat")
-  )
-;(setq py-python-command-args '("--autocall" "0"))
-;; Default is ("-i" "-colors" "LightBG")
-;(setq py-python-command-args '("-pylab" "-colors" "LightBG"))
-
-; To completion
-(setq ipython-completion-command-string "print(';'.join(__IP.Completer.all_completions('%s')))\n")
-
-;(require 'comint)
-;(define-key comint-mode-map [(meta p)]
-;  'comint-previous-matching-input-from-input)
-;(define-key comint-mode-map [(meta n)]
-;  'comint-next-matching-input-from-input)
-;(define-key comint-mode-map [(control meta n)]
-;  'comint-next-input)
-;(define-key comint-mode-map [(control meta p)]
-;  'comint-previous-input)
-
-;;; To solve ipython color problem with color-theme
-;; In 'M-x py-shell' with ipython, the color of default content is black.
-;; My default background color is also black. ipython.el uses the output
-;; of ipython.py(?). It has the format of ansi color. To determine the
-;; color of ansi format, ipython.el use ansi-color.el. The variable
-;; ansi-color-names-vector defines the color of ansi format.
-(custom-set-variables
- '(ansi-color-names-vector ["ligth-gray" "red" "green" "yellow" "blue" "magenta" "cyan" "white"]))
-
-
-;;; === For anything-ipython
-;;; --------------------------------------------------------------
-
-; The package requres anything. el file contains following
-;---------------
-;; Tested on emacs23.1 with python2.6, ipython-9.1 and python-mode.el.
-;; This file fix also normal completion (tab without anything) in the ipython-shell.
-;; This file reuse some code of ipython.el.
-;---------------
-; current emacs version is 23.0.95.1
-
-;(require 'anything)
-;(require 'anything-ipython)
-
-;(add-hook 'python-mode-hook #'(lambda ()
-;                                (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
-;(add-hook 'ipython-shell-hook #'(lambda ()
-;                                  (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
 
 
 ;;; === For cython

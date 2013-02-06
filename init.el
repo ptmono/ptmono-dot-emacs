@@ -145,6 +145,16 @@ function will provide the shell to use Visual C++ compiler."
 	(comint-send-input)))
     ))
 
+(when (d-not-windowp)
+  (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-home "myscript/pystartup.py")))
+  (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/ropemacs/ropemacs")))
+  (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/ropemode/ropemode")))
+  (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/Pymacs")))
+  ;; To add pycomplete.py
+  (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/python-mode/completion")))
+  (setenv "PYTHONSTARTUP" (concat d-dir-emacs "myscript/pystartup.py")))
+
+
 ;; For utf-8. You can edit a file with utf-8 when you failed to load
 ;; init.el.
 (when (d-windowp)
@@ -188,9 +198,13 @@ function will provide the shell to use Visual C++ compiler."
 
 (add-to-list 'load-path (concat d-dir-emacs "etc/rfcview"))
 (add-to-list 'load-path (concat d-dir-emacs "cvs/Pymacs"))
-(add-to-list 'load-path (concat d-dir-emacs "etc/python-mode"))
-;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode"))
-;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/completion"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/ipython/docs/emacs/"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/completion"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/devel/"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/extensions/"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/ipython/docs/emacs/"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/pylookup/"))
 ; ;(add-to-list 'load-path (concat d-dir-emacs "etc/delicious-el"))
 
 (byte-recompile-directory (concat d-dir-emacs "config/"))

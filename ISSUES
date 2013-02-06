@@ -1,3 +1,5 @@
+-*- mode: muse -*-
+
 * d-w-show don't compile following
 
  FONTPATTER: should have the form of a standard X font name, except the last two

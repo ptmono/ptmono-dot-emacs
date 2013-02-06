@@ -261,6 +261,10 @@
 		"#tag " tag \n
 		"#category " category \n)
 
+(d-def-skeleton "muse" ddheader
+		nil
+		"-*- mode: muse -*-" \n)
+
 ;;; === For lisp
 ;;; --------------------------------------------------------------
 ;; ddtest를 쓰기를 웠했는데요. lisp-mode에서 abbrev로 사용할 수가 없었습니다.
