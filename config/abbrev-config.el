@@ -265,6 +265,15 @@
 		nil
 		"-*- mode: muse -*-" \n)
 
+(d-def-skeleton "muse" ddreport
+		nil
+		"#"
+		'(setq time (d-insert-time))
+		\n
+		"REPORT: ")
+
+
+
 ;;; === For lisp
 ;;; --------------------------------------------------------------
 ;; ddtest를 쓰기를 웠했는데요. lisp-mode에서 abbrev로 사용할 수가 없었습니다.

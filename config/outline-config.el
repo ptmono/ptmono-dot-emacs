@@ -11,7 +11,7 @@
 
 (defvar d-outline-regexp-alist
   '(("java" "\\(?:\\([ \t]*.*\\(class\\|interface\\)[ \t]+[a-zA-Z0-9_]+[ \t\n]*\\({\\|extends\\|implements\\)\\)\\|[ \t]*\\(public\\|private\\|static\\|final\\|native\\|synchronized\\|transient\\|volatile\\|strictfp\\| \\|\t\\)*[ \t]+\\(\\([a-zA-Z0-9_]\\|\\( *\t*< *\t*\\)\\|\\( *\t*> *\t*\\)\\|\\( *\t*, *\t*\\)\\|\\( *\t*\\[ *\t*\\)\\|\\(]\\)\\)+\\)[ \t]+[a-zA-Z0-9_]+[ \t]*(\\(.*\\))[ \t]*\\(throws[ \t]+\\([a-zA-Z0-9_, \t\n]*\\)\\)?[ \t\n]*{\\)")
-    ("shell" "^\\[\\$")
+    ("shell" "^[\\[]\\$\\|^(")
     ("muse" "^\\.#+[A-z]?[0-9]+\\|^[*\f]+ \\|^[A-Z]+: \\|^[@\f]+ ")
     ("muse-heading" "^\\.#+[A-z]?[0-9]+\\|^[*\f]+ \\|^[@\f]+ ")
     ("ipython" "^In \\[")
@@ -20,6 +20,7 @@
     ("outline" d-keybinding/outline)
     ("cpp" "^[A-z]\\|^//")
     ("autoit" "[ ]*Func .+")
+    ("csharp" "\\(?:[ \t]*\\(public\\|private\\|static\\|final\\|native\\|synchronized\\|transient\\|volatile\\|strictfp\\| \\|\t\\)*[ \t]+\\(\\([a-zA-Z0-9_]\\|\\( *\t*< *\t*\\)\\|\\( *\t*> *\t*\\)\\|\\( *\t*, *\t*\\)\\|\\( *\t*\\[ *\t*\\)\\|\\(]\\)\\)+\\)[ \t]+[a-zA-Z0-9_]+[ \t]*(\\(.*\\))[ \t]*\\(throws[ \t]+\\([a-zA-Z0-9_, \t\n]*\\)\\)?[ \t\n]*\\)")
     ))
 
 

@@ -7,7 +7,9 @@
 ;; (if (d-windowp)
 ;;     (load-file "~/.emacs.d/etc/cedet-1.1/common/cedet.el")
 (if (d-windowp)
-    (load-file "~/.emacs.d/cvs/cedet/common/cedet.el")
+    ;(load-file "~/.emacs.d/cvs/cedet/common/cedet.el")
+    (load-file "~/.emacs.d/etc/cedet-1.1/common/cedet.el")
+  
   (load-file "~/.emacs.d/cvs/cedet/cedet-devel-load.el")
   (load-file "~/.emacs.d/cvs/cedet/contrib/cedet-contrib-load.el"))
   ;(load-file "~/.emacs.d/cvs/cedet/lisp/cedet/cedet.el"))

@@ -89,6 +89,7 @@ Usage: torrent.py command
  commands
   - compress
   - extract
+  - commitImgs
 """
 
 

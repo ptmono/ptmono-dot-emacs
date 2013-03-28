@@ -251,7 +251,7 @@
 
 ;;; === Python
 ;;; --------------------------------------------------------------
-(require 'python)
+(require 'python-mode)
 ;(define-key python-mode-map [tab] 'python-complete-symbol)
 
 ;(define-key python-mode-map [tab] 'symbol-complete) ; changed in version 23.0.60.1
@@ -281,6 +281,8 @@
 
 (define-key python-mode-map [?\C-c ?i]  'd-python/insert)
 (define-key python-mode-map [tab]  'py-complete)
+(define-key python-mode-map [C-backspace]  'backward-kill-word)
+(define-key python-mode-map [?\C-c ?\C-f] 'py-documentation) ;Original is py-sort-imports
 
 ;;; ropemacs
 ; ropemacs-mode define C-c d as rope-show-doc. It comflict my configurations.

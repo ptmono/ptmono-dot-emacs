@@ -21,3 +21,27 @@ fields 'fontset-ALIAS'.
 \end{quote}
 \end{description}
 
+
+* 1302071150 [Solved] python-mode indent problem
+
+<example>
+class Main:
+    
+ * aaacc
+</example>
+(py-newline-and-indent) doesn't work. infinitely loop.
+
+The problem is occurred form
+[[pos:///home/ptmono/Desktop/Documents/ppf/tools/ppf.el#15433][/home/ptmono/Desktop/Documents/ppf/tools/ppf.el]]. Because (require
+'python). I loading python instead of python-mode. It seems override
+python-mode.
+
+
+** Solution
+
+The reason is that I load python(not python-mode) after load python-mode.
+[[pos:///home/ptmono/Desktop/Documents/ppf/tools/ppf.el#15433][/home/ptmono/Desktop/Documents/ppf/tools/ppf.el]] is loading this (require
+'python). Fixed (require 'python) to (require 'python-mode).
+
+
+

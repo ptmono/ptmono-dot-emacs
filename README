@@ -5,27 +5,29 @@ files
  - init.el	: init file of emacs
  - ChangeLog
  - bookmarks
- - dal-worknote.elc	: init.el requires this file. I lose the source.
+ - dal-worknote.elc	: init.el requires this file. I lose the original source.
 
 
 directories
 -----------
 
- - config : It contains configuration and modification of emacs packages
-   such as muse, emacs-w3m, erc.
- - myel : It contains convenient tools written by me.
- - cvs	: It contains emacs packages downloaded by the version control systems.
- - etc	: It contains emacs packages downloaded by files.
- - info	: texinfo documents
+ - config : configurations and modifications of emacs packages I am using
+ - myel : I had written some codes for my own use
+ - cvs	: dependent packages from the version control system
+ - etc	: dependent packages from the file
 
 
 Using
 -----
 
-cvs, etc, info contains many files which is not modified by me. So I
-archived each directory. Each directory contains 'packages.tar.gz' file.
-Just extract the file.
+I spend no minute for using other people. So it will not work for you. I
+think that many emacs user needs only some part he want to know. I am
+using this emacs configuration on both Linux and Windows. On Windows it
+requires MingGW and cygwin.
 
-$ git clone https://github.com/ptmono/ptmono-dot-emacs.git .emacs.d
-$ make unzip # extract 3rd modules
+The directories cvs, etc contains the dependent emacs packages. To archive
+these directories I am using following commands.
+ - 'make zip'
+ - 'make-unzip'
 
+It will generate *.tar.gz files.

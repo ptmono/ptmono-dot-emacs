@@ -3,15 +3,11 @@
 
 (define-abbrev-table 'Custom-mode-abbrev-table '())
 
-(define-abbrev-table 'autoit-mode-abbrev-table '())
-
 (define-abbrev-table 'awk-mode-abbrev-table
   '(
    ))
 
 (define-abbrev-table 'bookmark-bmenu-mode-abbrev-table '())
-
-(define-abbrev-table 'bsh-script-mode-abbrev-table '())
 
 (define-abbrev-table 'c++-mode-abbrev-table
   '(
@@ -41,10 +37,6 @@
 
 (define-abbrev-table 'conf-xdefaults-mode-abbrev-table '())
 
-(define-abbrev-table 'csharp-mode-abbrev-table
-  '(
-   ))
-
 (define-abbrev-table 'cython-mode-abbrev-table '())
 
 (define-abbrev-table 'd-python-mode-abbrev-table '())
@@ -55,7 +47,11 @@
 
 (define-abbrev-table 'dig-mode-abbrev-table '())
 
+(define-abbrev-table 'doctex-mode-abbrev-table '())
+
 (define-abbrev-table 'eassist-mode-abbrev-table '())
+
+(define-abbrev-table 'eieio-custom-mode-abbrev-table '())
 
 (define-abbrev-table 'elk-test-mode-abbrev-table '())
 
@@ -65,13 +61,9 @@
 
 (define-abbrev-table 'emacs-lisp-mode-abbrev-table '())
 
-(define-abbrev-table 'erc-list-menu-mode-abbrev-table '())
-
 (define-abbrev-table 'erc-mode-abbrev-table '())
 
 (define-abbrev-table 'fundamental-mode-abbrev-table '())
-
-(define-abbrev-table 'gdb-script-mode-abbrev-table '())
 
 (define-abbrev-table 'global-abbrev-table
   '(
@@ -90,13 +82,13 @@
 
 (define-abbrev-table 'grep-mode-abbrev-table '())
 
-(define-abbrev-table 'gud-mode-abbrev-table '())
-
 (define-abbrev-table 'help-mode-abbrev-table '())
 
 (define-abbrev-table 'html-mode-abbrev-table '())
 
 (define-abbrev-table 'idl-mode-abbrev-table '())
+
+(define-abbrev-table 'inferior-js-mode-abbrev-table '())
 
 (define-abbrev-table 'inferior-moz-mode-abbrev-table '())
 
@@ -108,19 +100,9 @@
   '(
    ))
 
-(define-abbrev-table 'jde-mode-abbrev-table
-  '(
-    ("catch" "catch" c-electric-continued-statement 0)
-    ("else" "else" c-electric-continued-statement 0)
-    ("finally" "finally" c-electric-continued-statement 0)
-    ("while" "while" c-electric-continued-statement 0)
-   ))
-
-(define-abbrev-table 'jde-run-mode-abbrev-table '())
-
 (define-abbrev-table 'jython-mode-abbrev-table '())
 
-(define-abbrev-table 'lisp-interaction-mode-abbrev-table '())
+(define-abbrev-table 'latex-mode-abbrev-table '())
 
 (define-abbrev-table 'lisp-mode-abbrev-table
   '(
@@ -140,8 +122,6 @@
 (define-abbrev-table 'muse-mode-abbrev-table
   '(
    ))
-
-(define-abbrev-table 'nxml-mode-abbrev-table '())
 
 (define-abbrev-table 'objc-mode-abbrev-table
   '(
@@ -165,14 +145,19 @@
 
 (define-abbrev-table 'planner-tasks-overview-mode-abbrev-table '())
 
+(define-abbrev-table 'ppf-report-mode-abbrev-table '())
+
 (define-abbrev-table 'process-menu-mode-abbrev-table '())
 
 (define-abbrev-table 'prog-mode-abbrev-table '())
 
 (define-abbrev-table 'python-mode-abbrev-table
   '(
-    ("ddignore" "doctest: +IGNORE_EXCEPTION_DETAIL" nil 1)
    ))
+
+(define-abbrev-table 'python2-mode-abbrev-table '())
+
+(define-abbrev-table 'python3-mode-abbrev-table '())
 
 (define-abbrev-table 'qt-pro-mode-abbrev-table '())
 
@@ -181,6 +166,8 @@
 (define-abbrev-table 'sgml-mode-abbrev-table
   '(
    ))
+
+(define-abbrev-table 'sh-mode-abbrev-table '())
 
 (define-abbrev-table 'shell-mode-abbrev-table '())
 

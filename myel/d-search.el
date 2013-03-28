@@ -52,7 +52,9 @@
     ("php" "http://www.php.net/manual-lookup.php?pattern=%s")
     ; %3d is equal =.
     ("amazon" "http://www.amazon.com/s/ref=nb_ss?url=search-alias=stripbooks&field-keywords=%s&x=16&y=20")
-    ("msdn" "http://social.msdn.microsoft.com/Search/en-us?query=%s"))
+    ("msdn" "http://social.msdn.microsoft.com/Search/en-us?query=%s")
+    ("pinvoke" "http://pinvoke.net/search.aspx?search=%s&namespace=[All]")
+    )
     "3th of list is one of that nil, string, number. It specify
     view point that is the top position of buffer.")
 

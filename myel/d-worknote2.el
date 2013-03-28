@@ -55,7 +55,7 @@
 
 
 (defvar d-worknote-current-register ?R)
-(defvar d-worknote-name (if (d-windowp) "worknote_xp" "worknote2"))
+(defvar d-worknote-name (if (d-windowp) "worknote_xp" "worknote3"))
 (defvar d-worknote-name-with-extension (concat d-worknote-name ".muse"))
 (defvar d-worknote-name-full 
   (if (d-windowp)
@@ -1328,8 +1328,12 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
     ("docsec" d-worknote/insert/docsec)
     ("ddsec" d-worknote/insert/docsec)
     ("report" d-worknote/insert/report-temp)
-    )
-  "")
+    ("tag" d-worknote/insert/tag)
+    ("tag-example" (lambda () (d-worknote/insert/tag "example")))
+    ("tag-quote" (lambda () (d-worknote/insert/tag "quote")))
+    ("example" (lambda () (d-worknote/insert/tag "example")))
+    ("quote" (lambda () (d-worknote/insert/tag "quote")))
+  ""))
 
 (defun d-worknote/insert ()
   (interactive)
@@ -1356,7 +1360,37 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
     (insert ">>> ")))
 
 (defun d-worknote/insert/report-temp ()
-  (insert (concat (d-create-citation) "\nREPORT: " )))
+  (insert (concat "#" (d-create-citation) "\nREPORT: " )))
+
+
+(defun d-worknote/insert/tag (&optional tag)
+  ""
+  (interactive)
+  (let* ((tag (if tag
+		  tag
+		(completing-read "tag: " muse-publish-markup-tags)))
+	 (content "aaa"))
+    (with-temp-buffer
+      (insert-for-yank (current-kill 0))
+      (goto-char (point-min))
+      (d-worknote/insert/_tag)
+      (goto-char (point-min))
+      (insert (concat "<" tag ">\n"))
+      (goto-char (point-max))
+      (insert (concat "\n</" tag ">\n"))
+      (setq content (buffer-string))
+      )
+    (insert content)
+    ))
+
+(defun d-worknote/insert/_tag ()
+  (while (re-search-forward "\n\n" nil t)
+    (previous-line 2)
+    (fill-paragraph)
+    (next-line))
+
+  (re-search-forward "." nil t)
+  (fill-paragraph))
 
 
 

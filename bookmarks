@@ -2,7 +2,17 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("autocomplete-config.el"
+(("test_python"
+ (filename . "~/works/0python/")
+ (front-context-string . "elixir\n  drwxr-x")
+ (rear-context-string . "0K Feb 10  2012 ")
+ (position . 698))
+("samdol"
+ (filename . "~/works/0git/samdol/")
+ (front-context-string . "chrome_extension")
+ (rear-context-string . "16 Jan  1 06:09 ")
+ (position . 349))
+("autocomplete-config.el"
  (filename . "~/.emacs.d/config/autocomplete-config.el")
  (front-context-string . "\n(add-to-list 'l")
  (rear-context-string)
@@ -24,9 +34,9 @@
  (position . 2024))
 ("ppf.el"
  (filename . "~/Desktop/Documents/ppf/tools/ppf.el")
- (front-context-string)
- (rear-context-string . "\n\n(provide 'ppf)")
- (position . 15343))
+ (front-context-string . "\n;;; TODO:\n;; - ")
+ (rear-context-string . "'ppf/root-dir.\n\n")
+ (position . 238))
 ("projectb.el"
  (filename . "~/.emacs.d/myel/projectb.el")
  (front-context-string . "    ;;(setq url ")
@@ -177,7 +187,7 @@
  (filename . "~/.emacs.d/myel/d-worknote2.el")
  (front-context-string . "  \"The function ")
  (rear-context-string . "exp end-regexp)\n")
- (position . 4539))
+ (position . 6418))
 ("d-tag.el"
  ((filename . "~/.emacs.d/myel/d-tag.el")
   (front-context-string)

@@ -13,18 +13,22 @@
       ("freenode.net"
        "#emacs"
        ;; "#wiki"
-       ;; "#nethack"
+       "#nethack"
        "#python"
        ;; "#linux"
        "#maemo"
-       "#Netfilter"
-       "#networking"
+       ;; "#Netfilter"
+       ;; "#networking"
        "#fedora"
+       "#pypy"
+       "#opencv"
+       "#ptmono"
+       "#math"
        )
       ("hanirc.org"
-       ;; "#kldp"
-       ;; "#emacs"
-       "#debian-devel"
+       "#kldp"
+       "#emacs"
+       ;; "#debian-devel"
        "#python"
        ;; "#ZeroIRC" ; It is client door.
        )
@@ -42,8 +46,20 @@
 		    :weight 'ultra-light)
 
 
+;;; === Ignore track - disable new post notification
+;;; --------------------------------------------------------------
+
+;; To disable the notification on all mode-line when the irc buffer is
+;; changed. The default value is
+;; (setq erc-insert-post-hook '(erc-make-read-only erc-track-modified-channels))
+
+;; It is easy just include the tracked buffers.
+(setq erc-track-exclude '("#python" "#emacs" "#fedora" "#nethack" "#maemo" "math"))
 
 
+
+;;; === Bittalk
+;;; --------------------------------------------------------------
 (defun erc-cmd-JOINBIT ()
   "join to the channel of bittalk"
   (erc-cmd-MSG "^BitCaT^ !invite 26ca572a72353e38431950a9fe222e8e")

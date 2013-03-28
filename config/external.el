@@ -215,3 +215,38 @@
 (setq auto-mode-alist (append '(("\\.\\([Nn][Ss][Hh]\\)$" .
                                  nsis-mode)) auto-mode-alist))
 
+;;; === rpm-spec-mode
+;;; --------------------------------------------------------------
+(autoload 'rpm-spec-mode "rpm-spec-mode.el" "RPM spec mode." t)
+(setq auto-mode-alist (append '(("\\.spec" . rpm-spec-mode))
+                               auto-mode-alist))
+(setq rpm-spec-user-mail-address "ptmono@gmail.com")
+
+(defun d-spec-changelog-increment-version ()
+  (interactive)
+  (goto-char (point-min))
+  (let* ((max (search-forward-regexp rpm-section-regexp))
+       (version (rpm-spec-field-value "Version" max)))
+   (rpm-add-change-log-entry (concat "Upgrade version to " version))
+   )
+  )
+
+;;; === bash-completion
+;;; --------------------------------------------------------------
+;; In shell-mode, <Tab> doesn't complete alias. Emacs use
+;; 'comint-dynamic-complete. You can use M-x term to complete alias. But
+;; it not convenient. bash-completion.el helps this problem for
+;; shell-mode.
+
+(if (d-windowp)
+    (autoload 'bash-completion-dynamic-complete 
+      "bash-completion"
+      "BASH completion hook")
+  (add-hook 'shell-dynamic-complete-functions
+	    'bash-completion-dynamic-complete)
+  (add-hook 'shell-command-complete-functions
+	    'bash-completion-dynamic-complete)
+
+  (require 'bash-completion)
+  (bash-completion-setup)
+)
