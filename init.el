@@ -377,6 +377,7 @@ function will provide the shell to use Visual C++ compiler."
     "shell-config.el"
     "autoit-config.el"
     "ppf-config.el"
+    "elisp-config.el"
 
   ;;; myel folder
     ;; I written tools for me.

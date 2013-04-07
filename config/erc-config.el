@@ -13,7 +13,7 @@
       ("freenode.net"
        "#emacs"
        ;; "#wiki"
-       "#nethack"
+       ;; "#nethack"
        "#python"
        ;; "#linux"
        "#maemo"
@@ -54,7 +54,14 @@
 ;; (setq erc-insert-post-hook '(erc-make-read-only erc-track-modified-channels))
 
 ;; It is easy just include the tracked buffers.
-(setq erc-track-exclude '("#python" "#emacs" "#fedora" "#nethack" "#maemo" "math"))
+(custom-set-variables
+ '(erc-track-exclude '("#python"
+		       ;"#emacs"
+		       "#fedora"
+		       "#nethack" "#maemo" "#math" "#pypy" "#opencv"
+		       "##math" "freenode"
+		       ;"#ptmono"
+		       )))
 
 
 

@@ -21,3 +21,5 @@ elpa
 font
 snippets
 
+session.*
+srecode-map.el

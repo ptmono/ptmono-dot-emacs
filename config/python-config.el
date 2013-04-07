@@ -16,8 +16,9 @@
 (setq py-install-directory (concat d-dir-emacs "cvs/python-mode"))
 
 
+;;; .
 ;;; === For pymacs
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 
 ;(load-library "python-mode.el")
 (autoload 'pymacs-apply "pymacs")
@@ -28,8 +29,9 @@
 ;;(eval-after-load "pymacs"                                                                                                        
 ;;  '(add-to-list 'pymacs-load-path YOUR-PYMACS-DIRECTORY"))                                            
 
+;;; .
 ;;; === For python-mode
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 ;; python-mode do not include the functions of completion.
 (require 'python-mode)
 (setq py-complete-function 'ipython-complete
@@ -75,8 +77,76 @@
 
 
 
+
+
+
+;;; .
+;;; == Font-lock
+;;; ______________________________________________________________
+(defvar d-python-section-face 'd-python-section-face)
+(defface d-python-section-face
+  '((t (:foreground "#298727" :bold nil))) 
+  "Face for the python-mode ."
+  :group 'font-lock-faces)
+
+(defvar d-python-section-bold-face 'd-python-section-bold-face)
+(defface d-python-section-bold-face
+  '((t (:foreground "#4eff4b" :bold t))) 
+  "Face for the python-mode ."
+  :group 'font-lock-faces)
+
+
+(defvar d-python-doc-result-face 'd-python-doc-result-face)
+(defface d-python-doc-result-face
+  '((t (:foreground "#FF787A" :bold nil))) 
+  "Face for the python-mode ."
+  :group 'font-lock-faces)
+
+
+(defvar d-python-doctest-comment-face 'd-python-doctest-comment-face)
+(defface d-python-doctest-comment-face
+  '((t (:foreground "#FF787A" :bold nil))) 
+  "Face for the python-mode ."
+  :group 'font-lock-faces)
+
+
+(defvar d-python-doctest-input-face 'd-python-doctest-input-face)
+(defface d-python-doctest-input-face
+  '(;(t (:foreground "#FFBB00" :bold nil))) 
+    (t (:foreground "#FFD500" :bold nil))) 
+  "Face for the python-mode ."
+  :group 'font-lock-faces)
+
+
+(defvar d-python-doctest-input-face 'd-python-doctest-input-face)
+(defface d-python-doctest-input-face
+  '(;(t (:foreground "#FFBB00" :bold nil))) 
+    (t (:foreground "#FFD500" :bold nil))) 
+  "Face for the python-mode ."
+  :group 'font-lock-faces)
+
+
+
+(defvar d-python/font-lock-keywords
+  '(;("^[ \t]+>>> \\(.+\\)" 0 d-python-doctest-input-face t)
+    ("^[ \t]+>>> \\(#.+\\)$" 1 d-python-doctest-comment-face t)
+    
+    ("^### .*$" 0 d-python-section-face t)
+    ("^### =+ \\(.*\\)$" 1 d-python-section-bold-face t)
+    ("\\(.*\\)\n[ \t]*#==>$" 1 d-python-doc-result-face t)
+
+    ;; Fixme: more correct regexp
+    ;; refer to
+    ;; http://stackoverflow.com/questions/466053/regex-matching-by-exclusion-without-look-ahead-is-it-possible
+    ;; http://stackoverflow.com/questions/2217928/how-do-i-write-a-regular-expression-that-excludes-rather-than-matches-e-g-not
+    (">>> .*\\([^>']*\\(\\(['>][^>']+\\)*\\)\\)" 1 font-lock-doc-face t)
+
+    ))
+
+
+;;; .
 ;;; === For ipython and python shell
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 ;; Added in init.el
 ;(add-to-list 'load-path (concat d-dir-emacs "cvs/ipython/docs/emacs/"))
 (require 'ipython)
@@ -130,20 +200,23 @@
 
 
 
+;;; .
 ;;; = abbrev
 ;; python.el에 포함되어 있습니다. 이유는 모르겠지만, 시작시 로드하지 않아서 여기에
 ;; 붙여요.
 ;; Moved to abbrev-config.el
 
+;;; .
 ;;; === Completion
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 ;; To enable completion in python-mode
 ;; Use 'completion-at-point instead 'py-complete.
 (require 'pycomplete)
 
 
+;;; .
 ;;; === For anything-ipython
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 
 ; The package requires anything. el file contains following
 ;---------------
@@ -163,8 +236,9 @@
 
 
 
+;;; .
 ;;; === Inserting with key
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 (defvar d-python-key-insert-alist
   '(("docskip" "#doctest: +SKIP")
     ("docignore" "#doctest: +IGNORE_EXCEPTION_DETAIL")
@@ -204,8 +278,9 @@
     (insert ">>> ")))
 
 
+;;; .
 ;;; === For folding
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 ; from mailing list
 
 (add-hook 'python-mode-hook 'my-python-hook)
@@ -236,13 +311,16 @@
 
   (if (d-not-windowp)
       (flymake-mode))
+
+  (font-lock-add-keywords nil d-python/font-lock-keywords)
 )
 
 
 
 
+;;; .
 ;;; === For cython
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 
 (add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
 
@@ -260,8 +338,9 @@
 
 
 
+;;; .
 ;;; === For pylookup
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 
 (setq pylookup-dir "~/.emacs.d/cvs/pylookup")
 (add-to-list 'load-path pylookup-dir)
@@ -282,8 +361,9 @@
   "Run pylookup-update and create the database at `pylookup-db-file'." t)
 
 
+;;; .
 ;;; === Syntax checking
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 ;; from
 ;; - https://bitbucket.org/tavisrudd/pylint_etc_wrapper.py/src/5a5d4d4cff2e/pylint_etc_wrapper.py
 ;; - http://www.emacswiki.org/emacs/?action=browse;oldid=PythonMode;id=PythonProgrammingInEmacs
@@ -324,9 +404,9 @@
     (insert msgid)))
 
 
-
+;;; .
 ;;; === nosetests
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 ;; - Use commands M-x d-nosetest-doctest, M-x d-nosetest-unittest
 ;; - We can use on dual monitor. M-x d-nosetest/toggle-dualp
 ;; - To use new frame. M-x d-nosetest/toggle-newFramep
@@ -527,10 +607,16 @@
 (defalias 'd-python-set-nosetest-doctest 'd-nosetest-doctest)
 (defalias 'd-python-set-nosetest-unittest 'd-nosetest-unittest)
   
-	
 
+;;; .
+;;; === epydoc
+;;; ______________________________________________________________
+(require 'epydoc)
+
+
+;;; .
 ;;; === For etc
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 
 ;(require 'python-mode)
 ;(require 'doctest-mode)
@@ -592,8 +678,9 @@
 ;  (view-buffer-other-window "*PYDOCS*" t 'kill-buffer-and-window))
 
 
+;;; .
 ;;; === Re-define functions
-;;; --------------------------------------------------------------
+;;; ______________________________________________________________
 ;; I have no idea why I have to re-define this functions, but to use these
 ;; functions I have to re-define the functions.
 
@@ -837,4 +924,6 @@ in the current *Python* session."
 
 
 (provide 'python-config)
+
+
 

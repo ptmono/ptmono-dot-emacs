@@ -250,3 +250,19 @@
   (require 'bash-completion)
   (bash-completion-setup)
 )
+
+;;; === re-builder
+;;; --------------------------------------------------------------
+
+(defvar d-re-builder-regexp-grouping-face 'font-lock-regexp-grouping-backslash)
+(defvar d-re-builder-regexp-separator-face 'font-lock-constant-face)
+(defvar d-re-builder/font-lock-keywords
+  '(("\\\\\\\\(\\|\\\\\\\\)" 0 d-re-builder-regexp-grouping-face t)
+    ("\\\\\\\\|" 0 d-re-builder-regexp-separator-face t)
+    ))
+
+(defun d-re-builder/hook ()
+  (font-lock-add-keywords nil d-re-builder/font-lock-keywords)
+)
+
+(add-hook 'reb-mode-hook 'd-re-builder/hook)

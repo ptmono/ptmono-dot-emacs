@@ -474,6 +474,7 @@ For more on the structure of this list, see
 \\headwidth 492pt                % width of header
 %\\setcounter{page}{2}
 
+
 %%%% For boxing
 %\\usepackage{listings}
 %\\lstset{
@@ -516,6 +517,42 @@ For more on the structure of this list, see
   \\catcode`\\\\=12
   \\catcode`\\#=12
   \\includegraphics[width=0.75\\textwidth]
+}
+
+%%% other packages
+\\usepackage[parfill]{parskip}
+\\usepackage{enumitem}
+\\setlist{parsep=0pt,listparindent=\\parindent}
+\\usepackage{color}
+
+
+%%% calendar
+% from http://tex.stackexchange.com/questions/82153/option-clash-when-using-graphicx-and-tikz-packages
+% The tikz package load the graphicx package automatically, so you can't
+% load it again. Trying to load it with different options will cause the
+% Option clash error. You can use
+% \\PassOptionsToPackage{<option>}{graphicx} before loading tikz to pass
+% any additional options to the internally loaded graphicx. However, you
+% do not need and should not use the pdftex option manually with modern
+% LaTeX distributions. Packages which are driver dependent are very well
+% capable to detect the right driver by themselves and providing a wrong
+% one causes all kinds of trouble.
+\\PassOptionsToPackage{pdftex}{graphicx}
+\\usepackage{tikz}
+\\usetikzlibrary{calendar,shapes.geometric}
+
+
+%% Extra keys for bold and italic dates.
+\\pgfkeys{/tikz/italic/.code =
+  {
+    \\itshape{#1}
+  }
+}
+
+\\pgfkeys{/tikz/bold/.code =
+  {
+    \\bfseries{#1}
+  }
 }
 
 

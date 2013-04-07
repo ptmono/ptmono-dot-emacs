@@ -22,7 +22,7 @@
 ;;거여요.
 
 ;See emacsModes#0910141523. explanation about abbrev and skeleton
-;;; --------------------------------------------------------------
+
 ;;; examples
 ;; See http://www.emacswiki.org/emacs/SkeletonMode : has examples
 ;; and http://www.emacswiki.org/emacs/AbbrevMode
@@ -164,7 +164,7 @@
 ;  "</body>" > \n
 ;  "</html>" > \n \n)
 
-;;; end of example -----------------------------------------------
+;;; end of example
 
 
 ;;; === Common
@@ -438,6 +438,15 @@
 		nil
 		\n
 		_">>>")
+
+(d-def-skeleton "python" dddoctest
+		nil
+		'(setq name (skeleton-read "Name: "))
+		"def " name "():"\n
+		>"'''"\n
+		>">>> " name "()"\n
+		>"'''"\n
+		>_)
 
 ;;; === Csharp
 ;;; --------------------------------------------------------------

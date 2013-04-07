@@ -19,7 +19,6 @@
 ;       requires d-tag-contents-lists.
 
 
-
 ;;; todo
 ;
 ; 0904300349 d-worknote-worknote는 shift+F11을 동작한다. worknote.muse로 이동하고
@@ -1136,14 +1135,18 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
     ("title"        . "")
     ("date"         . "")
     ("img-full-path" . "/home/ptmono/.emacs.d/imgs/")
+    ("filtered-title" . "\\fancyhead[LO, RE]{\\bf\\large ")
     )
-  "")
+  ""
+  :group 'd-worknote
+  )
 
 (defcustom d-w-show/replace-string-alist
   '(;("STRING"    . KEY_STRING)
     ("DDocNumber" . "date")
     ("DDocTitle"  . "title")
     ("~/.emacs.d/imgs/" . "img-full-path")
+    ("\\fancyhead[LO, RE]{\\bf\\large mr, " . "filtered-title")
     )
 
   "You can add header or footer with this variable. The muse-mode
@@ -1155,7 +1158,8 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
   The string is definded in d-w-show/replace-string-alist. And
   connect with d-w-show-info. The struct d-w-show-info is
   returned by the function d-w-show-info/get-all with the
-  value.")
+  value."
+  :group 'd-worknote)
 
 (defun d-w-show-struc/get-value (str struc)
   "To deal d-w-show-info."
@@ -1312,7 +1316,8 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
 ;;     (assert-nonnil (progn
 ;; 		     (goto-char (point-min))
 ;; 		     (re-search-forward "2")))))
-	  
+
+
 
 ;;; === Inserting with key
 ;;; --------------------------------------------------------------
@@ -1333,6 +1338,9 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
     ("tag-quote" (lambda () (d-worknote/insert/tag "quote")))
     ("example" (lambda () (d-worknote/insert/tag "example")))
     ("quote" (lambda () (d-worknote/insert/tag "quote")))
+    ("vspace" d-worknote/insert/latex-vspace)
+    ("latex-vspace" d-worknote/insert/latex-vspace)
+    ("latex-calendar" d-worknote/insert/latex-calendar)
   ""))
 
 (defun d-worknote/insert ()
@@ -1392,6 +1400,103 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
   (re-search-forward "." nil t)
   (fill-paragraph))
 
+(defun d-worknote/insert/latex-vspace ()
+  (insert "<literal>\\vspace{-12pt}</literal>"))
+
+;; TODO: 1304051227, This is not automatically calculate the dates and the
+;; days to be marked. Let's insert automatically.
+(defun d-worknote/insert/latex-calendar ()
+  (insert "
+<literal>
+\\begin{minipage}[t]{.5\\textwidth}
+  September\\\\ 
+  \\begin{tikzpicture}
+    \\calendar (mycal) [dates=2013-09-01 to 2013-09-last,week list]
+    if (weekend,
+        between=09-16 and 09-20) [gray]
+    if (equals=09-03) [italic]
+    if (equals=09-13) [bold];
+    \\draw[black] (mycal-2013-09-04) circle (8pt);
+    \\node [star,draw] at (mycal-2013-09-10) {};
+  \\end{tikzpicture}
+\\end{minipage}
+</literal>
+"))
+
+
+;;; === Scheduling
+;;; --------------------------------------------------------------
+(defun d-w-schedule/create-calendar (beg end)
+  (interactive "r")
+  )
+			      
+
+
+(defun d-cal-tex-cursor-month-landscape (month year &optional n event)
+  "The modified function of cal-tex-cursor-month-landscape to
+  create landscape calendar.
+
+Use like (d-cal-tex-cursor-month-landscape 5 2013)
+"
+  (interactive (list (prefix-numeric-value current-prefix-arg)
+                     last-nonmenu-event))
+  (or n (setq n 1))
+  (let* (
+         (end-month month)
+         (end-year year)
+         (cal-tex-which-days '(0 1 2 3 4 5 6))
+         (d1 (calendar-absolute-from-gregorian (list month 1 year)))
+         (d2 (progn
+               (calendar-increment-month end-month end-year (1- n))
+               (calendar-absolute-from-gregorian
+                (list end-month
+                      (calendar-last-day-of-month end-month end-year)
+                      end-year))))
+         (diary-list (if cal-tex-diary (cal-tex-list-diary-entries d1 d2)))
+         (holidays (if cal-tex-holidays (cal-tex-list-holidays d1 d2)))
+         other-month other-year small-months-at-start)
+    (cal-tex-insert-preamble (cal-tex-number-weeks month year 1) t "12pt")
+    (cal-tex-cmd cal-tex-cal-one-month)
+    (dotimes (i n)
+      (setq other-month month
+            other-year year)
+      (calendar-increment-month other-month other-year -1)
+      (insert (cal-tex-mini-calendar other-month other-year "lastmonth"
+                                     "\\cellwidth" "\\cellheight"))
+      (calendar-increment-month other-month other-year 2)
+      (insert (cal-tex-mini-calendar other-month other-year "nextmonth"
+                                     "\\cellwidth" "\\cellheight"))
+      (cal-tex-insert-month-header 1 month year month year)
+      (cal-tex-insert-day-names)
+      (cal-tex-nl ".2cm")
+      (if (setq small-months-at-start
+                (< 1 (mod (- (calendar-day-of-week (list month 1 year))
+                               calendar-week-start-day)
+                          7)))
+          (insert "\\lastmonth\\nextmonth\\hspace*{-2\\cellwidth}"))
+      (cal-tex-insert-blank-days month year cal-tex-day-prefix)
+      (cal-tex-insert-days month year diary-list holidays
+                           cal-tex-day-prefix)
+      (cal-tex-insert-blank-days-at-end month year cal-tex-day-prefix)
+      (if (and (not small-months-at-start)
+               (< 1 (mod (- (1- calendar-week-start-day)
+                            (calendar-day-of-week
+                             (list month
+                                   (calendar-last-day-of-month month year)
+                                   year)))
+                         7)))
+          (insert "\\vspace*{-\\cellwidth}\\hspace*{-2\\cellwidth}"
+                  "\\lastmonth\\nextmonth%
+"))
+      (unless (= i (1- n))
+        (run-hooks 'cal-tex-month-hook)
+        (cal-tex-newpage)
+        (calendar-increment-month month year 1)
+        (cal-tex-vspace "-2cm")
+        (cal-tex-insert-preamble
+         (cal-tex-number-weeks month year 1) t "12pt" t))))
+  (cal-tex-end-document)
+  (run-hooks 'cal-tex-hook))
 
 
 
