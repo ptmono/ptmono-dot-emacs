@@ -1,0 +1,16 @@
+
+(deftest "d-init-package/canInstall"
+  (assert-t (d-init-package/canInstall "muse"))
+  (assert-nil (d-init-package/canInstall "NoPackage")))
+
+(deftest "d-init-package/load"
+  (add-to-list 'load-path (concat d-dir-emacs "myel"))
+  (assert-t (d-init-package/load "myel.el"))
+  )
+
+(deftest "d-init-package/pkgs-will-be-installed"
+  (assert-t (d-init-package/pkgs-will-be-installed)))
+
+(deftest "d-init-package/_pkg-transactions"
+  (let* ((multi-list (list (list 1 (list 2 3 4)) (list 5 (list 6)))))
+    (assert-equal (d-init-package/_pkg-transactions multi-list) ()))

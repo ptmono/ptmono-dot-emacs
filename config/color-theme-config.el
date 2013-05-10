@@ -29,6 +29,11 @@
 
 (defvar d-color-theme-p nil "To identify that emacs is using color-theme")
 
+
+;; Use package.el
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/color-theme/"))
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/color-theme/themes/"))
+
 (require 'color-theme)
 (color-theme-initialize)
 ;(color-theme-tty-dark)

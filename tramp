@@ -1,4 +1,4 @@
-;; -*- emacs-lisp -*- <13/03/23 19:03:57 /home/ptmono/.emacs.d/tramp>
+;; -*- emacs-lisp -*- <13/05/03 21:01:18 /home/ptmono/.emacs.d/tramp>
 ;; Tramp connection history.  Don't change this file.
 ;; You can delete it, forcing Tramp to reapply the checks.
 
@@ -62,7 +62,8 @@
   ("remote-encoding" "base64")
   ("remote-decoding" "base64 -d -i")
   ("inline-compress" "gzip")
-  ("inline-decompress" "gzip -d"))
+  ("inline-decompress" "gzip -d")
+  ("~root" "/root"))
  (["pscp" nil "dataType" nil]
   ("uname" "Linux 2.6.43.8-1.fc15.x86_64")
   ("test" "test")

@@ -21,6 +21,8 @@
     ("cpp" "^[A-z]\\|^//")
     ("autoit" "[ ]*Func .+")
     ("csharp" "\\(?:[ \t]*\\(public\\|private\\|static\\|final\\|native\\|synchronized\\|transient\\|volatile\\|strictfp\\| \\|\t\\)*[ \t]+\\(\\([a-zA-Z0-9_]\\|\\( *\t*< *\t*\\)\\|\\( *\t*> *\t*\\)\\|\\( *\t*, *\t*\\)\\|\\( *\t*\\[ *\t*\\)\\|\\(]\\)\\)+\\)[ \t]+[a-zA-Z0-9_]+[ \t]*(\\(.*\\))[ \t]*\\(throws[ \t]+\\([a-zA-Z0-9_, \t\n]*\\)\\)?[ \t\n]*\\)")
+
+    ("cs" "\\([ \t]*\\(namespace\\|public\\|private\\|static\\|final\\|native\\|synchronized\\|transient\\|volatile\\|strictfp\\|internal\\|protected\\)\\)")
     ))
 
 

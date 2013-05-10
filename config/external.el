@@ -1,19 +1,5 @@
 ;; There is etc-config.el.
 
-;;; === mmm-mode: for php mode with html css etc
-;;; --------------------------------------------------------------
-(require 'mmm-mode)
-(setq mmm-global-mode 'maybe)
-(mmm-add-mode-ext-class nil "\\.php3?\\'" 'html-php)
-;(mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
-(mmm-add-classes
- '((html-php
-    :submode php-mode
-    :front "<\\?\\(php\\)?"
-    :back "\\?>")))
-(autoload 'php-mode "php-mode" "PHP editing mode" t)
-(add-to-list 'auto-mode-alist '("\\.php3?\\'" . sgml-html-mode))
-
 
 ;;; === extview :which opens files using outside programs
 ;;; --------------------------------------------------------------
@@ -118,6 +104,11 @@
 
 ;;; === rfcview
 ;;; --------------------------------------------------------------
+(add-to-list 'load-path (concat d-dir-emacs "etc/rfcview"))
+(load "rfc")
+(load "rfcview")
+(require 'rfc)
+(require 'rfcview)
 (setq auto-mode-alist
       (cons '("/rfc[0-9]+\\.txt\\(\\.gz\\)?\\'" . rfcview-mode)
             auto-mode-alist))
@@ -266,3 +257,5 @@
 )
 
 (add-hook 'reb-mode-hook 'd-re-builder/hook)
+
+

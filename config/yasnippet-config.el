@@ -107,6 +107,13 @@
 (add-hook 'after-save-hook 'd-yasnippets/update-on-save)
 
 
+
+;;; disable tab binding
+;; See keybinding.el
+;; (define-key yas/minor-mode-map [(tab)] nil)
+;; (define-key yas/minor-mode-map(kbd "TAB") nil)
+
+
 ;;; === Using bundle
 ;;; --------------------------------------------------------------
 ;; See the manual
@@ -143,4 +150,5 @@
 
 (provide 'yasnippet-config)
 ;;; yasnippet-config.el ends here
+
 

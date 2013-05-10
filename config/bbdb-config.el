@@ -1,3 +1,7 @@
+
+;; Use package.el
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/bbdb/lisp"))
+
 (require 'bbdb)
 (bbdb-initialize)
 

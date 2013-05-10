@@ -3,6 +3,8 @@
 ;; install python-rope'.
 
 (require 'pymacs)
+(when (featurep 'python) (unload-feature 'python t)) ; from readme
+
 
 ;;--------------------------------------------------------------------------------
 ;; It has a problem. SOLVED

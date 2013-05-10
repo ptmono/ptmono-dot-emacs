@@ -23,6 +23,27 @@
 (defvar d-note-section-regexp "^\\.#+[A-z]?[0-9]+\\|^[*\f]+ \\|^[A-Z]+: \\|^[@\f]+ " "for planner's note section")
 
 
+;;; === Type
+;;; --------------------------------------------------------------
+
+
+(defun d-libs/symbol (input)
+  "Returns symbol. INPUT is a string or symbol"
+  (unwind-protect
+      (condition-case err
+	  (setq ak (intern input))
+	;(error (message (format "Caught exception: [%s]" err))))
+	(error
+	 (if (symbolp input)
+	     (setq ak input)
+	   (error "INPUT can be a string or a symbol.")
+	   )))
+    ak))
+      
+	    
+
+    
+
 ;;; === String
 ;;; --------------------------------------------------------------
 (defun d-string-count (string)
@@ -320,6 +341,100 @@ Problem:
   (modify-frame-parameters (window-frame (frame-selected-window)) (x-parse-geometry geometry)))
 
 
+(defun d-window-info/splited-windowp ()
+  (listp (nth 0 (window-tree))))
+
+
+(defun d-window-info/left-window ()
+  (d-window-info/window 2))
+
+(defun d-window-info/right-window ()
+  (d-window-info/window 3))
+
+(defun d-window-info/window (n)
+  (let* ((tree (condition-case nil
+		   (nth n (nth 0 (window-tree)))
+		 (error nil)))
+	 result)
+    (if (and tree (listp tree))
+	(dolist (win tree)
+	  (if (windowp win)
+	      (setq result (cons win result))))
+      (setq result tree))
+    result))
+
+(defun d-window/get-not-matched (windows matched-window)
+  "Returns a list not matched windows. WINDOWS is a list of window.
+MATCHED-WINDOW is the window to be not matched."
+  (let* (result)
+    (condition-case nil
+	(dolist (win windows)
+	  (unless (eq win matched-window)
+	    (setq result (cons win result))))
+      (error nil))
+    result))
+
+(defun d-window/get-matched (windows matched-window)
+  (let* (result)
+    (condition-case nil
+	(dolist (win windows)
+	  (if (eq win matched-window)
+	      (setq result (cons win result))))
+      (error nil))
+    result))
+
+(defun d-window-info/rigth-window ()
+  (condition-case nil
+      (nth 3 (nth 0 (window-tree)))
+    (error nil)))
+      
+  
+(defun d-window-other-window/get-target ()
+  (let* ((splited-windowp (d-window-info/splited-windowp))
+	 (current-window (selected-window))
+	 (left-windows (d-window-info/left-window))
+	 (right-windows (d-window-info/right-window))
+
+	 ;; Where the current buffer
+	 (left-windowp (d-window/get-matched left-windows current-window))
+	 (right-windowp (d-window/get-matched right-windows current-window))
+	 result)
+
+    (cond ((not splited-windowp)
+	   nil)
+	  (left-windowp
+	   (nth 0 (d-window/get-not-matched left-windows current-window)))
+	  (right-windowp
+	   (nth 0 (d-window/get-not-matched right-windows current-window))))))
+
+(defun d-window-open-other-window (buffer-name)
+  "Open BUFFER-NAME other window. And return the target window."
+  (interactive)
+  (let* ((splited-windowp (d-window-info/splited-windowp))
+	 (target (d-window-other-window/get-target)))
+
+    (cond ((not splited-windowp)
+	   (split-window-horizontally)
+	   (setq target (nth 3 (nth 0 (window-tree))))
+	   (set-window-buffer target buffer-name))
+
+	  ;; This window is vertically separated
+	  (target
+	   (set-window-buffer target buffer-name))
+	  
+	  (t
+	   (split-window-vertically)
+	   (setq target (d-window-other-window/get-target))
+	   (set-window-buffer target buffer-name)))
+    target))
+
+(defun d-other-window (buffer-name)
+  "See d-window-open-other-window"
+  (d-window-open-other-window buffer-name))
+
+
+
+
 
 
 
@@ -327,10 +442,19 @@ Problem:
 ;;; --------------------------------------------------------------
 (defun d-append-to-file (text file)
   "To insert file, we can use the function append-to-file. This
-use the region of current buffer. I need a direct way."
+use the region of current buffer. I need a direct way.
+
+We also can use write-region.
+"
   (with-temp-buffer
     (insert text)
     (append-to-file (point-min) (point-max) file)))
+
+(defun d-write-to-file (text file)
+  ""
+  (with-temp-buffer
+    (insert text)
+    (write-region (point-min) (point-max) file)))
 
 
 (defun strip-text-properties(txt)
@@ -384,6 +508,20 @@ shell-command-read-minibuffer is used for completion"
 	 (directory (file-name-directory file))
 	 (command (shell-command-read-minibuffer "! on : " directory)))
     (message (shell-command-to-string (concat command " " file)))))
+
+
+;;; === Buffer
+;;; --------------------------------------------------------------
+
+(defun d-buffer/create-new-empty (buffer-name)
+  "Create new empty buffer."
+  (when (get-buffer buffer-name)
+    (kill-buffer buffer-name))
+  (get-buffer-create buffer-name))
+
+    
+  
+  
 
 
 ;;; === Screenshot
@@ -465,6 +603,23 @@ shell-command-read-minibuffer is used for completion"
 				extension))
 	 )
     full_filename))
+
+(defun d-libs-image/getExtension(filename)
+  "FILENAME contains abpath like /tmp/img. The return will be
+/tmp/img.jpg or /tmp/img.png. You can add extension."
+  (let* ((exts (list "jpg" "png"))
+	 abname-with-ext
+	 ext
+	 result)
+    (while exts
+      (setq ext (car exts))
+      (setq exts (cdr exts))
+
+      (setq abname-with-ext (concat filename "." ext))
+      (if (file-exists-p abname-with-ext)
+	  (setq result ext)))
+    ext))
+
 
 
 ;;; === Process

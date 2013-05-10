@@ -259,7 +259,8 @@
 		"#date " ctime \n
 		"#update " ctime \n
 		"#tag " tag \n
-		"#category " category \n)
+		"#category " category \n
+		"#unpublished false" \n)
 
 (d-def-skeleton "muse" ddheader
 		nil
@@ -450,12 +451,18 @@
 
 ;;; === Csharp
 ;;; --------------------------------------------------------------
-;; (require 'csharp-mode)
+(require 'csharp-mode)
 
-;; (d-def-skeleton "csharp" ddcw
-;; 		nil
-;; 		"Console.WriteLine" \n
-;; 		)
+(d-def-skeleton "csharp" ddcw
+		nil
+		"Console.WriteLine" \n
+		)
+
+(d-def-skeleton "csharp" ddgs
+		nil
+		"{ get; private set; }" \n
+		)
+
 
 
 ;;; === For python (I not use this)

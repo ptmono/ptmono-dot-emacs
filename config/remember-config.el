@@ -8,6 +8,8 @@
 ;; 입력되었다.
 ;------------------------------------------------------------
 
+;; Builtin package
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/remember/"))
 
 ;  (require 'remember)
     (require 'remember-planner)

@@ -1,3 +1,6 @@
+
+(add-to-list 'load-path (concat d-dir-emacs "cvs/nxhtml/"))
+
 ;; require the variable
 ;; TODO: clean the problem of TeX-add-style-hook
 (unless TeX-add-style-hook

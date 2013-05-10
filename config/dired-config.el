@@ -83,3 +83,13 @@ p있다면 함수는 단지 확장자에 규정한 함수를 불러오는 역활
 (defun concat-string-list (list) 
    "Return a string which is a concatenation of all elements of the list separated by spaces" 
     (mapconcat '(lambda (obj) (format "%s" obj)) list " "))
+
+;;; === Dired-x
+;;; --------------------------------------------------------------
+;; To hide *~ files. To show *~ files, use M-x dired-omit-mode
+(load-library "dired-x")
+(add-hook 'dired-load-hook
+	  (function (lambda () (load "dired-x"))))
+(add-hook 'dired-mode-hook
+	  (lambda ()
+	    (dired-omit-mode 1)))

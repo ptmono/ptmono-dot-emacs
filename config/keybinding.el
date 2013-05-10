@@ -52,6 +52,8 @@
 
 ;; (global-set-key [?\C-m] 'd-worknote-newline-heading)
 (global-set-key [?\C-c ?d ?w] 'd-worknote-current)
+(global-set-key [?\C-c ?d ?\M-f] 'd-worknote-set-frame-with-firefox)
+(global-set-key [?\C-c ?d ?\M-c] 'd-worknote-set-frame-with-chromium)
 (global-set-key [?\C-c ?d ?c] 'd-citation)
 
 (global-set-key [?\C-c ?d ?1] (lambda () (interactive) (d-worknote-window-selecter 1)))
@@ -395,9 +397,6 @@
 ;; See outline-config.el
 
 
-
-
-
 ;;; === Dired
 ;;; --------------------------------------------------------------
 (define-key dired-mode-map [??] 'd-worknote-file-info)
@@ -408,3 +407,15 @@
 ;; See gcal-config.el
 
 
+
+;;; === Auctex
+;;; --------------------------------------------------------------
+(add-hook 'latex-mode-hook (lambda ()
+			     (define-key TeX-mode-map [tab] 'TeX-complete-symbol)))
+
+
+;;; === yasnippet
+;;; --------------------------------------------------------------
+;;; disable tab binding
+(define-key yas/minor-mode-map [(tab)] nil)
+(define-key yas/minor-mode-map(kbd "TAB") nil)

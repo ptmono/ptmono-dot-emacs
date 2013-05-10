@@ -1,5 +1,5 @@
 ;; add cclookup to your loadpath, ex) "~/.lisp/addons/cclookup"
-(setq cclookup-dir "~/.emacs.d/etc2/cclookup")
+(setq cclookup-dir "~/.emacs.d/etc/cclookup")
 (add-to-list 'load-path cclookup-dir)
 ;; load cclookup when compile time
 (eval-when-compile (require 'cclookup))

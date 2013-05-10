@@ -1,5 +1,6 @@
 ;; TODO: Clear
 
+
 ;;; === For planner
 ;;; --------------------------------------------------------------
 (require 'planner)
@@ -474,4 +475,6 @@ note on the task's plan page or on the current page."
           (planner-note-link-text (planner-current-note-info)))))
   (d-worknote-note-done)
   (d-planner-create-tag page))
+
+(provide 'planner-config)
 

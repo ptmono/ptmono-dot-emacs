@@ -2,7 +2,17 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("test_python"
+(("init-load.el"
+ (filename . "/media/cvs/Documents/works/0cvs/trunk/dotemacs.d/init-load.el")
+ (front-context-string . "(add-to-list 'lo")
+ (rear-context-string . "th d-dir-emacs)\n")
+ (position . 116))
+("package-config.el"
+ (filename . "~/.emacs.d/config/package-config.el")
+ (front-context-string . "\n\n;; Fixme: Supp")
+ (rear-context-string . "t/packages/\")))\n")
+ (position . 476))
+("test_python"
  (filename . "~/works/0python/")
  (front-context-string . "elixir\n  drwxr-x")
  (rear-context-string . "0K Feb 10  2012 ")

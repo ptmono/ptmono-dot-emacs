@@ -6,6 +6,7 @@
 ;;
 ;; The specifications for the API are at <http://del.icio.us/doc/api>.
 
+(add-to-list 'load-path (concat d-dir-emacs "etc/delicious-el"))
 (require 'delicious)
 (setq delicious-api-user "ptmono"
       delicious-api-password "securet")

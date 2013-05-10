@@ -1,0 +1,6 @@
+(deftest "d-libs/symbol"
+  (let* ((aa (make-symbol "aa")))
+    (make-symbol "aa")
+    (assert-t (symbolp (d-libs/symbol "aa")))
+    (assert-t (symbolp (d-libs/symbol aa)))
+    ))

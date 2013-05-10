@@ -145,6 +145,22 @@ See `muse-publish-markup-tags' for more information."
   :group 'planner-publish)
 
 
+;;; === Markup tags
+;;; --------------------------------------------------------------
+
+(add-hook 'muse-publish-markup-tags
+	  '("plantuml" nil nil d-muse-publish-plantuml-tag))
+
+
+(defun d-muse-publish-plantuml-tag (beg end attrs)
+  )
+
+;; (defun muse-publish-python-tag (beg end attrs)
+;;   (muse-publish-command-tag beg end
+;;                             (cons (cons "interp" (executable-find "python"))
+;;                                   attrs)))
+
+
 ;;; === For html
 ;;; --------------------------------------------------------------
 (defcustom d-muse-html-header
@@ -576,7 +592,7 @@ For more on the structure of this list, see
 
 
 
-
+;;;###autoload
 (defcustom d-muse-latex-markup-specials-document
   '((?\\ . "\\textbackslash{}")
     (?\_ . "\\textunderscore{}")
@@ -697,7 +713,8 @@ regions."
     (muse-publish-section-close len)))
 
 
-(provide 'd-muse-publish)
+
+(provide 'muse-publish-config)
 
 
 

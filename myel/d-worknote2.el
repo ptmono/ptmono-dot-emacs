@@ -1122,7 +1122,7 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
 ;; format. Basically it uses muse-publish. This will convert the note to
 ;; pdf using Latex. I create a style of muse-publish 'd-latex'.
 ;; muse-publish-config.el contains the source.
-(require 'd-muse-publish)		;The name of muse-publish-config.el
+;;(require 'muse-publish-config)		;The name of muse-publish-config.el
 
 (defvar d-w-show-tmp-directory "/tmp/")
 (defvar d-w-show-tmp-filename "d-w-show-muse")
@@ -1169,13 +1169,13 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
   "To deal d-w-show-info."
   (setcdr (assoc str struc) value))
 
-(deftest "test/d-w-show-struc/"
-  (let* ((aa d-w-show/replace-string-list)
-	 (str "DDocNumber")
-	 (value "vvv"))
-    (d-w-show-struc/set-value str value aa)
-    (assert-equal value
-		  (d-w-show-struc/get-value str aa))))
+;; (deftest "test/d-w-show-struc/"
+;;   (let* ((aa d-w-show/replace-string-alist)
+;; 	 (str "DDocNumber")
+;; 	 (value "vvv"))
+;;     (d-w-show-struc/set-value str value aa)
+;;     (assert-equal value
+;; 		  (d-w-show-struc/get-value str aa))))
 
 (defun d-w-show ()
   "Show pdf of current section."
@@ -1498,6 +1498,106 @@ Use like (d-cal-tex-cursor-month-landscape 5 2013)
   (cal-tex-end-document)
   (run-hooks 'cal-tex-hook))
 
+
+
+;;; === Window - wmctrl
+;;; --------------------------------------------------------------
+(defun d-wmctrl/resize (geometry &optional window-title wmctrl_geo_p)
+  "Re-geometry for WINDOW-TITLE. See the manual of wmctrl to get
+geometry and window-title."
+  (let* ((window-title (if window-title
+			  window-title
+			(frame-parameter (window-frame (frame-selected-window)) 'name)))
+	 (cmd-remove-max (concat "wmctrl -r \"" window-title "\" -b remove,maximized_horz"))
+	 (cmd (concat "wmctrl -r \"" window-title "\" -e " geometry)))
+
+    (shell-command-to-string cmd-remove-max)
+    (shell-command-to-string cmd))
+  )
+
+(defun d-wmctrl/title-to-string ()
+  (shell-command-to-string "wmctrl -l"))
+
+(defun d-worknote-set-frame-with-chromium ()
+  ""
+  (interactive)
+  (d-wmctrl/resize "0,0,0,1060,1200" "chromium")
+  (d-wmctrl/resize "0,1100,0,850,1200")
+  )
+
+(defun d-worknote-set-frame-with-firefox ()
+  ""
+  (interactive)
+  (d-wmctrl/resize "0,0,0,1060,1200" "firefox")
+  (d-wmctrl/resize "0,1100,0,850,1200")
+  )
+
+
+;;; === plantuml
+;;; --------------------------------------------------------------
+
+(defvar d-worknote-plantuml/img-buffer "*plantuml*")
+(defvar d-worknote-plantuml/bin "java -jar ~/tmp/plantuml/plantuml.jar")
+(defvar d-worknote-plantuml/temp-file "~/tmp/plantuml_temp.txt")
+(defvar d-worknote-plantuml/temp-png "~/tmp/plantuml_temp.png")
+
+(defun d-worknote-plantuml/render ()
+  (let* ((cmd (concat d-worknote-plantuml/bin " " d-worknote-plantuml/temp-file)))
+    (shell-command cmd)))
+
+
+(defun d-worknote-plantuml/get-text ()
+  (save-excursion
+    (let* ((start-regexp "^<[A-z]+>")
+	   (end-regexp "^</[A-z]+>")
+	   (start (progn 
+		    (re-search-backward start-regexp nil t)
+		    (match-end 0)))
+	   (end (progn
+		  (re-search-forward end-regexp nil t)
+		  (match-beginning 0)))
+		
+	   (content (buffer-substring start end)))
+      content)))
+   
+(defun d-worknote-plantuml/init ()
+  (let* ((content (d-worknote-plantuml/get-text)))
+    (d-write-to-file content d-worknote-plantuml/temp-file)
+    (d-worknote-plantuml/render)
+
+    (d-buffer/create-new-empty d-worknote-plantuml/img-buffer)
+    ))
+
+(defun d-worknote-plantuml/show ()
+  "Shows UML image. ex)
+<plantuml>
+@startuml
+User -> (Start)
+User -> (Use the application) : A small label
+
+:Main Admin: ---> (Use the application) : This is\nyet another\nlabel
+@enduml
+</plantuml>
+"
+  (interactive)
+  (d-worknote-plantuml/init)
+
+  (let* ((window (d-window-open-other-window d-worknote-plantuml/img-buffer))
+	 (current-window (selected-window)))
+    (select-window window)
+    (insert-file-contents d-worknote-plantuml/temp-png)
+    (image-mode)
+    (select-window current-window)))
+
+(defun d-worknote-plantuml/gimp ()
+  (interactive)
+  (start-process-shell-command "plantuml_gimp" nil (concat "gimp " d-worknote-plantuml/temp-png)))
+
+(defun d-worknote-plantuml/save-to-imgs ()
+  "Save d-worknote-plantuml/temp-png to ~/imgs."
+  (interactive)
+  (let* ((target-name (concat (d-citation-image/get-new-image-name-without-extension) ".png")))
+  (shell-command-to-string (concat "cp " d-worknote-plantuml/temp-png " " target-name))))
 
 
 (provide 'd-worknote2)

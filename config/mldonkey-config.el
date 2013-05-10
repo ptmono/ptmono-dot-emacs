@@ -1,3 +1,6 @@
+
+;; It's builtin
+;; (add-to-list 'load-path (concat d-dir-emacs "etc/mldonkey-el-0.0.4b"))
 (require 'mldonkey)
 
 (setq mldonkey-host "localhost")

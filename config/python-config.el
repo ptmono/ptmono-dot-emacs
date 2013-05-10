@@ -13,6 +13,15 @@
 ;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/completion/"))
 ;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/devel/"))
 ;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/extensions/"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/Pymacs"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/ipython/docs/emacs/"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/completion"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/devel/"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/extensions/"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/ipython/docs/emacs/"))
+(add-to-list 'load-path (concat d-dir-emacs "cvs/pylookup/"))
+
 (setq py-install-directory (concat d-dir-emacs "cvs/python-mode"))
 
 
@@ -33,6 +42,7 @@
 ;;; === For python-mode
 ;;; ______________________________________________________________
 ;; python-mode do not include the functions of completion.
+(when (featurep 'python) (unload-feature 'python t)) ; from readme
 (require 'python-mode)
 (setq py-complete-function 'ipython-complete
       py-shell-complete-function 'ipython-complete
@@ -139,7 +149,7 @@
     ;; refer to
     ;; http://stackoverflow.com/questions/466053/regex-matching-by-exclusion-without-look-ahead-is-it-possible
     ;; http://stackoverflow.com/questions/2217928/how-do-i-write-a-regular-expression-that-excludes-rather-than-matches-e-g-not
-    (">>> .*\\([^>']*\\(\\(['>][^>']+\\)*\\)\\)" 1 font-lock-doc-face t)
+    (">>> .*\\([^>']*\\(\\(['>][^>']+\\)*\\)\\)[ \n]*" 1 font-lock-doc-face t)
 
     ))
 
@@ -211,7 +221,10 @@
 ;;; ______________________________________________________________
 ;; To enable completion in python-mode
 ;; Use 'completion-at-point instead 'py-complete.
-(require 'pycomplete)
+;; (require 'pycomplete)
+;; Normal require conflict when using package. It is a trick.
+(add-hook 'python-mode-hook (lambda () (require 'pycomplete)))
+
 
 
 ;;; .
@@ -309,8 +322,9 @@
   ; (hide-body)
   (show-paren-mode 1)
 
-  (if (d-not-windowp)
-      (flymake-mode))
+  ;; With Some problem, use manually
+  ;; (if (d-not-windowp)
+  ;;     (flymake-mode))
 
   (font-lock-add-keywords nil d-python/font-lock-keywords)
 )
@@ -684,243 +698,249 @@
 ;; I have no idea why I have to re-define this functions, but to use these
 ;; functions I have to re-define the functions.
 
+;; #1305101300 The cause of the problem is "(require 'python)" conflict
+;; with (require 'python-mode). To solve this, I have replace python -->
+;; python-mode.
+
+;; This is not tested on Windows. So this section is commented.
+
 ;; py-shell is modified. (sit-for 2) is added after call of
 ;; make-comint-in-buffer.
 
 
-(defun py-shell (&optional argprompt dedicated pyshellname switch sepchar py-buffer-name done split)
-  "Start an interactive Python interpreter in another window.
-Interactively, \\[universal-argument] 4 prompts for a buffer.
-\\[universal-argument] 2 prompts for `py-python-command-args'.
-If `default-directory' is a remote file name, it is also prompted
-to change if called with a prefix arg.
+;; (defun py-shell (&optional argprompt dedicated pyshellname switch sepchar py-buffer-name done split)
+;;   "Start an interactive Python interpreter in another window.
+;; Interactively, \\[universal-argument] 4 prompts for a buffer.
+;; \\[universal-argument] 2 prompts for `py-python-command-args'.
+;; If `default-directory' is a remote file name, it is also prompted
+;; to change if called with a prefix arg.
 
-Returns py-shell's buffer-name.
-Optional string PYSHELLNAME overrides default `py-shell-name'.
-Optional symbol SWITCH ('switch/'noswitch) precedes `py-switch-buffers-on-execute-p'
-When SEPCHAR is given, `py-shell' must not detect the file-separator.
-BUFFER allows specifying a name, the Python process is connected to
-When DONE is `t', `py-shell-manage-windows' is omitted
-Optional symbol SPLIT ('split/'nosplit) precedes `py-split-buffers-on-execute-p'
-"
-  (interactive "P")
-  (let* ((coding-system-for-read 'utf-8)
-         (coding-system-for-write 'utf-8)
-         (switch (or switch py-switch-buffers-on-execute-p))
-         (split (or split py-split-windows-on-execute-p))
-         (sepchar (or sepchar (char-to-string py-separator-char)))
-         (args py-python-command-args)
-         (oldbuf (current-buffer))
-         (path (getenv "PYTHONPATH"))
-         ;; make classic python.el forms usable, to import emacs.py
-         (process-environment
-          (cons (concat "PYTHONPATH="
-                        (if path (concat path path-separator))
-                        data-directory)
-                process-environment))
-         ;; reset later on
-         (py-buffer-name
-          (or py-buffer-name
-              (when argprompt
-                (cond
-                 ((eq 4 (prefix-numeric-value argprompt))
-                  (setq py-buffer-name
-                        (prog1
-                            (read-buffer "Py-Shell buffer: "
-                                         (generate-new-buffer-name (py-buffer-name-prepare (or pyshellname py-shell-name) sepchar)))
-                          (if (file-remote-p default-directory)
-                              ;; It must be possible to declare a local default-directory.
-                              (setq default-directory
-                                    (expand-file-name
-                                     (read-file-name
-                                      "Default directory: " default-directory default-directory
-                                      t nil 'file-directory-p)))))))
-                 ((and (eq 2 (prefix-numeric-value argprompt))
-                       (fboundp 'split-string))
-                  (setq args (split-string
-                              (read-string "Py-Shell arguments: "
-                                           (concat
-                                            (mapconcat 'identity py-python-command-args " ") " ")))))))))
-         (pyshellname (or pyshellname (py-choose-shell)))
-         ;; If we use a pipe, Unicode characters are not printed
-         ;; correctly (Bug#5794) and IPython does not work at
-         ;; all (Bug#5390). python.el
-         (process-connection-type t)
-         ;; already in py-choose-shell
-         (py-use-local-default
-          (if (not (string= "" py-shell-local-path))
-              (expand-file-name py-shell-local-path)
-            (when py-use-local-default
-              (error "Abort: `py-use-local-default' is set to `t' but `py-shell-local-path' is empty. Maybe call `py-toggle-local-default-use'"))))
-         (py-buffer-name-prepare (unless (and py-buffer-name (not dedicated))
-                                   (py-buffer-name-prepare (or pyshellname py-shell-name) sepchar dedicated)))
-         (py-buffer-name (or py-buffer-name-prepare py-buffer-name))
-         (executable (cond (pyshellname)
-                           (py-buffer-name
-                            (py-report-executable py-buffer-name))))
-         proc)
-    (unless (comint-check-proc py-buffer-name)
-      (set-buffer (apply 'make-comint-in-buffer executable py-buffer-name executable nil args))
-      (sit-for 2)
-      (set (make-local-variable 'comint-prompt-regexp)
-           (cond ((string-match "[iI][pP]ython[[:alnum:]*-]*$" py-buffer-name)
-                  (concat "\\("
-                          (mapconcat 'identity
-                                     (delq nil (list py-shell-input-prompt-1-regexp py-shell-input-prompt-2-regexp ipython-de-input-prompt-regexp ipython-de-output-prompt-regexp py-pdbtrack-input-prompt py-pydbtrack-input-prompt))
-                                     "\\|")
-                          "\\)"))
-                 (t (concat "\\("
-                            (mapconcat 'identity
-                                       (delq nil (list py-shell-input-prompt-1-regexp py-shell-input-prompt-2-regexp py-pdbtrack-input-prompt py-pydbtrack-input-prompt))
-                                       "\\|")
-                            "\\)"))))
-      (set (make-local-variable 'comint-input-filter) 'py-history-input-filter)
-      (set (make-local-variable 'comint-prompt-read-only) py-shell-prompt-read-only)
-      (set (make-local-variable 'comint-use-prompt-regexp) nil)
-      (set (make-local-variable 'compilation-error-regexp-alist)
-           python-compilation-regexp-alist)
-      ;; (setq completion-at-point-functions nil)
-      (when py-fontify-shell-buffer-p
-        (set (make-local-variable 'font-lock-defaults)
-             '(py-font-lock-keywords nil nil nil nil
-                                     (font-lock-syntactic-keywords
-                                      . py-font-lock-syntactic-keywords))))
-      (set (make-local-variable 'comment-start) "# ")
-      (set (make-local-variable 'comment-start-skip) "^[ \t]*#+ *")
-      (set (make-local-variable 'comment-column) 40)
-      (set (make-local-variable 'comment-indent-function) #'py-comment-indent-function)
-      (font-lock-fontify-buffer))
-    (set (make-local-variable 'indent-region-function) 'py-indent-region)
-    (set (make-local-variable 'indent-line-function) 'py-indent-line)
-    ;; (font-lock-unfontify-region (point-min) (line-beginning-position))
-    (setq proc (get-buffer-process py-buffer-name))
-    ;; (goto-char (point-max))
-    (move-marker (process-mark proc) (point-max))
-    ;; (funcall (process-filter proc) proc "")
-    (py-shell-send-setup-code proc)
-    ;; (accept-process-output proc 1)
-    (compilation-shell-minor-mode 1)
-    ;;(sit-for 0.1)
-    (setq comint-input-sender 'py-shell-simple-send)
-    (setq comint-input-ring-file-name
-          (cond ((string-match "[iI][pP]ython[[:alnum:]*-]*$" py-buffer-name)
-                 (if py-honor-IPYTHONDIR-p
-                     (if (getenv "IPYTHONDIR")
-                         (concat (getenv "IPYTHONDIR") "/history")
-                       py-ipython-history)
-                   py-ipython-history))
-                (t
-                 (if py-honor-PYTHONHISTORY-p
-                     (if (getenv "PYTHONHISTORY")
-                         (concat (getenv "PYTHONHISTORY") "/" (py-report-executable py-buffer-name) "_history")
-                       py-ipython-history)
-                   py-ipython-history))
-                ;; (dedicated
-                ;; (concat "~/." (substring py-buffer-name 0 (string-match "-" py-buffer-name)) "_history"))
-                ;; .pyhistory might be locked from outside Emacs
-                ;; (t "~/.pyhistory")
-                ;; (t (concat "~/." (py-report-executable py-buffer-name) "_history"))
-                ))
-    (comint-read-input-ring t)
-    (set-process-sentinel (get-buffer-process py-buffer-name)
-                          #'shell-write-history-on-exit)
-    ;; (comint-send-string proc "import emacs\n")
-    ;; (process-send-string proc "import emacs")
-    (add-hook 'comint-output-filter-functions
-              'ansi-color-process-output)
+;; Returns py-shell's buffer-name.
+;; Optional string PYSHELLNAME overrides default `py-shell-name'.
+;; Optional symbol SWITCH ('switch/'noswitch) precedes `py-switch-buffers-on-execute-p'
+;; When SEPCHAR is given, `py-shell' must not detect the file-separator.
+;; BUFFER allows specifying a name, the Python process is connected to
+;; When DONE is `t', `py-shell-manage-windows' is omitted
+;; Optional symbol SPLIT ('split/'nosplit) precedes `py-split-buffers-on-execute-p'
+;; "
+;;   (interactive "P")
+;;   (let* ((coding-system-for-read 'utf-8)
+;;          (coding-system-for-write 'utf-8)
+;;          (switch (or switch py-switch-buffers-on-execute-p))
+;;          (split (or split py-split-windows-on-execute-p))
+;;          (sepchar (or sepchar (char-to-string py-separator-char)))
+;;          (args py-python-command-args)
+;;          (oldbuf (current-buffer))
+;;          (path (getenv "PYTHONPATH"))
+;;          ;; make classic python.el forms usable, to import emacs.py
+;;          (process-environment
+;;           (cons (concat "PYTHONPATH="
+;;                         (if path (concat path path-separator))
+;;                         data-directory)
+;;                 process-environment))
+;;          ;; reset later on
+;;          (py-buffer-name
+;;           (or py-buffer-name
+;;               (when argprompt
+;;                 (cond
+;;                  ((eq 4 (prefix-numeric-value argprompt))
+;;                   (setq py-buffer-name
+;;                         (prog1
+;;                             (read-buffer "Py-Shell buffer: "
+;;                                          (generate-new-buffer-name (py-buffer-name-prepare (or pyshellname py-shell-name) sepchar)))
+;;                           (if (file-remote-p default-directory)
+;;                               ;; It must be possible to declare a local default-directory.
+;;                               (setq default-directory
+;;                                     (expand-file-name
+;;                                      (read-file-name
+;;                                       "Default directory: " default-directory default-directory
+;;                                       t nil 'file-directory-p)))))))
+;;                  ((and (eq 2 (prefix-numeric-value argprompt))
+;;                        (fboundp 'split-string))
+;;                   (setq args (split-string
+;;                               (read-string "Py-Shell arguments: "
+;;                                            (concat
+;;                                             (mapconcat 'identity py-python-command-args " ") " ")))))))))
+;;          (pyshellname (or pyshellname (py-choose-shell)))
+;;          ;; If we use a pipe, Unicode characters are not printed
+;;          ;; correctly (Bug#5794) and IPython does not work at
+;;          ;; all (Bug#5390). python.el
+;;          (process-connection-type t)
+;;          ;; already in py-choose-shell
+;;          (py-use-local-default
+;;           (if (not (string= "" py-shell-local-path))
+;;               (expand-file-name py-shell-local-path)
+;;             (when py-use-local-default
+;;               (error "Abort: `py-use-local-default' is set to `t' but `py-shell-local-path' is empty. Maybe call `py-toggle-local-default-use'"))))
+;;          (py-buffer-name-prepare (unless (and py-buffer-name (not dedicated))
+;;                                    (py-buffer-name-prepare (or pyshellname py-shell-name) sepchar dedicated)))
+;;          (py-buffer-name (or py-buffer-name-prepare py-buffer-name))
+;;          (executable (cond (pyshellname)
+;;                            (py-buffer-name
+;;                             (py-report-executable py-buffer-name))))
+;;          proc)
+;;     (unless (comint-check-proc py-buffer-name)
+;;       (set-buffer (apply 'make-comint-in-buffer executable py-buffer-name executable nil args))
+;;       (sit-for 2)
+;;       (set (make-local-variable 'comint-prompt-regexp)
+;;            (cond ((string-match "[iI][pP]ython[[:alnum:]*-]*$" py-buffer-name)
+;;                   (concat "\\("
+;;                           (mapconcat 'identity
+;;                                      (delq nil (list py-shell-input-prompt-1-regexp py-shell-input-prompt-2-regexp ipython-de-input-prompt-regexp ipython-de-output-prompt-regexp py-pdbtrack-input-prompt py-pydbtrack-input-prompt))
+;;                                      "\\|")
+;;                           "\\)"))
+;;                  (t (concat "\\("
+;;                             (mapconcat 'identity
+;;                                        (delq nil (list py-shell-input-prompt-1-regexp py-shell-input-prompt-2-regexp py-pdbtrack-input-prompt py-pydbtrack-input-prompt))
+;;                                        "\\|")
+;;                             "\\)"))))
+;;       (set (make-local-variable 'comint-input-filter) 'py-history-input-filter)
+;;       (set (make-local-variable 'comint-prompt-read-only) py-shell-prompt-read-only)
+;;       (set (make-local-variable 'comint-use-prompt-regexp) nil)
+;;       (set (make-local-variable 'compilation-error-regexp-alist)
+;;            python-compilation-regexp-alist)
+;;       ;; (setq completion-at-point-functions nil)
+;;       (when py-fontify-shell-buffer-p
+;;         (set (make-local-variable 'font-lock-defaults)
+;;              '(py-font-lock-keywords nil nil nil nil
+;;                                      (font-lock-syntactic-keywords
+;;                                       . py-font-lock-syntactic-keywords))))
+;;       (set (make-local-variable 'comment-start) "# ")
+;;       (set (make-local-variable 'comment-start-skip) "^[ \t]*#+ *")
+;;       (set (make-local-variable 'comment-column) 40)
+;;       (set (make-local-variable 'comment-indent-function) #'py-comment-indent-function)
+;;       (font-lock-fontify-buffer))
+;;     (set (make-local-variable 'indent-region-function) 'py-indent-region)
+;;     (set (make-local-variable 'indent-line-function) 'py-indent-line)
+;;     ;; (font-lock-unfontify-region (point-min) (line-beginning-position))
+;;     (setq proc (get-buffer-process py-buffer-name))
+;;     ;; (goto-char (point-max))
+;;     (move-marker (process-mark proc) (point-max))
+;;     ;; (funcall (process-filter proc) proc "")
+;;     (py-shell-send-setup-code proc)
+;;     ;; (accept-process-output proc 1)
+;;     (compilation-shell-minor-mode 1)
+;;     ;;(sit-for 0.1)
+;;     (setq comint-input-sender 'py-shell-simple-send)
+;;     (setq comint-input-ring-file-name
+;;           (cond ((string-match "[iI][pP]ython[[:alnum:]*-]*$" py-buffer-name)
+;;                  (if py-honor-IPYTHONDIR-p
+;;                      (if (getenv "IPYTHONDIR")
+;;                          (concat (getenv "IPYTHONDIR") "/history")
+;;                        py-ipython-history)
+;;                    py-ipython-history))
+;;                 (t
+;;                  (if py-honor-PYTHONHISTORY-p
+;;                      (if (getenv "PYTHONHISTORY")
+;;                          (concat (getenv "PYTHONHISTORY") "/" (py-report-executable py-buffer-name) "_history")
+;;                        py-ipython-history)
+;;                    py-ipython-history))
+;;                 ;; (dedicated
+;;                 ;; (concat "~/." (substring py-buffer-name 0 (string-match "-" py-buffer-name)) "_history"))
+;;                 ;; .pyhistory might be locked from outside Emacs
+;;                 ;; (t "~/.pyhistory")
+;;                 ;; (t (concat "~/." (py-report-executable py-buffer-name) "_history"))
+;;                 ))
+;;     (comint-read-input-ring t)
+;;     (set-process-sentinel (get-buffer-process py-buffer-name)
+;;                           #'shell-write-history-on-exit)
+;;     ;; (comint-send-string proc "import emacs\n")
+;;     ;; (process-send-string proc "import emacs")
+;;     (add-hook 'comint-output-filter-functions
+;;               'ansi-color-process-output)
 
-    ;; (add-hook 'comint-preoutput-filter-functions
-    ;; '(ansi-color-filter-apply
-    ;; (lambda (string) (buffer-substring comint-last-output-start
-    ;; (process-mark (get-buffer-process (current-buffer)))))))
-    ;; (ansi-color-for-comint-mode-on)
-    (use-local-map py-shell-map)
-    ;; pdbtrack
-    (add-hook 'comint-output-filter-functions 'py-pdbtrack-track-stack-file t)
-    (remove-hook 'comint-output-filter-functions 'python-pdbtrack-track-stack-file t)
-    (setq py-pdbtrack-do-tracking-p t)
-    (set-syntax-table python-mode-syntax-table)
-    ;; (add-hook 'py-shell-hook 'py-dirstack-hook)
-    (when py-shell-hook (run-hooks 'py-shell-hook))
-    (unless done (py-shell-manage-windows switch split oldbuf py-buffer-name))
-    py-buffer-name))
+;;     ;; (add-hook 'comint-preoutput-filter-functions
+;;     ;; '(ansi-color-filter-apply
+;;     ;; (lambda (string) (buffer-substring comint-last-output-start
+;;     ;; (process-mark (get-buffer-process (current-buffer)))))))
+;;     ;; (ansi-color-for-comint-mode-on)
+;;     (use-local-map py-shell-map)
+;;     ;; pdbtrack
+;;     (add-hook 'comint-output-filter-functions 'py-pdbtrack-track-stack-file t)
+;;     (remove-hook 'comint-output-filter-functions 'python-pdbtrack-track-stack-file t)
+;;     (setq py-pdbtrack-do-tracking-p t)
+;;     (set-syntax-table python-mode-syntax-table)
+;;     ;; (add-hook 'py-shell-hook 'py-dirstack-hook)
+;;     (when py-shell-hook (run-hooks 'py-shell-hook))
+;;     (unless done (py-shell-manage-windows switch split oldbuf py-buffer-name))
+;;     py-buffer-name))
 
 
 
-(defun ipython-complete ()
-  "Try to complete the python symbol before point. Only knows about the stuff
-in the current *Python* session."
-  (interactive)
-  (let* ((ugly-return nil)
-	 (sep ";")
-	 (python-process (or (get-buffer-process (current-buffer))
-                                        ;XXX hack for .py buffers
-			     (get-process py-which-bufname)))
-	 ;; XXX currently we go backwards to find the beginning of an
-	 ;; expression part; a more powerful approach in the future might be
-	 ;; to let ipython have the complete line, so that context can be used
-	 ;; to do things like filename completion etc.
-	 (beg (save-excursion (skip-chars-backward "a-z0-9A-Z_./\-" (point-at-bol))
-			      (point)))
-	 (end (point))
-	 (line (buffer-substring-no-properties (point-at-bol) end))
-	 (pattern (buffer-substring-no-properties beg end))
-	 (completions nil)
-	 (completion-table nil)
-	 completion
-         (comint-preoutput-filter-functions
-          (append comint-preoutput-filter-functions
-                  '(ansi-color-filter-apply
-                    (lambda (string)
-                      (setq ugly-return (concat ugly-return string))
-                      "")))))
-    (process-send-string python-process
-			 (format ipython-completion-command-string pattern line))
-    (accept-process-output python-process)
-    (setq completions
-	  (split-string (substring ugly-return 0 (position ?\n ugly-return)) sep))
-                                        ;(message (format "DEBUG completions: %S" completions))
-    (setq completion-table (loop for str in completions
-				 collect (list str nil)))
-    (setq completion (try-completion pattern completion-table))
-    (cond ((eq completion t))
-	  ((null completion)
-	   (message "Can't find completion for \"%s\" based on line %s" pattern line)
-	   (ding))
-	  ((not (string= pattern completion))
-	   (delete-region (- end (length pattern)) end)
-	   (insert completion))
-	  (t
-	   (message "Making completion list...")
-	   (with-output-to-temp-buffer "*IPython Completions*"
-	     (display-completion-list (all-completions pattern completion-table)))
-	   (message "Making completion list...%s" "done")))))
+;; (defun ipython-complete ()
+;;   "Try to complete the python symbol before point. Only knows about the stuff
+;; in the current *Python* session."
+;;   (interactive)
+;;   (let* ((ugly-return nil)
+;; 	 (sep ";")
+;; 	 (python-process (or (get-buffer-process (current-buffer))
+;;                                         ;XXX hack for .py buffers
+;; 			     (get-process py-which-bufname)))
+;; 	 ;; XXX currently we go backwards to find the beginning of an
+;; 	 ;; expression part; a more powerful approach in the future might be
+;; 	 ;; to let ipython have the complete line, so that context can be used
+;; 	 ;; to do things like filename completion etc.
+;; 	 (beg (save-excursion (skip-chars-backward "a-z0-9A-Z_./\-" (point-at-bol))
+;; 			      (point)))
+;; 	 (end (point))
+;; 	 (line (buffer-substring-no-properties (point-at-bol) end))
+;; 	 (pattern (buffer-substring-no-properties beg end))
+;; 	 (completions nil)
+;; 	 (completion-table nil)
+;; 	 completion
+;;          (comint-preoutput-filter-functions
+;;           (append comint-preoutput-filter-functions
+;;                   '(ansi-color-filter-apply
+;;                     (lambda (string)
+;;                       (setq ugly-return (concat ugly-return string))
+;;                       "")))))
+;;     (process-send-string python-process
+;; 			 (format ipython-completion-command-string pattern line))
+;;     (accept-process-output python-process)
+;;     (setq completions
+;; 	  (split-string (substring ugly-return 0 (position ?\n ugly-return)) sep))
+;;                                         ;(message (format "DEBUG completions: %S" completions))
+;;     (setq completion-table (loop for str in completions
+;; 				 collect (list str nil)))
+;;     (setq completion (try-completion pattern completion-table))
+;;     (cond ((eq completion t))
+;; 	  ((null completion)
+;; 	   (message "Can't find completion for \"%s\" based on line %s" pattern line)
+;; 	   (ding))
+;; 	  ((not (string= pattern completion))
+;; 	   (delete-region (- end (length pattern)) end)
+;; 	   (insert completion))
+;; 	  (t
+;; 	   (message "Making completion list...")
+;; 	   (with-output-to-temp-buffer "*IPython Completions*"
+;; 	     (display-completion-list (all-completions pattern completion-table)))
+;; 	   (message "Making completion list...%s" "done")))))
 
-(defun py-complete ()
-  "Complete symbol before point using Pymacs. "
-  (interactive)
-  (let ((symbol (py-complete-enhanced-symbol-before-point)))
-    (if (string= "" symbol)
-        (tab-to-tab-stop)
-      (let ((completions
-             (py-complete-completions-for-symbol symbol)))
-        (if completions
-            (let* (completion
-                   (lastsym (car (last (split-string symbol "\\."))))
-                   (lastlen (length lastsym)))
-              (cond ((null (cdr completions))
-                     (setq completion (car completions)))
-                    (t
-                     (setq completion (try-completion lastsym completions))
-                     (message "Making completion list...")
-                     (with-output-to-temp-buffer "*PythonCompletions*"
-                       (display-completion-list completions))
-                     (message "Making completion list...%s" "done")))
-              (when (and (stringp completion)
-                         (> (length completion) lastlen))
-                (insert (substring completion lastlen))))
-          (message "Can't find completion for \"%s\"" symbol)
-          (ding))))))
+;; (defun py-complete ()
+;;   "Complete symbol before point using Pymacs. "
+;;   (interactive)
+;;   (let ((symbol (py-complete-enhanced-symbol-before-point)))
+;;     (if (string= "" symbol)
+;;         (tab-to-tab-stop)
+;;       (let ((completions
+;;              (py-complete-completions-for-symbol symbol)))
+;;         (if completions
+;;             (let* (completion
+;;                    (lastsym (car (last (split-string symbol "\\."))))
+;;                    (lastlen (length lastsym)))
+;;               (cond ((null (cdr completions))
+;;                      (setq completion (car completions)))
+;;                     (t
+;;                      (setq completion (try-completion lastsym completions))
+;;                      (message "Making completion list...")
+;;                      (with-output-to-temp-buffer "*PythonCompletions*"
+;;                        (display-completion-list completions))
+;;                      (message "Making completion list...%s" "done")))
+;;               (when (and (stringp completion)
+;;                          (> (length completion) lastlen))
+;;                 (insert (substring completion lastlen))))
+;;           (message "Can't find completion for \"%s\"" symbol)
+;;           (ding))))))
 
 
 (provide 'python-config)

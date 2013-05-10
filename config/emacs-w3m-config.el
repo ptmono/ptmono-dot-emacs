@@ -1,9 +1,12 @@
 ;; 0710300110 modified d-w3m-close-window
 ;; for gnus
 
+;; Use package.el
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/emacs-w3m/")) ;installed
+
 ;;; === Load w3m
 ;;; --------------------------------------------------------------
-(require 'w3m-load)
+;(require 'w3m-load)
 (setq w3m-use-cookies t) ; enabling cookies
 (setq w3m-cookie-accept-bad-cookies t)
 (setq w3m-cookie-accept-domains '(

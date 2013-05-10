@@ -391,7 +391,16 @@ amazon.com"
   (interactive)
   (if (and (equal major-mode 'w3m-mode) (w3m-image))
       (d-citation-w3m-image)
-    (insert (concat "[[" d-dir-imgs "image" (number-to-string (d-citation-max-number)) ".jpg]]"))))
+
+    (let* ((filename-without-ext (concat d-dir-imgs "image" (number-to-string (d-citation-max-number))))
+	   (filename (concat filename-without-ext "." (d-libs-image/getExtension filename-without-ext))))
+      (insert (concat "[[" filename "]]")))))
+
+(defun d-citation-image/get-new-image-name-without-extension ()
+  (let* ((filename-without-ext (concat d-dir-imgs "image" (number-to-string (d-libs-image-max-number-plus-one)))))
+    filename-without-ext))
+
+
 
 (defun d-citation-w3m-image ()
   "to insert directry web image into muse. The function downloads

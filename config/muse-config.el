@@ -8,17 +8,9 @@
 ; 0904260430 d-muse-indent has a problem. See worknote2.muse#0904260252
 
 
-(require 'planner)
-(require 'd-library)
+;; Use package.el
 
-(defvar d-muse-project-publish-buffer-list-before nil)
-(defvar d-muse-tag-1 "\\(^[A-Z_]+\\>\\): "
-  "This is a regexp for worknote. e.g)
-MEMO:
-or
-DAIRY:
-")
-
+(require 'muse)
 (require 'muse-mode)     ;load authoring mode
 (require 'muse-html)     ;load publishing styles I use
 (require 'muse-latex)
@@ -31,6 +23,24 @@ DAIRY:
 ;; 가능하게 하기 위해서 필요한 부분이다. 0605171221 don't use.
 ;; 이 부분을 없앤다면 project의 link를 할수가 없었다.
 (require 'muse-wiki)
+
+
+(add-to-list 'load-path (concat d-dir-emacs "cvs/planner/"))
+(load "planner")
+(require 'planner)
+
+(load "muse")
+(load "muse-colors")
+(require 'd-library)
+
+(defvar d-muse-project-publish-buffer-list-before nil)
+(defvar d-muse-tag-1 "\\(^[A-Z_]+\\>\\): "
+  "This is a regexp for worknote. e.g)
+MEMO:
+or
+DAIRY:
+")
+
 
 
 

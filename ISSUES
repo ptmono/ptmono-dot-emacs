@@ -44,4 +44,5 @@ The reason is that I load python(not python-mode) after load python-mode.
 'python). Fixed (require 'python) to (require 'python-mode).
 
 
-
+ - [[pos:///home/ptmono/.emacs.d/cvs/cedet/lisp/cedet/semantic/wisent/python.el#1175][/home/ptmono/.emacs.d/cvs/cedet/lisp/cedet/semantic/wisent/python.el]]
+   also (require 'python). This cause indent freezing problem.

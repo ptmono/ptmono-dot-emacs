@@ -495,7 +495,7 @@ returns a file name created"
   (interactive)
   (message "Listing ebooks")
   (let* ((buf-name "*Ebook*")
-	 (args "find /media/data100/0ebook/ /mnt/data50/ /media/data/ebooks/ /media/data/0-incoming/ /media/data100/0ebook/ /media/data50/0ebooks/ \\( -iregex \".*\\(pdf\\|chm\\|rar\\|zip\\|djvu\\|tgz\\|gz\\|bz2\\|7z\\)\" \\) -exec ls -lhd {} \\; > ~/ebook_list &"))
+	 (args "find /media/data100/0ebook/ /mnt/data50/ /media/data/ebooks/ /media/data/0-incoming/ \\( -iregex \".*\\(pdf\\|chm\\|rar\\|zip\\|djvu\\|tgz\\|gz\\|bz2\\|7z\\)\" \\) -exec ls -lhd {} \\; > ~/ebook_list &"))
     (if (get-buffer buf-name)
 	(kill-buffer buf-name))
     (save-window-excursion
