@@ -90,22 +90,54 @@
 ;;; === Default
 ;;; --------------------------------------------------------------
 
-(add-to-list 'load-path (concat d-dir-emacs "cvs/yasnippet"))
-(load (concat d-dir-emacs "cvs/yasnippet/yasnippet.el"))
+;; With package.el
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/yasnippet"))
+;; (load (concat d-dir-emacs "cvs/yasnippet/yasnippet.el"))
 
+;; (add-to-list 'load-path
+;; 	     "~/.emacs.d/plugins/yasnippet")
 (require 'yasnippet) ;; not yasnippet-bundle
-(yas/initialize)
+(setq yas-snippet-dirs
+      '("~/.emacs.d/snippets"))
+(yas-global-mode 1)
 
+
+;; (yas/initialize)
 
 (defvar d-yasnippets/dir (concat d-dir-emacs "snippets"))
-(yas/load-directory d-yasnippets/dir)
+;; (yas/load-directory d-yasnippets/dir)
 
-;; hook for automatic reloading of changed snippets
+;;; hook for automatic reloading of changed snippets
 (defun d-yasnippets/update-on-save ()
+  (interactive)
   (when (string-match "emacs.d/snippets" buffer-file-name)
-    (yas/load-directory d-yasnippets/dir)))
+    (yas-load-directory d-yasnippets/dir)))
 (add-hook 'after-save-hook 'd-yasnippets/update-on-save)
 
+
+;;; To completion
+;; from emacswiki
+(defun yas-ido-expand ()
+  "Lets you select (and expand) a yasnippet key"
+  (interactive)
+    (let ((original-point (point)))
+      (while (and
+              (not (= (point) (point-min) ))
+              (not
+               (string-match "[[:space:]\n]" (char-to-string (char-before)))))
+        (backward-word 1))
+    (let* ((init-word (point))
+           (word (buffer-substring init-word original-point))
+           (list (yas-active-keys)))
+      (goto-char original-point)
+      (let ((key (remove-if-not
+                  (lambda (s) (string-match (concat "^" word) s)) list)))
+        (if (= (length key) 1)
+            (setq key (pop key))
+          (setq key (ido-completing-read "key: " list nil nil word)))
+        (delete-char (- init-word original-point))
+        (insert key)
+        (yas-expand)))))
 
 
 ;;; disable tab binding

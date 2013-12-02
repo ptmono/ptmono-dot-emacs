@@ -38,11 +38,89 @@
   (push '("\\.swf$" . "/usr/bin/swiftfox %s") extview-application-associations)
   (push '("\\.cbr$" . "qcomicbook %s") extview-application-associations)
 
-  (push '("\\.html$" . ask) extview-application-associations) ;extview는 html을 자동으로 실행시킨다. 이로서 선택할 수가 있다.
-  (push '("\\.php$" . ask) extview-application-associations) ;extview는 html을 자동으로 실행시킨다. 이로서 선택할 수가 있다.
-  (push '("\\.jpg$" . ask) extview-application-associations) ;extview는 html을 자동으로 실행시킨다. 이로서 선택할 수가 있다.
-  (push '("\\.gif$" . ask) extview-application-associations) ;extview는 html을 자동으로 실행시킨다. 이로서 선택할 수가 있다.
+  ;; You can choose the external
+  (push '("\\.html$" . ask) extview-application-associations)
+  (push '("\\.php$" . ask) extview-application-associations)
+  (push '("\\.jpg$" . "eog %s") extview-application-associations)
+  (push '("\\.gif$" . "eog %s") extview-application-associations)
+  (push '("\\.png$" . "eog %s") extview-application-associations)
+  (push '("\\.torrent$" . ask) extview-application-associations)
   )
+
+
+;; When I migrate to ubuntu find-file couldn't open *.py file. extview.el
+;; is the cause. extview.el uses the program mailcap to find associated
+;; program for mime. We can get all mime.type from /etc/mime.types. The
+;; mime of python is "text/x-python". /etc/mailcap and ~/.mailcap contains
+;; the associated program for the mime type. All text type uses less.
+;; text/*; less '%s'; needsterminal
+;; text/*; view '%s'; edit=vim '%s'; compose=vim '%s'; test=test -x /usr/bin/vim; needsterminal
+;; text/*; more '%s'; needsterminal
+;; text/*; view '%s'; edit=vi '%s'; compose=vi '%s'; needsterminal
+;; So we have to manually skip for text type.
+(defadvice find-file (around extview-find-file 
+                             (filename &optional wildcards) activate)
+  "Around advice for find-file which checks if the file should be
+opened with an external viewer instead of Emacs."
+  (interactive "FFind file: \np")
+  ;; check `extview-application-associations' first, since it has
+  ;; priority
+  (let ((handler (some (lambda (descriptor)
+                         (if (string-match (car descriptor) filename)
+                             descriptor))
+                       extview-application-associations)))
+    (if (and handler
+             (not (and (eq 'ask (cdr handler))
+                       (y-or-n-p "Open with external viewer? "))))
+        (if (eq (cdr handler) 'ask)     ; open with emacs
+            (setq handler nil)
+          (setq handler (cdr handler)))
+
+      ;; check if there is an appropriate mailcap entry
+      (let* ((ext (file-name-extension filename))
+             (mime (if ext 
+                       (mailcap-extension-to-mime ext))))
+        (if mime
+	    ;; Skip for text types
+	    (unless (equal (string-match "^text" mime) 0)
+	      (setq handler (mailcap-mime-info mime))))
+	  
+
+        ;; only string handlers are considered, since we're interested
+        ;; in external viewers, not emacs functions
+        (unless (stringp handler)
+          (setq handler nil))))
+
+    ;; call the handler if found
+    (if handler
+        (let* ((logbuffer "*extview log*")
+               (components (split-string handler))
+               ;; hopefully the first component is always the
+               ;; application name
+               (app (car components))
+               ;; substitute file name for %s args
+               (args (mapcar (lambda (arg)
+                               (if (or (equal "%s" arg)
+                                       (equal "'%s'" arg))
+                                   (expand-file-name filename)
+                                 arg))
+                             (cdr components))))
+          
+          (get-buffer-create logbuffer)
+          (with-current-buffer logbuffer
+            (goto-char (point-max))
+            (insert (format "Opening file %s with handler: %s"
+                            filename handler)
+                    "\n"))
+
+          (apply 'start-process "extview-process" logbuffer app args)          
+
+          (message (concat "File is opened with an external viewer. "
+                           "See buffer %s for status messages.")
+                   logbuffer))
+                         
+      ad-do-it)))
+
 
 
 ;;; === For bhl-mode
@@ -257,5 +335,11 @@
 )
 
 (add-hook 'reb-mode-hook 'd-re-builder/hook)
+
+
+;;; === Autopair
+;;; --------------------------------------------------------------
+;(require 'autopair)
+;(autopair-global-mode) ;; to enable in all buffers
 
 

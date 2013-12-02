@@ -47,6 +47,9 @@
 ;(global-set-key [(shift f11)] 'd-worknote-open-frame) ; 이 함수는 거의 쓰지를 않는다.
 (global-set-key [(shift f11)] 'd-worknote-worknote)
 
+(global-set-key [?\C-x ?f] 'd-ido-gpicker-find-file)
+
+
 ;;; window selection
 (global-set-key [?\C-x ?O] (lambda () (interactive) (other-window -1)))
 
@@ -68,12 +71,17 @@
 ;; with d-nosetest/set.
 ;(global-set-key [?\C-c ?d ?r] 'd-worknote-create-tag)
 
+
 ;;; etc
 (global-set-key [?\C-c ?d ?t] 'd-find-file-tag)
 (global-set-key [?\C-c ?d ?e] 'd-test)
 (global-set-key [?\C-c ?d ?r] 'd-test-restore)
 (global-set-key [?\C-c ?d ?v] 'view-mode)
 
+(global-set-key [?\C-x ?7] '(lambda () (interactive)
+			      (d-window-delete-other-vertical)
+			      (recenter-top-bottom)))
+			      
 
 ;;; === Inserting
 ;;; --------------------------------------------------------------
@@ -93,6 +101,7 @@
 				   (interactive)
 				   (d-worknote-tag-ref-number "REF")))
 (global-set-key [?\C-c ?d ?i ?f] 'd-worknote-firefox-get-url)
+;; Inserting -*- mode: muse -*-. Use "ddheader" in muse-mode.
 
 
 ;;; === Searching
@@ -212,6 +221,13 @@
 (define-key c-mode-base-map [M-tab] 'semantic-ia-complete-symbol-menu)
 
 
+;;; === Java
+;;; --------------------------------------------------------------
+(define-key java-mode-map [?\M-.] 'gtags-find-tag-other-window)
+(define-key java-mode-map [?\C-\M-.] 'gtags-find-rtag)
+(define-key java-mode-map [?\C-h ?j] 'javadoc-lookup)
+
+
 ;;; === Auto-complete
 ;;; --------------------------------------------------------------
 ;(define-key ac-mode-map  [tab] 'auto-complete)
@@ -270,10 +286,36 @@
 ;; [?\M-tab] --> completion-at-point
 (define-key python-mode-map [?\C-c ?\C-h] 'pylookup-lookup)
 
+(define-key python-mode-map [?\C-c ?x ?u] 'd-nosetest-unittest)
+(define-key python-mode-map [?\C-c ?x ?d] 'd-nosetest-doctest)
+
 ;(define-key py-mode-map [tab] 'anything-ipython-complete)
 ;(define-key py-mode-map [tab] 'anything-ipython-complete)
 ;(define-key inferior-python-mode-map [?\C-i] 'indent-for-tab-command)
 ;(define-key inferior-python-mode-map [tab] 'comint-dynamic-complete)
+
+
+;;; unittest
+(define-key python-mode-map [?\C-c ?u ?e] 'd-nosetest-output-assert/do) ; see current line output
+(define-key python-mode-map [?\C-c ?u (shift ?e)] 'd-nosetest-output-assert/setUnittestCommand)
+(define-key python-mode-map [?\C-c ?u ?s] 'd-nosetest-unittest) ; set
+(define-key python-mode-map [?\C-c ?u ?w] 'd-nosetest-output-assert/insertOutput)
+
+;;; doctest mode
+;; On doc are only work doctest-mode with mmm-mode. So redefine commands
+(define-key doctest-mode-map [?\C-c ?i]  'd-python/insert)
+
+(define-key doctest-mode-map [?\C-c ?u ?e] 'd-nosetest-output-assert/do)
+(define-key doctest-mode-map [?\C-c ?u ?w] 'd-nosetest-output-assert/insertOutput)
+
+(define-key doctest-mode-map [?\C-c ?\C-h] 'pylookup-lookup)
+
+(define-key doctest-mode-map [?\C-c ?x ?u] 'd-nosetest-unittest)
+(define-key doctest-mode-map [?\C-c ?x ?d] 'd-nosetest-doctest)
+(define-key doctest-mode-map [?\C-c ?x ?t] 'd-nosetest/toggle-python-version)
+(define-key python-mode-map [?\C-c ?x ?c] 'd-nosetest-custom)
+(define-key python-mode-map [?\C-c ?x ?t] 'd-nosetest/toggle-python-version)
+
 
 ;;; ipython
 (define-key py-shell-map [?\C-c ?\C-f] 'python-describe-symbol)
@@ -285,6 +327,7 @@
 (define-key python-mode-map [tab]  'py-complete)
 (define-key python-mode-map [C-backspace]  'backward-kill-word)
 (define-key python-mode-map [?\C-c ?\C-f] 'py-documentation) ;Original is py-sort-imports
+
 
 ;;; ropemacs
 ; ropemacs-mode define C-c d as rope-show-doc. It comflict my configurations.
@@ -390,6 +433,10 @@
 
 
 (define-key muse-mode-map [?\C-c ?i] 'd-worknote/insert)
+(define-key muse-mode-map [tab] 'hippie-expand)
+
+
+
 ;;; === Outline-mode
 ;;; --------------------------------------------------------------
 ;; Outline-minor-mode key mape
@@ -411,11 +458,13 @@
 ;;; === Auctex
 ;;; --------------------------------------------------------------
 (add-hook 'latex-mode-hook (lambda ()
-			     (define-key TeX-mode-map [tab] 'TeX-complete-symbol)))
+			     (define-key tex-mode-map [tab] 'TeX-complete-symbol)))
 
 
 ;;; === yasnippet
 ;;; --------------------------------------------------------------
 ;;; disable tab binding
-(define-key yas/minor-mode-map [(tab)] nil)
-(define-key yas/minor-mode-map(kbd "TAB") nil)
+(define-key yas-minor-mode-map [(tab)] nil)
+(define-key yas-minor-mode-map(kbd "TAB") 'yas-expand)
+;(define-key yas-minor-mode-map [(meta tab)] 'yas-ido-expand)
+(define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-ido-expand)

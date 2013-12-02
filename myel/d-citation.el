@@ -101,7 +101,9 @@
     ("nf" d-citation-file/cite nil)
     ("inter" d-citation-inter)
     ("section" d-citation-section/insert)
-    ("sikuli" d-citation-sikuli/insert))
+    ("sikuli" d-citation-sikuli/insert)
+    )
+
   "list for 'd-citation the list form is
 name function mode. name is used to call function.
 if mode is nil, its name is do not restored
@@ -539,7 +541,7 @@ PATH+PAGE#CNUMBER."
     (if (not anchor)
 	(message "Current line has no Cnumber.")
       (setq link (concat buffer-file-name anchor))
-      (setq link (concat "[[" link "][" (buffer-name) "]]"))
+      (setq link (concat "[[" link "][" (d-citation-section/buffer-name) "]]"))
       (other-window 1)
       (insert link))))
     
@@ -780,7 +782,7 @@ Currently only used for outline-mode of d-citation-inter-anchor."
 (defun d-citation-section/getInfo ()
   (let* ((buffers-sync-p (d-citation-section/checkSyncDirs))
 	 (buffer-file-name (if buffers-sync-p
-			       (buffer-name)
+			       (d-citation-section/buffer-name)
 			     (buffer-file-name)))
 	 (buffer-name (file-name-nondirectory (buffer-file-name)))
 	 (note-info (d-worknote-section-info))
@@ -797,6 +799,12 @@ Currently only used for outline-mode of d-citation-inter-anchor."
     (if (equal buf1 buf2)
 	t
       nil)))
+
+(defun d-citation-section/buffer-name ()
+  (let* ((buffer-name (buffer-file-name)))
+    (file-name-nondirectory (buffer-file-name))
+    ))
+    
 		   
 
 ;;; === d-citation-sikuli

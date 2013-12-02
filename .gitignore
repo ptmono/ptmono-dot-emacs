@@ -16,3 +16,12 @@ tutorial
 url
 session.*
 srecode-map.el
+elpa*
+latex-math-preview-cache
+javadoc-cache
+recentf
+request
+init-load.el.prev
+.ignoresvn
+ac-comphist.dat
+bookmarks

@@ -1,5 +1,7 @@
 (require 'buff-menu+)
 
+(load-file "/home/ptmono/.emacs.d/etc/buff-menu.el")
+
 ;; Sort for mode
 (setq Buffer-menu-sort-column 5)
 

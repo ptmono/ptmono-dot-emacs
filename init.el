@@ -47,16 +47,27 @@
 (when (d-windowp)
   (load-file (concat d-dir-emacs "config/windows-config.el")))
 
+(setenv "PYTHONPATH" "")
 
 ;; 
 (when (d-not-windowp)
+  (setenv "PYTHONPATH" (concat (concat d-home "/myscript/PythonLibs") ":" (getenv "PYTHONPATH")))
   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-home "myscript/pystartup.py")))
   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/ropemacs/ropemacs")))
   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/ropemode/ropemode")))
   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/Pymacs")))
   ;; To add pycomplete.py
   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-dir-emacs "cvs/python-mode/completion")))
-  (setenv "PYTHONSTARTUP" (concat d-dir-emacs "myscript/pystartup.py")))
+  (setenv "PYTHONSTARTUP" (concat d-home "/myscript/pystartup.py"))
+
+  (setenv "TEXLIVE_VERSION" "2013")
+  (setenv "PATH" (concat "/usr/local/texlive/" (getenv "TEXLIVE_VERSION") "/bin/x86_64-linux/:" (getenv "PATH")))
+  (setenv "LD_LIBRARY_PATH" "/usr/lib/jvm/java-7-oracle/jre/lib/amd64:/usr/lib/jvm/java-7-oracle/jre/lib/amd64/server")
+)
+
+;; To disable pagination for git command
+;; See more http://www.kernel.org/pub/software/scm/git/docs/git-config.html
+(setenv "GIT_PAGER" "cat")
 
 
 ;; For utf-8. You can edit a file with utf-8 when you failed to load

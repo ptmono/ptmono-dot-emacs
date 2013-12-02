@@ -56,7 +56,8 @@
 	  (setq title (strip-text-properties (match-string 2)))
 	  (unless title
 	    (setq title (strip-text-properties (match-string 3)))))
-	
+
+	(setq title (downcase title))
 	(setq start (match-beginning 0))
 	(setq end (match-end 0))
 	(setq set (list start end title))
@@ -173,7 +174,8 @@
     (global-set-key "\M-o" cm-map)
     (setq d-keybinding/initp t))
 
-  (semantic-tag-folding-mode -1)
+  (if (d-not-windowp)
+      (semantic-tag-folding-mode -1))
   (outline-minor-mode 1)
   )
 ;; Init outline

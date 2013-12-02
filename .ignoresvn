@@ -1,5 +1,6 @@
 *~
 *.elc
+*/*.elc
 *#
 auto-save-list
 dal-worknote.elc.bak

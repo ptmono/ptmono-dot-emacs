@@ -19,9 +19,9 @@
 ;; (require 'planner-schedule)
 ;(require 'planner-timeclock)
 
-(unless (d-windowp)
-  (require 'planner-w3m) ; make tasks based on W3M buffers
-  )
+;; (unless (d-windowp)
+;;   (require 'planner-w3m) ; make tasks based on W3M buffers
+;;   )
 (require 'planner-calendar)
 (require 'planner-cyclic)
 (require 'planner-erc)

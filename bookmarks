@@ -2,11 +2,46 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("init-load.el"
- (filename . "/media/cvs/Documents/works/0cvs/trunk/dotemacs.d/init-load.el")
+(("nlp"
+ (filename . "/media/data/ebooks/computers/nlp/")
+ (front-context-string . "등산법을_이용한_한국어_맞춤법")
+ (rear-context-string . "3K Aug 27 06:20 ")
+ (position . 134))
+("dlibs"
+ (filename . "~/works/0git/dlibs/")
+ (front-context-string . "common.py\n  lrwx")
+ (rear-context-string . "79 Aug  3 00:19 ")
+ (position . 131))
+("latex-math-preview-config.el"
+ (filename . "~/.emacs.d/config/latex-math-preview-config.el")
+ (front-context-string . "]{article}\\n\\\\pa")
+ (rear-context-string . "cumentclass[12pt")
+ (position . 804))
+("ido-config.el"
+ (filename . "~/.emacs.d/config/ido-config.el")
+ (front-context-string . "   (list\n    (or")
+ (rear-context-string . "\n  (interactive\n")
+ (position . 219))
+("mock_socket.py"
+ (filename . "~/works/0git/dlibs/http_testing/mock_socket.py")
+ (front-context-string . "'''\nSee mock_soc")
+ (rear-context-string . "# coding: utf-8\n")
+ (position . 35))
+("doctest-config.el"
+ (filename . "~/.emacs.d/config/doctest-config.el")
+ (front-context-string . "\n(add-to-list 'l")
+ (rear-context-string)
+ (position . 1))
+("yasnippet-config.el"
+ (filename . "~/.emacs.d/config/yasnippet-config.el")
+ (front-context-string . ";; (setq yas/roo")
+ (rear-context-string . "esting-snippets\n")
+ (position . 2721))
+("init-load.el"
+ (filename . "~/.emacs.d/init-load.el")
  (front-context-string . "(add-to-list 'lo")
- (rear-context-string . "th d-dir-emacs)\n")
- (position . 116))
+ (rear-context-string . "\")) load-path))\n")
+ (position . 95))
 ("package-config.el"
  (filename . "~/.emacs.d/config/package-config.el")
  (front-context-string . "\n\n;; Fixme: Supp")

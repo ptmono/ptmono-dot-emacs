@@ -109,7 +109,7 @@ and increase d-print-info-subpage value one"
     (browse-url-kde url)))
 
 
-(defvar browse-url-chromium-cvs-program "chrome-cvs")
+(defvar browse-url-chromium-cvs-program "chromium-browser")
 
 ;;;###autoload
 (defun browse-url-chrome-cvs (url &optional new-window)

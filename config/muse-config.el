@@ -303,12 +303,12 @@ planner에서만 잘 적용되는 것 같다.
   ;; 			 (+ 4 (match-beginning 0))
   ;; 			 '(display '(image . (:type jpeg :file "~/imgs/image162.jpg")))))
 
-  (while (re-search-forward "^\\(#\\\)\\([0-9]\\{6\\}\\)\\([0-9]\\{4\\}\\)" end t)
+  (while (re-search-forward "^\\(#\\\)\\([0-9]\\{6\\}\\)\\([0-9]\\{4\\}\\)$" end t)
     (add-text-properties (match-beginning 0)
 			 (match-end 0)
 			 '(face muse-reference-face)))
 
-  (while (re-search-forward "^\\([0-9]\\{6\\}\\)\\([0-9]\\{4\\}\\)" end t)
+  (while (re-search-forward "^\\([0-9]\\{6\\}\\)\\([0-9]\\{4\\}\\)$" end t)
     (add-text-properties (match-beginning 0)
 			 (match-end 0)
 			 '(face muse-reference-face)))
@@ -371,7 +371,7 @@ planner에서만 잘 적용되는 것 같다.
   ;; 			 (match-end 0)
   ;; 			 '(face d-muse-colors-notes)))
 
-  (while (re-search-forward "^\\(@+\\)\\(.+\\)" end t)
+  (while (re-search-forward "^\\(@+\\) \\(.+\\)$" end t)
     (add-text-properties (match-beginning 2)
 			 (match-end 2)
 			 '(face d-muse-sub-sections)))
@@ -699,6 +699,35 @@ on screen only http link, otherwise executed by
 						     )))
     ;; DONE: to be asynchronous.
     (start-process "gimp" "*gimp*" "gimp" filename)))
+
+
+(defun d-muse-gimp-resize()
+  "To resize image in muse-mode."
+  (interactive)
+  (let* ((size (read-string "Size: " "500"))
+	 filename)
+    (setq filename 
+	  (concat d-home "/imgs/"
+		  (replace-regexp-in-string "]]\n"
+					    ""
+					    (file-name-nondirectory (thing-at-point 'line))
+					    )))
+    (start-process "cp" "*convert*" "cp" filename d-muse-gimp-backup-filename)
+    (start-process "convert" "*convert*" "convert" filename "-resize" size filename)
+))
+
+(defun d-muse-gimp-restore()
+  "To restore the resized image in muse-mode."
+  (interactive)
+  (let* (filename)
+    (setq filename 
+	  (concat d-home "/imgs/"
+		  (replace-regexp-in-string "]]\n"
+					    ""
+					    (file-name-nondirectory (thing-at-point 'line))
+					    )))
+    (start-process "cp" "*convert*" "cp" d-muse-gimp-backup-filename filename)
+))
 
 
 

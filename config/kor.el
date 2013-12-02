@@ -157,6 +157,15 @@ the values from the Unicode charts, you should set it to 16."
   (create-fontset-from-fontset-spec
    "-misc-fixed-medium-r-*-*-15-*-*-*-*-*-fontset-z")
    ;; korean-ksc5601:-*-WenQuanYi Zen Hei-*-*-*-*-15-*-*-*-*-*-ksc5601" t)
+
+  (create-fontset-from-fontset-spec
+   "-misc-fixed-medium-r-*-*-13-*-*-*-*-*-fontset-x")
+   ;; korean-ksc5601:-*-WenQuanYi Zen Hei-*-*-*-*-15-*-*-*-*-*-ksc5601" t)
+
+  (create-fontset-from-fontset-spec
+   "-misc-fixed-medium-r-*-*-15-*-*-*-*-*-fontset-n,
+   korean-ksc5601:-*-WenQuanYi Zen Hei-*-*-*-*-15-*-*-*-*-*-ksc5601" t)
+
   )
 
 (defun do-font()
@@ -171,10 +180,10 @@ the values from the Unicode charts, you should set it to 16."
 	(set-frame-font "DejaVu Sans Mono-12")
 	(add-to-list 'default-frame-alist
 		     '(font . "DejaVu Sans Mono-12")))
-    (set-frame-font "fontset-z")
+    (set-frame-font "fontset-n")
     (add-to-list 'default-frame-alist
 		 ;'(font . "-*-Fixed-medium-*-*-*-15-*-*-*-*-*-fontset-y"))))
-		 '(font . "fontset-z"))))
+		 '(font . "fontset-n"))))
 
 ;; (defun d-face ()
 ;;   (interactive)
@@ -198,6 +207,27 @@ the values from the Unicode charts, you should set it to 16."
   (set-frame-font "DejaVu Sans Mono-12")
   (add-to-list 'default-frame-alist
 	       '(font . "DejaVu Sans Mono-12")))
+
+(defun d-font-dsm-18()
+  (interactive)
+  (set-frame-font "DejaVu Sans Mono-18")
+  (add-to-list 'default-frame-alist
+	       '(font . "DejaVu Sans Mono-25")))
+
+(defun d-font-dsm-25()
+  (interactive)
+  (set-frame-font "DejaVu Sans Mono-25")
+  (add-to-list 'default-frame-alist
+	       '(font . "DejaVu Sans Mono-25")))
+
+
+(defun d-font-dsm-30()
+  (interactive)
+  (set-frame-font "DejaVu Sans Mono-30")
+  (add-to-list 'default-frame-alist
+	       '(font . "DejaVu Sans Mono-30")))
+
+
 
 (defun d-font-courier-10()
   (interactive)
@@ -244,6 +274,22 @@ korean-ksc5601:-baekmuk-gulimbdf-bold-*-*-*-18-*-*-*" t)
    korean-ksc5601:-*-gothic-*-*-*-*-*-*-*-*" t)
     (error ""))
   (set-frame-font "-*-fixed-medium-*-*-*-20-*-*-*-*-*-fontset-v"))
+
+(defun d-face-6 ()
+  (interactive)
+  (condition-case nil
+      (create-fontset-from-fontset-spec
+       "-*-times-medium-r-*-*-11-*-*-*-*-*-fontset-u,
+   korean-ksc5601:-baekmuk-gulimbdf-medium-*-*-*-18-*-*-*,
+korean-ksc5601:-baekmuk-gulimbdf-bold-*-*-*-18-*-*-*" t)
+    (error ""))
+  (set-frame-font "fontset-u")
+  (add-to-list 'default-frame-alist
+	       ;'(font . "-*-Fixed-medium-*-*-*-15-*-*-*-*-*-fontset-y"))))
+	       '(font . "fontset-u")))
+
+
+
 
 
 ;; See end of init.el

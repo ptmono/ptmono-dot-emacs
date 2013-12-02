@@ -94,7 +94,7 @@
     (3200 planner-date-regexp 0 link)
     ;; <--In planner-mode end
     (1999"^Footnotes:?\\s-*" 0 d-fn-sep)
-    (2099 "\\[\\([1-9][0-9]*\\)\\]" 0 d-footnote)
+    (2088 "^[ \t(]*\\[\\([1-9][0-9]*\\)\\]" 0 d-footnote)
     (7501 "^\\([A-Z]+\\): " 0 dtag)
     ;;(7508 "^\\(\\@+\\)\\s-+" 0 d-note-section)
     (8508 "^\\(\\@+\\)\\s-+" 0 dsection)
@@ -110,12 +110,14 @@ For more on the structure of this list, see `muse-publish-markup-regexps'."
                   function))
   :group 'd-muse-publish)
 
+;; functions for d-latex is d-muse-latex-markup-functions
 (defcustom d-muse-publish-markup-functions
   '((task . planner-publish-markup-task)
     (note . planner-publish-markup-note)
     (dtag . d-muse-publish-markup-dtag)
     (d-fn-sep . d-muse-publish-markup-fn-sep)
     (d-footnote  . d-muse-html-markup-footnote)
+    (dsection . d-muse-publish-markup-dnotesection)
     )
     "An alist of style types to custom functions for that kind of text.
 For more on the structure of this list, see
@@ -445,6 +447,7 @@ An example of using <link> is as follows.
   '((table . muse-latex-markup-table)
     (dtag  . d-muse-publish-markup-dtag)
     (dsection . d-muse-publish-markup-dnotesection)
+    (d-footnote . muse-publish-markup-footnote)
     )
   "An alist of style types to custom functions for that kind of text.
 For more on the structure of this list, see

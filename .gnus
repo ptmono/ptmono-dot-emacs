@@ -5,13 +5,15 @@
 
 (setq gnus-secondary-select-methods
       '((nnml "")
-	(nntp "binnews.kornet.net")))
+	;(nntp "binnews.kornet.net")
+	))
 (setq gnus-post-method "native")
 
 
 (setq gnus-treat-display-smileys t)
-(setq gnus-summary-line-format "%U%R: %d: %-20,20B: %-70,70s: %a\n")
+(setq gnus-summary-line-format "%U%R: %d: %-5,5B: %-80,80s: %a\n")
 ;(setq gnus-summary-line-format " %O%U%R | %-50,50s | |%z%d| %B%20,20(%[%4L: %-22,22f%]%) \n")
+;; ~/.newsrc.eld contains the group specified variable
 
 
 (setq gnus-use-full-window nil)
@@ -59,43 +61,57 @@
 	 )))
 
 
+(defcustom gnus-visible-headers
+  "^From:\\|^Newsgroups:\\|^Subject:\\|^Date:\\|^Followup-To:\\|^Reply-To:\\|^Organization:\\|^Summary:\\|^Keywords:\\|^To:\\|^[BGF]?Cc:\\|^Posted-To:\\|^Mail-Copies-To:\\|^Mail-Followup-To:\\|^Apparently-To:\\|^Gnus-Warning:\\|^Resent-From:\\|^X-RSS-URL:"
+  "*All headers that do not match this regexp will be hidden.
+This variable can also be a list of regexp of headers to remain visible.
+If this variable is non-nil, `gnus-ignored-headers' will be ignored."
+  :type '(choice
+	  (repeat :value-to-internal (lambda (widget value)
+				       (custom-split-regexp-maybe value))
+		  :match (lambda (widget value)
+			   (or (stringp value)
+			       (widget-editable-list-match widget value)))
+		  regexp)
+	  (const :tag "Use gnus-ignored-headers" nil)
+	  regexp)
+  :group 'gnus-article-hiding)
+
+
+
 ;;; === BBDB
 ;;; --------------------------------------------------------------
+;; TODO bbdb seems his functions are changed. Fix following functions.
 (require 'bbdb-com) ;; so that bbdb-search will be defined for below
 
-(defvar bbdb/gnus-folder-field 'gnus-folder
-  "BBDB field that controls where Gnus splits its mail")
+;; (defvar bbdb/gnus-folder-field 'gnus-folder
+;;   "BBDB field that controls where Gnus splits its mail")
 
 (defvar dal-gnus-nnrss-last-buffer nil)
 
-(defun gnus-folder-per-bbdb ()
-  "gnus fancy split function.
-   If the sender is in bbdb, return folder from the bbdb attribute
-   indicated by `bbdb/gnus-folder-field'"
-  (let* ((who (bbdb-canonicalize-address
-               (cadr (gnus-extract-address-components
-                      (or (message-fetch-field "from")
-                          (message-fetch-field "sender")
-                          (message-fetch-field "reply-to"))))))
-         (found (bbdb-search-simple nil who)))
-    (and found (bbdb-record-getprop found bbdb/gnus-folder-field))))
+;; (defun gnus-folder-per-bbdb ()
+;;   "gnus fancy split function.
+;;    If the sender is in bbdb, return folder from the bbdb attribute
+;;    indicated by `bbdb/gnus-folder-field'"
+;;   (let* ((who (bbdb-canonicalize-address
+;;                (cadr (gnus-extract-address-components
+;;                       (or (message-fetch-field "from")
+;;                           (message-fetch-field "sender")
+;;                           (message-fetch-field "reply-to"))))))
+;;          (found (bbdb-search-simple nil who)))
+;;     (and found (bbdb-record-getprop found bbdb/gnus-folder-field))))
 
-(defun gnus-if-in-bbdb (target)
-  "gnus fancy split function;
-     if the senders address is in bbdb, return TARGET"
-  (let ((who (bbdb-canonicalize-address
-              (cadr (gnus-extract-address-components
-                     (or (message-fetch-field "frrom")
-                         (message-fetch-field "sender")
-                         (message-fetch-field "reply-to")
-                         "nobody@nowhere.nohow"))))))
-    (when (bbdb-search-simple nil who)
-      target)))
-
-(when (boundp 'message-syntax-checks)
-  (add-to-list 'message-syntax-checks '(sender . disabled)))
-(setq nnmail-split-methods 'nnmail-split-fancy)
-(setq nnmail-crosspost nil)
+;; (defun gnus-if-in-bbdb (target)
+;;   "gnus fancy split function;
+;;      if the senders address is in bbdb, return TARGET"
+;;   (let ((who (bbdb-canonicalize-address
+;;               (cadr (gnus-extract-address-components
+;;                      (or (message-fetch-field "from")
+;;                          (message-fetch-field "sender")
+;;                          (message-fetch-field "reply-to")
+;;                          "nobody@nowhere.nohow"))))))
+;;     (when (bbdb-search-simple nil who)
+;;       target)))
 
 
 ;;; === Inline images
@@ -153,7 +169,16 @@
 (setq gnus-gcc-mark-as-read t)	
 (setq nnmail-cache-accepted-message-ids t)
 
+(when (boundp 'message-syntax-checks)
+  (add-to-list 'message-syntax-checks '(sender . disabled)))
+;; Set split method to nnmail-split-fancy
+(setq nnmail-split-methods 'nnmail-split-fancy)
+(setq nnmail-crosspost nil)
 
+;; To split non-ascii characters
+;; See gnus.muse#1306210445
+(setq nnmail-mail-splitting-decodes t)
+(setq nnmail-mail-splitting-charset 'utf-8)
 
 ;; Notice match string is regular express.
 (setq nnmail-split-fancy
@@ -162,10 +187,11 @@
 	(:nnmail-split-fancy-with-parent)
 	("Subject" "Cron <ptmono@localhost> /usr/bin/fetchmail -s" "nnfolder:expired")
 
-	("Subject" "test" "test")
-	("Subject" "제목" "test")
-	("Subject" "테스트" "test")
-	(any ".*테스트.*" "test")	
+	;; spams
+	("from" "11st@ems.11st.co.kr" "mail.spam_regular")
+	("from" "mail@netmarble.co.kr" "mail.spam_regular")
+
+
 	;; Google Alert, which for google blog
 	(any "googlealerts-noreply@google.com"
 	     (| ("subject" "python-mode" "gAlert.pythonMode")
@@ -189,10 +215,49 @@
 	(any "help-gnu-emacs@gnu.org" "list.emacs.help")
 	(any "gnu-emacs-help@gnu.org" "list.emacs.help")
 	(any "info-gnu-emacs@gnu.org" "list.emacs.digest")
+
+	;; Job mailing
+	("from" "alert@indeed.com" "job_mailling")
+	("from" "webmaster@mailinfo.saramin.co.kr" "job_mailling")
+	("from" "certificatematching@mailinfo.saramin.co.kr" "job_mailling")
+	("from" "specialtymatching@mailinfo.saramin.co.kr" "job_mailling")
+	("from" "personalmatching@mailinfo.saramin.co.kr" "job_mailling")
+	("from" "openrecruitmatching@saramin.co.kr" "job_mailling")
+	("from" "openrecruitmatching@mailinfo.saramin.co.kr" "job_mailling")
+
+	;; Quora
+	(any "noreply@quora.com"
+	     (|
+	      ("subject" ".*Algorithms.*" "mail.quora.algorithms")
+	      ("subject" ".*Books.*" "mail.quora.books")
+	      ("subject" ".*Artificial Intelligence.*" "mail.quora.ai")
+	      ("subject" ".*Technology.*" "mail.quora.tech")
+	      ("subject" ".*Cloud Computing.*" "mail.quora.cloud")
+	      ("subject" ".*Fine Art.*" "mail.quora.fineart")
+	      ("subject" ".*R (software).*" "mail.quora.r")
+	      ("subject" ".*Science.*" "mail.quora.science")
+	      ("subject" ".*Education.*" "mail.quora.education")
+	      ("subject" ".*The Universe.*" "mail.quora.universe")
+	      ("subject" ".*Classification.*" "mail.quora.classification")
+	      ("subject" ".*Natural Language Processing.*" "mail.quora.nlp")
+	      ("subject" ".*Data.*" "mail.quora.data")
+	      ("subject" ".*Apache Hadoop.*" "mail.quora.data")
+	      ("subject" ".*Book.*" "mail.quora.book")
+	      ("subject" ".*Statistics.*" "mail.quora.statistics")
+	      ("subject" ".*Physics.*" "mail.quora.physics")
+	      ("subject" ".*Computer Vision.*" "mail.quora.vision")
+	      ("subject" ".*Mathematics.*" "mail.quora.math")
+	      "mail.quora.etc"))
+
+	(any "topixalerts.com" "mail.topix")
+	(any "nltk-users@googlegroups.com" "mail.googlegroups.nltk")
+	
 	
 	(any "service@youtube.com" "mail.youtube")
+	(any "noreply@youtube.com" "mail.youtube")
+	(any "noreply@facebookmail.com" "mail.facebook")
 	(any "redhat@myseminar.co.kr" "mail.advert")
-	(any "movie@localhost" "mail.movie")
+	(any "movie@torrent.info" "mail.movie")
 	(any "chickensoup@partner.beliefnet.com" "mail.english.chicken")
 	(any "teachingenglish@lists.bbc.co.uk" "mail.english.bbc")
 	(any "learningenglish@lists.bbc.co.uk" "mail.english.bbc")
@@ -220,26 +285,110 @@
 	;; lecture
 	;; (any "admin@fedoraforum.org" "mail.fedora.howto")
 	(any "fedoraforum.org@googlemail.com" "mail.fedora.howto")
-	(any "imnotice@imory.co.kr" "mail.advertising")
-	(any "training-kr@redhat.com" "mail.advertising")
-	(any "admin@11st.co.kr" "mail.advertising")
 	(any "spellcheck-ko@googlegroups.com" "mail.spellcheck-ko")
 	(any "sysadminstudy@googlegroups.com" "mail.googlegroups.sysadminstudy")
 
 	;; Fetch
-	(any "YtnBreaking@localhost" "mail.news.ytnBreaking")
-	(any "IutopiaMovie@localhost" "mail.movie")
-	(any "NaverPopularNewsWorld@localhost" "mail.news.np_world")
-	(any "NaverPopularNewsPolitics@localhost" "mail.news.np_politics")
+	(any "YtnBreaking@torrent.info"
+	     
+	     (|
+	      ;; issues
+	      ("subject" ".*\\(icij\\|뉴스타파\\|국정원\\|안철수\\|공인인증\\|박람회\\|김학의\\).*" "news.issues")
+	      ("subject" ".*\\(전두환\\|몰아주기\\|국정원\\|코스피\\|환율\\|원세훈\\|김영란\\).*" "news.issues")
+	      ("subject" "사기" "news.issues")
+	      ("subject" "취업" "news.issues")
+	      ("subject" "민주당" "news.issues")
+	      ("subject" "이정희" "news.issues")
+	      ("subject" "스노든" "news.issues")
+	      ("subject" "증시" "news.issues")
+
+	      ;; minor_issues
+	      ("subject" ".*\\(박근혜\\|NLL\\|아시아나\\|활주로\\|샌프란시스코\\|탑승객\\|777\\|김정은\\).*" "mail.news.ytnBreaking.minor")
+	      ("subject" "한수원" "mail.news.ytnBreaking.minor_issues")
+	      ("subject" "인도" "mail.news.ytnBreaking.minor_issues")
+	      ("subject" ".*버냉키.*" "mail.news.ytnBreaking.minor_issues")
+
+	      ;; minor
+	      ("subject" "불황" "mail.news.ytnBreaking.minor")
+
+	      ;; accident
+	      ("subject" ".*\\(낙뢰\\).*" "mail.news.ytnBreaking.accident")
+
+	      ;; Wether
+	      ("subject" "날씨" "mail.news.ytnBreaking.weather")
+	      ("subject" "\\(내일도\\|내일\\|오늘도\\)" "mail.news.ytnBreaking.weather")
+	      ("subject" ".*\\(폭염\\|찜통더위\\|더워\\|무더위\\).*" "mail.news.ytnBreaking.weather")
+	      ("subject" ".*\\(장맛\\|장마철\\|소나기\\|장마\\).*" "mail.news.ytnBreaking.weather")
+	      ("subject" ".*\\(호후주의보\\|호후특보\\).*" "mail.news.ytnBreaking.weather")
+
+	      ;; policy
+	      ("subject" ".*\\(개성공단\\|외무부\\|김한길\\|민주당\\|새누리당\\).*" "mail.news.ytnBreaking.policy")
+
+	      ;; entertainment
+	      ("subject" ".*\\(송혜교\\|이병현\\|전지현\\).*" "mail.news.ytnBreaking.entertainment")
+	      ("subject" ".*\\(박스오피스\\|이병현\\|전지현\\).*" "mail.news.ytnBreaking.entertainment")
+	      ("subject" "공항패션" "mail.news.ytnBreaking.entertainment")
+
+	      
+	      ;; sports
+	      ("subject" ".*\\(골프\\|윔블던\\|역전승\\|연승\\|우승\\|준우승\\).*" "mail.news.ytnBreaking.minor")
+	      ("subject" "넥센" "mail.news.ytnBreaking.sports")
+	      ("subject" "\\(호투\\|리그\\)" "mail.news.ytnBreaking.sports")
+	      ("subject" ".*\\(추신수\\|이승엽\\|류현진\\|홍명보\\|박인비\\|박세리\\|손연재\\).*" "mail.news.ytnBreaking.sports")
+	      ("subject" ".*\\(구자철\\|기성룡\\|축구연맹\\|LPGA\\).*" "mail.news.ytnBreaking.sports")
+	      "mail.news.ytnBreaking"))
+	
+	(any "IutopiaMovie@torrent.info" "mail.movie")
+	(any "NaverPopularNewsWorld@torrent.info" "mail.news.np_world")
+	(any "NaverPopularNewsPolitics@torrent.info" "mail.news.np_politics")
+	(any "ParkozImage@torrent.info" "mail.news.parkozImage")
+	(any "TorrentRg@torrent.info" "mail.movie")
+
+	(any "n-cgzbab=tznvy.pbz-66b60@postmaster.twitter.com" "mail.news.twitter")
+	(any "active questions tagged python" "mail.stackoverflow.python")
+	(any "active_questions_tagged_python" "mail.stackoverflow.python")
+	(any "active_questions_tagged_niltk" "mail.stackoverflow.nltk")
+	(any "active questions tagged nltk" "mail.stackoverflow.nltk")
+	(any "Mathematics - Stack Exchange" "mail.stackexchange.math")
+	(any "Mathematics_Stack_Exchange" "mail.stackexchange.math")
+	(any "Mathematics Stack Exchange" "mail.stackexchange.math")
+	(any "Physics Stack Exchange" "mail.stackexchange.physics")
+	(any "Physics_Stack_Exchange" "mail.stackexchange.physics")
+	(any "commandlinefu" "mail.commandlinefu")
+	("from" "All commands" "mail.commandlinefu")
+
+	(any "IT eBooks" "torrent.ebooks")
+
+	;; Job
+	(any "webmaster@saramin.co.kr" "job.saramin")
+	(any "saramin@saramin.co.kr" "job.saramin")
+	(any "48saramin@saramin.co.kr" "job.saramin")
+
 
 	;; etc
 	(any "gnome-kr@googlegroups.com" "mail.gnome-kr")
+	(any "qdjango@googlegroups.com" "mail.googlegroups.qdjango")
+
+	(any "biztalk@daou.co.kr" "mail.spam_regular")
+
+	(any "askbot@python.kr" "mail.python.kr")
+	(any "likelink" "mail.likelink")
+	(any "hanitv" "mail.hanitv")
 
 	;; For program error log
 	(any "error_log@localhost" "mail.system.error")
 	(any "ptmono@localhost"
 	     (| ("from" "ohohoh@localhost" "mail.torrent")
 		"etc"))
+
+	;; advertisments
+	(any "mail@global.netmarble.com" "mail.advertising")
+	(any "noreturnmail@kyobobook.co.kr" "mail.advertising")
+	(any "imnotice@imory.co.kr" "mail.advertising")
+	(any "training-kr@redhat.com" "mail.advertising")
+	(any "admin@11st.co.kr" "mail.advertising")
+
+	(any "noreply-6ad87ed6@plus.google.com" "mail.googleplus")
 
 	"etc"))
 
@@ -289,46 +438,107 @@
 
 (add-to-list 'nnmail-extra-headers nnrss-description-field)
 
+(defvar d-gnus/browse-with-webkit-list
+  '("nnml:mail.news.parkozImage"
+    "nnml:mail.stackoverflow.python"
+    "nnml:mail.movie"
+    )
+  "To browse the link with webkit. Add the name. You can get the
+  name with the variable gnus-newsgroup-name in the summary
+  buffer." )
+
+(defcustom d-gnus-browser-headers
+  '("X-RSS-URL"
+    "X-Gnus-Url"
+    )
+  "If the article has these headers, then the value opened with
+  webkit."
+  :group 'd-gnus)
+
+
 (defun browse-nnrss-url(arg)
   (interactive "p")
   (setq dal-gnus-nnrss-last-buffer (current-window-configuration))
-  (let ((url (assq nnrss-url-field
-                   (mail-header-extra
-                    (gnus-data-header
-                     (assq (gnus-summary-article-number)
-                           gnus-newsgroup-data))))))
-
+  ;; (let ((url (assq nnrss-url-field
+  ;;                  (mail-header-extra
+  ;;                   (gnus-data-header
+  ;;                    (assq (gnus-summary-article-number)
+  ;;                          gnus-newsgroup-data))))))
+  (let* ((url-headers d-gnus-browser-headers)
+	 (article-headers (d-gnus-headers-get))
+	 header value url)
+    (while url-headers
+      (setq header (car url-headers))
+      (setq value (d-gnus-headers-get-value header article-headers))
+      (if value
+	  (progn (setq url value)
+		 (setq url-headers nil)))
+      (setq url-headers (cdr url-headers)))
+		
     ;; to here get url
     (if url
 	(let* ((cbuffer (selected-window))
-	       (url-type (if (string-match-p "^mms" (cdr url))
+	       (url-type (if (string-match-p "^mms" url)
 			     "mms"
-			   "http")))
+			   "http"))
+	       cmd)
 	  (gnus-summary-mark-as-read nil "R")
 	  ;(forward-line 1)
 	  ;; gnus-summary-mark-as-read function only mark function
 
 	  (when (equal url-type "http")
 	    (select-window (next-window))
-	    (if current-prefix-arg
+	    (if (or current-prefix-arg
+		    (member gnus-newsgroup-name d-gnus/browse-with-webkit-list))
 		(progn
 		  (select-window (previous-window))
-		  (setq cmd (concat "python ~/works/11torrent_merge/tools/webkit.py \"" (cdr url) "\""))
+		  (setq cmd (concat "python3.3 ~/works/11torrent_merge/tools/webkit.py \"" url "\""))
 					;(shell-command cmd))))
 		  (start-process-shell-command "webkit" nil cmd))
 
 	      (progn
 		;(delete-window)
 		(select-window cbuffer)
-		(browse-url (cdr url)))))
+		(browse-url url))))
 	  
 		;(w3m-browse-url (cdr url)))))
 
 	  (when (equal url-type "mms")
-	    (start-process "mplayer" "*mplayer*" "mplayer" "-xy" "2" (cdr url))
+	    (start-process "mplayer" "*mplayer*" "mplayer" "-xy" "2" url)
 	    (d-libs/detect-end-process-and-kill-buffer "mplayer" "*mplayer*" 20)
 	    )))))
 
+
+(defun d-gnus-headers-get ()
+  "In summary buffer, the function returns the article's header
+data as alist."
+  (let* ((filename (nnml-article-to-file (gnus-summary-article-number)))
+	 header-alist header content)
+    (with-temp-buffer
+      (insert-file-contents filename)
+      (goto-char (point-min))
+      (while (re-search-forward "\\(^[A-z-]+\\): \\(.*\\)" nil t)
+	(setq header (match-string 1))
+	(setq content (match-string 2))
+	(push (cons header content) header-alist)
+	))
+    header-alist
+  ))
+
+(defun d-gnus-headers-get-value (header headers)
+  "Get current articles's value of HEADER in HEADERS."
+  (let* ((content (assoc header headers))
+	 result)
+    (if content
+	(cdr content)))
+  )
+
+
+(defun d-gnus-find-article ()
+  "Find-file current article"
+  (interactive)
+  (let* ((filename (nnml-article-to-file (gnus-summary-article-number))))
+    (find-file filename)))
 
 
 
@@ -348,7 +558,11 @@
 ;keybinding.el을 참고하면, return이 아니라 kp-return 인 것 같다
 
 
+(defvar nnrss-url-xrss 'X-RSS-URL)
+
 (add-to-list 'nnmail-extra-headers nnrss-url-field)
+(add-to-list 'nnmail-extra-headers nnrss-url-xrss)
+
 
 
 
@@ -449,14 +663,18 @@
 	      (save-excursion
 		(start-process "newAndMovie" "*newAndMovie*"
 			       "python"
-			       "/home/ptmono/works/11torrent_merge/main.py")
+			       "/home/ptmono/works/0service/dScrapper/main.py")
+		(start-process "stackoverPython" nil
+			       "/usr/local/src/packages/rss2email-2.71/rss2email.py"
+			       "/usr/local/src/packages/rss2email-2.71/feeds.dat"
+			       "run")
 		(set-window-configuration win))))))))
-		
 
-(gnus-demon-add-handler 'gnus-demon-scan-movie-and-news 60 10)
-(gnus-demon-add-handler 'gnus-demon-scan-mail-or-news-and-update-2 180 3)
-(gnus-demon-add-handler 'gnus-demon-scan-mail-or-news-and-update 500 30)
-;(gnus-demon-add-handler 'gnus-demon-scan-mail-or-news-and-update 120 30)
+(gnus-demon-add-handler 'gnus-demon-scan-movie-and-news 60 20)
+;(gnus-demon-add-handler 'gnus-demon-scan-mail-or-news-and-update-2 30 3)
+(gnus-demon-add-handler 'gnus-demon-scan-mail-or-news-and-update-2 180 20)
+;(gnus-demon-add-handler 'gnus-demon-scan-mail-or-news-and-update 500 30)
+(gnus-demon-add-handler 'gnus-demon-scan-mail-or-news-and-update 120 30)
 (gnus-demon-add-handler 'gnus-demon-scan-all-update 800 30)
 ;(gnus-demon-add-handler 'd-newsgroup-nfo 600 nil)
 (gnus-demon-init)
@@ -635,6 +853,45 @@ The hook `gnus-exit-gnus-hook' is called before actually exiting."
       (gnus-clear-system)
       ;; Allow the user to do things after cleaning up.
       (gnus-run-hooks 'gnus-after-exiting-gnus-hook))))
+
+
+;;; === Atom feeds
+;;; --------------------------------------------------------------
+;; from [[http://www.emacswiki.org/emacs/GnusRss][EmacsWiki: Gnus Rss]]
+
+;; This wouldn't work for me. I cann't find the reason. I couldn't
+;; understand why just execute xsltproc with atom2rss.xsl.
+
+;; Instead this I consider rss2email to read RSS.
+
+;; (require 'mm-url)
+;; (defadvice mm-url-insert (after DE-convert-atom-to-rss () )
+;;   "Converts atom to RSS by calling xsltproc."
+;;   (when (re-search-forward "xmlns=\"http://www.w3.org/.*/Atom\"" 
+;;                            nil t)
+;;     (goto-char (point-min))
+;;     (message "Converting Atom to RSS... ")
+;;     (call-process-region (point-min) (point-max) 
+;;                          "xsltproc" 
+;;                          t t nil 
+;;                          (expand-file-name "~/atom2rss.xsl") "-")
+;;     (goto-char (point-min))
+;;     (message "Converting Atom to RSS... done")))
+
+;; (ad-activate 'mm-url-insert)
+
+;;; rss2email
+;; See [[worknote2.muse#1301042040]]
+;; $ ./r2e email ptmono@localhost
+
+;; # add feed
+;; $ ./r2e add http://stackoverflow.com/feeds/tag?tagnames=python&sort=newest
+;; $ ./r2e add http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml
+
+;; # Fetch. It is not daemon.
+;; $ ./r2e run
+
+
 
 
 ;See auth.el

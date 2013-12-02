@@ -48,6 +48,8 @@ determines this value.")
     (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/.emacs.d/cvs/python-mode/completion")))
     (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ";" (concat cygwin-home "/.emacs.d/cvs/pymacs")))
     (setenv "PYTHONSTARTUP" (concat cygwin-home "/myscript/pystartup.py"))
+
+    (setenv "PYTHONUNBUFFERED" "x")	;To solve shell buffer flushing problem
     (setq exec-path (cons cygwin-bin exec-path))
 
     (setq shell-file-name "bash") ; default value is emacs/bin/cmdproxy.exe

@@ -3,7 +3,7 @@
 ;; (add-to-list 'load-path (concat d-dir-emacs "cvs/auctex/"))
 ;; (add-to-list 'load-path (concat d-dir-emacs "cvs/auctex/preview/"))
 
-(require 'auctex-autoloads)
+;(require 'auctex-autoloads)
 ;; (load "auctex.el" nil t t)
 ;; (load "preview-latex.el" nil t t)
 

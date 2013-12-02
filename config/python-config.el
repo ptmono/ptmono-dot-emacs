@@ -1,4 +1,12 @@
 
+;;; Logs
+
+;; 1305230532 py-indent-tabs-mode-off
+;; If this mode on. python-mode use tab. It will occur many indent errors
+;; and mis-execution. Python don't support tab/space mixing. Just use
+;; space tab. It is recommened
+
+
 ;; Add in init.el. There is a compile error when auto compiling.
 ;; (when (d-not-windowp)
 ;;   (setenv "PYTHONPATH" (concat (getenv "PYTHONPATH") ":" (concat d-home "myscript/pystartup.py")))
@@ -15,14 +23,17 @@
 ;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/extensions/"))
 (add-to-list 'load-path (concat d-dir-emacs "cvs/Pymacs"))
 (add-to-list 'load-path (concat d-dir-emacs "cvs/ipython/docs/emacs/"))
-(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode"))
-(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/completion"))
-(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/devel/"))
-(add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/extensions/"))
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode"))
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/completion"))
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/devel/"))
+;; (add-to-list 'load-path (concat d-dir-emacs "cvs/python-mode/extensions/"))
 (add-to-list 'load-path (concat d-dir-emacs "cvs/ipython/docs/emacs/"))
 (add-to-list 'load-path (concat d-dir-emacs "cvs/pylookup/"))
 
 (setq py-install-directory (concat d-dir-emacs "cvs/python-mode"))
+(add-to-list 'load-path py-install-directory)
+(when (featurep 'python) (unload-feature 'python t)) ; from readme
+;(require 'python-mode)
 
 
 ;;; .
@@ -35,15 +46,16 @@
 (autoload 'pymacs-eval "pymacs" nil t)
 (autoload 'pymacs-exec "pymacs" nil t)
 (autoload 'pymacs-load "pymacs" nil t)
-;;(eval-after-load "pymacs"                                                                                                        
+(autoload 'pymacs-autoload "pymacs")
+;;(eval-after-load "pymacs"
 ;;  '(add-to-list 'pymacs-load-path YOUR-PYMACS-DIRECTORY"))                                            
 
 ;;; .
 ;;; === For python-mode
 ;;; ______________________________________________________________
 ;; python-mode do not include the functions of completion.
-(when (featurep 'python) (unload-feature 'python t)) ; from readme
-(require 'python-mode)
+;; (when (featurep 'python) (unload-feature 'python t)) ; from readme
+;; (require 'python-mode)
 (setq py-complete-function 'ipython-complete
       py-shell-complete-function 'ipython-complete
       py-shell-name "ipython"
@@ -57,9 +69,6 @@
 ;(setq py-shell-local-path (concat d-dir-emacs "/cvs/ipython/ipython.py"))
 ;(setq py-python-command "ipython")
 ;(setq pymacs-python-command "python")
-
-
-
 
 
 
@@ -84,10 +93,6 @@
 ;; Emacs you may have to add these lines to your ~/.emacs file:
 ;;    (global-font-lock-mode t)
 ;;    (setq font-lock-maximum-decoration t)
-
-
-
-
 
 
 ;;; .
@@ -140,8 +145,8 @@
 (defvar d-python/font-lock-keywords
   '(;("^[ \t]+>>> \\(.+\\)" 0 d-python-doctest-input-face t)
     ("^[ \t]+>>> \\(#.+\\)$" 1 d-python-doctest-comment-face t)
+    ("^[ \t]+>>> \\(##+.+\\)$" 1 d-python-section-face t)
     
-    ("^### .*$" 0 d-python-section-face t)
     ("^### =+ \\(.*\\)$" 1 d-python-section-bold-face t)
     ("\\(.*\\)\n[ \t]*#==>$" 1 d-python-doc-result-face t)
 
@@ -149,7 +154,9 @@
     ;; refer to
     ;; http://stackoverflow.com/questions/466053/regex-matching-by-exclusion-without-look-ahead-is-it-possible
     ;; http://stackoverflow.com/questions/2217928/how-do-i-write-a-regular-expression-that-excludes-rather-than-matches-e-g-not
-    (">>> .*\\([^>']*\\(\\(['>][^>']+\\)*\\)\\)[ \n]*" 1 font-lock-doc-face t)
+
+    ;; Currently using doctest
+    ;; (">>> .*\\([^>']*\\(\\(['>][^>']+\\)*\\)\\)[ \n]*" 1 font-lock-doc-face t)
 
     ))
 
@@ -327,10 +334,9 @@
   ;;     (flymake-mode))
 
   (font-lock-add-keywords nil d-python/font-lock-keywords)
+  ;; with tab mode I meet may indent error.
+  (py-indent-tabs-mode-off 1)
 )
-
-
-
 
 ;;; .
 ;;; === For cython
@@ -427,19 +433,66 @@
 ;; - Restore the windows with M-x d-test-restore that binded with C-c d r.
 
 (defvar d-nosetest/testBuffername "*nosetest*")
+(defvar d-nosetest/latestTestType nil)
 (defvar d-nosetest/targetBuffername nil)
-(defvar d-nosetest/command nil "Full command. It require to create 'd-test.")
-(defvar d-nosetest/command-doctest (if (d-not-windowp)
-				       "nosetests --with-doctest"
-				     "nosetests.exe --with-doctest"))
+(defcustom d-nosetest/command nil "Full command. It require to create 'd-test." :group 'python-config)
+
+(defvar d-nosetest/python-version "2.7")
+
+;; some problem this variable is repalce with function
+(defcustom d-nosetest/command-doctest (if (d-not-windowp)
+				       (concat "nosetests-" d-nosetest/python-version " -v --with-doctest --doctest-tests")
+				     "nosetests.exe -v --with-doctest")
+  ""
+  :group 'python-config
+)
 				     ;(concat "ipy.exe -m doctest")))
-(defvar d-nosetest/command-unittest (if (d-not-windowp)
-					"nosetests"
-				      "nosetests.exe"))
+(defcustom d-nosetest/command-unittest (if (d-not-windowp)
+					(concat "nosetests-" d-nosetest/python-version " -v")
+				      "nosetests.exe -v")
+  ""
+  :group 'python-config
+)
 
 (defvar d-nosetest/newFramep nil)
 (defvar d-nosetest/dualp nil "If t, we use dual monitor mode.")
 (defvar d-nosetest/windows-register ?R)
+
+(defun d-nosetest/command-doctest()
+  (if (d-not-windowp)
+      (concat "nosetests-" d-nosetest/python-version " -v --with-doctest --doctest-tests")
+    "nosetests.exe -v --with-doctest"))
+
+(defun d-nosetest/command-unittest()
+  (if (d-not-windowp)
+      (concat "nosetests-" d-nosetest/python-version " -v")
+    "nosetests.exe -v"))
+
+(defun d-nosetest/command-pure-doctest()
+  (if (d-not-windowp)
+      (concat "python" d-nosetest/python-version " -m doctest")
+    "pythonw.exe -v --with-doctest"))
+
+(defun d-nosetest/is-pure-doctest(buffer-name)
+  (if (equal (file-name-extension buffer-name) "doctest")
+      t
+    nil))
+
+
+
+(defun d-nosetest/toggle-python-version()
+  (interactive)
+  (let* ((prev-version (if (equal d-nosetest/python-version "3.3")
+			   "3.3"
+			 "2.7"))
+	 (new-version (if (equal d-nosetest/python-version "3.3")
+			  "2.7"
+			"3.3")))
+    (setq d-nosetest/python-version new-version)
+    (if d-nosetest/command
+	(setq d-nosetest/command
+	      (replace-regexp-in-string prev-version new-version d-nosetest/command)))
+  (message d-nosetest/python-version)))
 
 (defun d-nosetest/toggle-newFramep()
   (interactive)
@@ -462,19 +515,26 @@
   (jump-to-register d-nosetest/windows-register))
 
 (defun d-nosetest/set (type)
+  (setq d-nosetest/latestTestType type)
   (let* ((buffer-name (file-name-nondirectory (buffer-file-name)))
 	 (test-buffer-name d-nosetest/testBuffername)
-	 (nose-command-only (cond ((equal type "doctest")
-				   d-nosetest/command-doctest)
+	 (nose-command-only (cond ((equal t (d-nosetest/is-pure-doctest buffer-name))
+				   (d-nosetest/command-pure-doctest))
+				  ((equal type "doctest")
+				   (d-nosetest/command-doctest))
 				  ((equal type "custom")
 				   (read-string "Command: "))
+				  
 				  (t
-				   d-nosetest/command-unittest)))
+				   (d-nosetest/command-unittest))))
 	 (nose-command (if (equal type "custom")
-			   nose-command-only
+			   (progn
+			     (setq d-nosetest/latestTestType (read-string "Command Type: " "doctest"))
+			     nose-command-only)
 			 (concat nose-command-only " " buffer-name)))
 	 (frame (selected-frame))
-	 (window (selected-window)))
+	 (window (selected-window))
+	 )
 
     (setq d-nosetest/command nose-command)
     (condition-case nil
@@ -487,6 +547,7 @@
 
       (let* ((frame (selected-frame))
 	     (window (selected-window))
+	     target-window
 	     )
 	(window-configuration-to-register d-nosetest/windows-register)
 	;; Frame determination
@@ -510,8 +571,18 @@
     ))
 
 (defun d-nosetest/resetTestShell ()
-  (let* ((frame (d-nosetest/isFrame d-nosetest/testBuffername))
-	 (window (d-nosetest/isWindow d-nosetest/testBuffername)))
+  (let* ((current-buffer (current-buffer))
+	 (default-directory (file-name-directory (buffer-file-name)))
+	 (frame (d-nosetest/isFrame d-nosetest/testBuffername))
+	 (window (d-nosetest/isWindow d-nosetest/testBuffername))
+	 target-window
+	 )
+
+    (condition-case nil
+	(kill-buffer d-nosetest/testBuffername)
+      (error nil))
+    (shell d-nosetest/testBuffername)
+    (bury-buffer)
 
     (cond 
      ;; We will use test frame on dual monitor.
@@ -519,25 +590,23 @@
       (if frame
 	  (progn
 	    (select-frame-set-input-focus frame)
-	    (kill-buffer d-nosetest/testBuffername)
-	    (shell d-nosetest/testBuffername)
+	    (switch-to-buffer d-nosetest/testBuffername)
 	    (delete-other-windows))
 	(d-nosetest/createTestFrame)))
-     ;; If window on frame, just re-create testBuffer.
+
+     ;; If window on frame, just re-create testBuffer. Current window
+     ;; contains testbuffer.
      (window
       (select-window (get-buffer-window d-nosetest/testBuffername))
-      (kill-buffer d-nosetest/testBuffername)
-      (shell d-nosetest/testBuffername))
+      (switch-to-buffer d-nosetest/testBuffername))
+
      ;; other
      (t
-      (condition-case nil
-	  (kill-buffer d-nosetest/testBuffername)
-	(error nil))
-      (shell d-nosetest/testBuffername))
-     )))
+      (switch-to-buffer current-buffer)
+      (message (concat "*nosetest* is ready. Version is " d-nosetest/python-version  " !!"))
+     ))))
 	
 	     
-
 (defun d-nosetest/openTestShell ()
   (cond (d-nosetest/dualp
 	 (select-frame-set-input-focus (d-nosetest/isFrame d-nosetest/testBuffername)))
@@ -547,7 +616,9 @@
 	 (if (d-nosetest/isWindow d-nosetest/testBuffername)
 	     ;; It is used if test window exists.
 	     (select-window (get-buffer-window d-nosetest/testBuffername))
-	   (switch-to-buffer-other-window d-nosetest/testBuffername)))))
+	   (select-window (d-window-open-other-window d-nosetest/testBuffername))
+	   ;; (switch-to-buffer-other-window d-nosetest/testBuffername)
+	   ))))
     
 
 (defun d-nosetest/isFrame (buffername)
@@ -621,6 +692,210 @@
 (defalias 'd-python-set-nosetest-doctest 'd-nosetest-doctest)
 (defalias 'd-python-set-nosetest-unittest 'd-nosetest-unittest)
   
+
+
+
+;;; unittest
+
+(defvar d-unittest-output-assert/process-buffer-name "*py-unittest-proc*")
+
+(defun d-nosetest-output-assert/getOutput (id)
+  (let* (anc)
+    (save-excursion
+
+      (message "fsjklfd")
+      (cond ((equal d-nosetest/latestTestType "unittest")
+	     (re-search-backward (concat "AssertionError: \\(.*\\) != " id) nil t)
+	     (setq anc (match-string 1)))
+
+	    ((equal d-nosetest/latestTestType "doctest")
+	     ;; id will be line number
+	     (re-search-backward (format "\\(--\\|\\*\\*\\)\nFile.*, line %s, in " id) nil t)
+	     (goto-char (match-beginning 0))
+	     (re-search-forward "^Got:\\(\n.*$\\)" nil t)
+	     (setq anc (match-string 1))
+	     (message anc)
+	     )))
+    anc
+  ))
+
+
+
+(defun d-nosetest-output-assert/line-info()
+  "Return (ASSERTP START END DATA). 
+
+ASSERT: non-nil or nil. non-nil means that it is assert line. nil
+means it is command.
+
+START: If ASSERT is non-nil, the start point of the result of
+assert. If ASSERT is nil, It is the start point of the command
+function.
+
+END: If ASSERT is non-nil, the end point of the result of
+assert. If ASSERT is nil, It is the end point of the command
+function.
+
+data: a string
+
+LINE-NUMBER: a string
+"
+  (interactive)
+  (let* ((str (thing-at-point 'line))
+	 (point-at-bol (point-at-bol))
+	 (line-number (line-number-at-pos))
+	 (doc-regexp "[ \t]*>>> \\(.*\\)")
+	 ;; Fixme: don't parse folowing
+	 ;; self.assertEqual(list_range_to_list(url_range), [1, 2, 3, 4, 5, 6, 7, 8, 9])
+	 ;; self.assertEqual(list(iterateUrls(url_format, url_range)), 5442)
+	 (assert-regexp "self.assert[^,]+, *\\(.*\\))$")
+	 (cmd-regexp "^[ \t]*\\(.*\\)$")
+	 result result-pos assertp start end data
+	 )
+    (cond ((equal d-nosetest/latestTestType "unittest")
+	   (setq assertp (string-match assert-regexp str))
+    
+	   (unless assertp (string-match cmd-regexp str))
+
+	   (setq start (+ point-at-bol (match-beginning 1)))
+	   (setq end (+ point-at-bol (match-end 1)))
+	   (setq data (match-string 1 str))
+
+	   (setq result (list assertp start end data line-number))
+	   )
+
+	  ((equal d-nosetest/latestTestType "doctest")
+	   (save-excursion
+	     (goto-char (point-at-eol))
+	     (setq start (point)) ; the start to be deleted line
+	     ;(re-search-backward doc-regexp nil t)
+	     ;(goto-char (match-beginning 0))
+	     (setq line-number (line-number-at-pos))
+
+	     )
+
+	   (setq assertp nil)
+	   (setq end nil)
+	   (setq data nil)
+	   (setq line-number (number-to-string line-number))
+	   (setq result (list assertp start end data line-number)))
+	  )
+    result
+    ))
+
+(defun d-nosetest-output-assert/init (line-info)
+  (let* ((assertp (nth 0 line-info))
+	 (start (nth 1 line-info))
+	 (end (nth 2 line-info))
+	 (line-number (nth 4 line-info))
+	 (id (d-random-number 9000)) ; It is string
+	 (cmd (condition-case nil
+		  (buffer-substring start end)
+		(error "")))
+	 ;; Remove strange end spaces
+	 (cmd (replace-regexp-in-string " *$" "" cmd))
+	 result
+	 )
+    (cond ((equal d-nosetest/latestTestType "unittest")
+	   (delete-region start end)
+	   (goto-char start)
+	   
+	   (if assertp
+	       (insert id)
+	     (insert (concat "self.assertEqual(" cmd ", " id ")")))
+
+	   (save-buffer)
+	   (setq result (list id start)))
+
+	  ((equal d-nosetest/latestTestType "doctest")
+	   ;; start is point-at-bol of next line of function
+	   (setq result (list line-number start))))
+    result
+    ))
+
+
+;; TODO: Use process
+
+(defun d-nosetest-output-assert/do ()
+  (interactive)
+  (let* ((assert-info (d-nosetest-output-assert/line-info))
+	 (id-info (d-nosetest-output-assert/init assert-info))
+	 (id (nth 0 id-info))
+	 (start (nth 1 id-info))
+	 (end (+ start (length id)))
+
+	 (current-window (selected-window))
+	 (test-bufferp (d-nosetest/isBuffer d-nosetest/testBuffername))
+	 test-window output
+	 )
+
+    (if test-bufferp
+	(progn
+	  (d-test)
+	  ;;(setq test-window (get-buffer-window d-nosetest/testBuffername))
+	  ;;(select-window test-window)
+
+	  ))))
+
+
+    ;; (call-process "nosetests" nil d-unittest-output-assert/process-buffer-name t
+    ;; 		  (buffer-file-name))
+    
+
+(defun d-nosetest-output-assert/insertOutput ()
+  (interactive)
+  (let* ((id-info (d-nosetest-output-assert/line-info))
+	 ;; id is used to find assert output. On unittest we use custom
+	 ;; number. On doctest it is line number.
+	 (id (if (equal d-nosetest/latestTestType "unittest")
+		 ;; custom number
+		 (nth 3 id-info)
+	       ;; line-number
+	       (nth 4 id-info)))
+
+	 (start (nth 1 id-info))
+	 (end (+ start (length id)))
+
+	 (current-window (selected-window))
+	 (current-frame (selected-frame))
+	 (test-bufferp (d-nosetest/isBuffer d-nosetest/testBuffername))
+	 test-window output
+	 )
+
+    (cond (d-nosetest/dualp
+	   (select-frame-set-input-focus (d-nosetest/isFrame d-nosetest/testBuffername)))
+	  (d-nosetest/newFramep
+	   (switch-to-buffer-other-frame d-nosetest/testBuffername))
+	  (t
+	   (setq test-window (get-buffer-window d-nosetest/testBuffername))
+	   (select-window test-window)))
+
+    (setq output (d-nosetest-output-assert/getOutput id))
+    
+    (if (or d-nosetest/dualp d-nosetest/newFramep)
+    	(select-frame-set-input-focus current-frame))
+    (select-window current-window)
+    (if (equal d-nosetest/latestTestType "unittest")
+    	(delete-region start end))
+    (goto-char start)
+    (insert output)))
+
+(defun d-nosetest-output-assert/getUnittestCommand ()
+  (let* ((class-name (save-excursion
+		       (re-search-backward "class \\(.*\\)\(.*\):" nil t)
+		       (match-string 1)))
+	 (file-name-sans-extension (file-name-sans-extension (buffer-name)))
+	 (command (concat "python -m unittest " file-name-sans-extension "." class-name))
+	 )
+    command))
+
+(defun d-nosetest-output-assert/setUnittestCommand ()
+  "We couldn't use libs.logger to save file with nosetest.
+Command-line unitest can save file. So we specify the command."
+  (interactive)
+  (setq d-nosetest/command (d-nosetest-output-assert/getUnittestCommand))
+  (message (concat d-nosetest/command " is seted as command")))
+
+
 
 ;;; .
 ;;; === epydoc
@@ -944,6 +1219,3 @@
 
 
 (provide 'python-config)
-
-
-

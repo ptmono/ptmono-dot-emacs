@@ -11,6 +11,8 @@
 (add-to-list 'load-path (concat d-dir-emacs "cvs/muse/lisp/"))
 (add-to-list 'load-path (concat d-dir-emacs "cvs/remember/"))
 
+(add-to-list 'load-path (concat d-dir-emacs "cvs/auto-java-complete/"))
+
 ;;; package.el
 (require 'd-library)
 ;; We will load packages manually with package-initialize. It will avoid
@@ -20,32 +22,66 @@
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
 	("marmalade" . "http://marmalade-repo.org/packages/")
-	("melpa" . "http://melpa.milkbox.net/packages/")))
+	;; melpa uses version controled versions like github.
+	("melpa" . "http://melpa.milkbox.net/packages/")
+	("org" . "http://orgmode.org/elpa/")
+	))
 
 (setq package-load-list
       '((fringe-helper	 	t)	; Required by elk-test
-	(elk-test		t)
 	(color-theme		t)
-	(mldonkey		t)
-	(mmm-mode		t)
-	(bbdb			t)
 	(csharp-mode		t)
 	(muse			nil)
-	(w3m			t)
-	(auctex			t)
 	(remember		nil)	; Cvs
-	(pymacs			t)
+	(pymacs			nil)
 	(ipython		nil)
-	(highline		t)
 	(php-mode		t)
-	(shell-command		t)
 	(boxquote		t)
 	(htmlize		t)
 	(js2-mode		nil)	; Cause error
+	(yasnippet		t)
+	(erefactor		t)
+	(autopair		t)
+
 	
-	(flymake-cursor	t)
+	(flymake-cursor		t)
 	(anything		nil)
 	(anything-ipython	nil)
+
+	(mldonkey		t	t) ;It seems in marmalade. It conflict with melpa.
+	(javadoc-help		t) ; It seems in marmalade. It conflict with melpa.
+	(auctex			t) ; It seems in marmalade. It conflict with melpa.
+
+	(magit			t)
+	(git-commit-mode	t) ; required by magit
+	(git-rebase-mode	t) ; required by magit
+	(qml-mode		t)
+
+
+	;; melpa
+	(javadoc-lookup		t)
+	(org			t)	; org is a part of emacs, But org-reveal require new
+	;(org-reveal		t)
+	(shell-command		t)
+	(mew			t)	; w3m require mew
+	(w3m			t)
+	(bbdb			t)
+	(mmm-mode		t)
+	(fringe-helper		t)	; elk-test uses it
+	(elk-test		nil)	; No in my elpas. Other elpa contains this.
+	(highline		t) ; buildin(?)
+	(ein			t)
+	(websocket		t)
+	(request		t)
+	(auto-complete		t)
+	(popup			t)
+
+	;; Json.el is build-in package. But g-client json.el will replace
+	;; this. Notice that.
+
+	;; Testing
+	(fiplr			nil)	; fuzzy file finding
+	(flx			nil)
 
 	;; builtins
 	(iimage			nil)
@@ -60,7 +96,7 @@
 
 ;; It seems inits all values, but I have no guarantee the work.
 
-;(package-initialize t)
+(package-initialize t)
 
 (require 'package)
 (package-load-all-descriptors)		; package-alist
@@ -81,6 +117,7 @@
     ("dictionary-init"		t)
     ("ell"			nil)
     ("extview"			t)
+    ("highlight-current-line"	t)
 
     ("jd-el"			nil)
     ("planner"			nil)	; See planner-config.el
@@ -111,8 +148,9 @@ complexitly.")
 (defvar d-init-package/tested-pkg-list
   '(("python-config"		t)
     ("ropemacs-config"		t)
-    ("color-theme"		t)
+    ;("color-theme"		t)
     ("color-theme-config"	t)
+    ("kor"			t)
     ))
 
 (defvar d-init-package/config-list
@@ -133,16 +171,14 @@ complexitly.")
     ("remember-config"		t)
     ("auth"			t)
     ("emacs-w3m-config"		t)
-    ("mldonkey-config"		t)
-    ("bbdb-config"		t)
     ("find-config"		t)
     ("erc-config"		t)
-    ("auctex-config"		t)
+    ("auctex-config"		t) ;New conflict
     ("calendar-config"		t)
-    ("color-theme-config"	t)
+    ("color-theme-config"	t) ;New conflict
     ("appt-config"		t)
+    ("yasnippet-config"		t)	; Depends to python
     ("python-config"		t)	; contains python-mode, ipython, pymacs
-    ("ropemacs-config"		t)
     ("outline-config"		t)
     ("dired-config.el"		t)
     ("kor.el"			t)	; for korean env and font
@@ -155,7 +191,6 @@ complexitly.")
     ("android-config"		nil)
     ("vc-config"		t)
     ("elk-test-config"		t)
-    ("yasnippet-config"		t)
     ("autoinsert-config"	t)
     ("autocomplete-config"	t)
     ("cc-config"		t)	; c, c++, c#, qt
@@ -169,6 +204,9 @@ complexitly.")
     ("kite-config.el"		t)	; Require package. Test env for chromium extension
     ("mmm-mode-config"		t)
     ("doctest-config.el"	t)
+    ("ido-config.el"		t)
+    ("latex-math-preview-config.el" t)	; preview latex math
+    ("magit-config.el"		t)
     )
   "")
 
@@ -176,6 +214,11 @@ complexitly.")
   '(("nxhtml-config"		nil)
     ("d-latex"			t)
     ("gtags-config"		t)
+
+    ("mldonkey-config"		t) ;New conflict
+    ("bbdb-config"		t) ;New conflict
+    ("ropemacs-config"		t)	; When loaded just after python-config, it occur 30 error
+    ("java-config.el"		t)
     )
   "This will conflict on Windows environment.")
 
@@ -233,19 +276,26 @@ d-init-package/3rd-pkg-list."
 	 (d-init-package/load d-init-package/config-list)
 	 (d-init-package/load d-init-package/my-pkg-list))))
 
-(defun d-init-package/pkgs-will-be-installed ()
-  "Return a list of package to be installed."
-  (let* (pkg-dsc pkg-name pkg-reqs pkg-ver result)
+(defun d-init-package/pkgs-we-need ()
+  "Return a list of package emacs need. But the function does not
+know the packages are installed"
+  (let* (pkg-dsc pkg-name pkg-reqs pkg-ver pkg-only-linux result)
     (dolist (p package-load-list)
       (setq pkg (nth 0 p))
       (setq pkg-ver (nth 1 p))
+      (setq pkg-only-linux (nth 2 p))
 
       (if pkg-ver
-	  (unless (package-installed-p pkg)
-	    (push pkg result))))
-    ;; Add the required packages
-    (d-init-package/pkg-transactions result)))
+	  (if (d-not-windowp)
+	      (unless (package-installed-p pkg)
+		(push pkg result))
+	    (and (not (package-installed-p pkg)) (not pkg-only-linux)
+		 (push pkg result)))))
+    result))
 
+(defun d-init-package/pkgs-will-be-installed ()
+  "Return a list of package to be installed."
+  (package-compute-transaction (d-init-package/pkgs-we-need) nil))
 
 ;;;###autoload
 (defun d-init-package/install-all ()
@@ -277,6 +327,7 @@ problem."
 ;; (package-desc-reqs (cdr (assq 'js2-mode package-archive-contents)))
 ;; ((emacs (24 1)))
 ;; package-compute-transaction will error with emacs package.
+;; Obsoleted
 (defun d-init-package/pkg-transactions (pkg-list)
   "Returns pkg-list which include the required packages. PKG-LIST
 is the list of package."
@@ -303,6 +354,13 @@ is the list of package."
 ;; From emacswiki 
 ;; package.el seems does not add the paths of packages into load-path. We
 ;; manually add installed path to configure the packages.
+
+;; Obsolete. Package have changed their data structure. They uses
+;; cl-defstruct macro. We can get the information from the package descriptor
+;; (package-desc-SLOT-NAME DESC)
+;; (package-desc-dir desc)
+;; (package-desc-version desc)
+;; See more the manual. package-update-load-paths.
 ;;;###autoload
 (defun package-update-load-path ()
   "Update the load path for newly installed packages."
@@ -323,9 +381,21 @@ is the list of package."
               (add-to-list 'load-path path)))
           package-alist)))
 
+;;;###autoload
+(defun package-update-load-paths ()
+  "Replace package-update-load-path"
+  (interactive)
+  (dolist (pkg package-alist)
+    (let* ((pkg-name(symbol-name (car pkg)))
+	   (pkg-version (package-version-join (package-desc-vers (cdr pkg))))
+	   (pkg-dir (package--dir pkg-name pkg-version)))
+      (add-to-list 'load-path pkg-dir))))
+
+
 ;;; Load packages
 (d-init-package/install-all)
-(package-update-load-path)		; add load-paths
+;; Fixme: It doesn't load color-theme
+(package-update-load-paths)		; add load-paths
 (package-initialize t)
 (package-refresh-contents)
 (d-init-package/load-all)
@@ -333,9 +403,14 @@ is the list of package."
 (d-init-package/load-custom-and-keybinding)
 
 ;;; Compile new els
-;; (byte-recompile-directory (concat d-dir-emacs "config/"))
-;; (byte-recompile-directory (concat d-dir-emacs "myel/"))
-;; (byte-recompile-directory (concat d-dir-emacs "etc/"))
+;; Fixme: Unknown bug. When turn on abbrev y-or-n be asked.
+
+;; The "auto-compile" library from Jonas Bernouilli is a great way to
+;; ensure that .elc files are kept in sync with their corresponding .el
+;; files
+;; https://github.com/tarsius/auto-compile
+
+;; (byte-recompile-directory (concat d-dir-emacs "etc/") 0)
 ;; (byte-recompile-directory (concat d-dir-emacs "etc2/"))
 ;; (byte-recompile-directory (concat d-dir-emacs "url/"))
 ;; (byte-recompile-directory (concat d-dir-emacs "elpa/"))

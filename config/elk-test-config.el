@@ -1,4 +1,4 @@
-(add-to-list 'load-path (concat d-dir-emacs "elpa/elk-test-0.3.2"))
+(add-to-list 'load-path (concat d-dir-emacs "etc2/elk-test-0.3.2"))
 (require 'elk-test)
 (autoload 'elk-test-mode "elk-test" nil t)
 (add-to-list 'auto-mode-alist '("\\.elk\\'" . elk-test-mode))

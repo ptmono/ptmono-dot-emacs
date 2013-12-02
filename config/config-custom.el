@@ -44,7 +44,7 @@
  '(gnus-topic-line-format "%v%y_%-55=%i[ %(%{%n%}%) -- %A ]%l%v----
 ")
  '(grep-command "grep -nHE -e ")
- '(grep-find-command "find . -path '*/.svn' -prune -o -path '*/CVS' -prune -o -path '*/.git' -prune -o ! -name '*~' -type f -print0 | xargs -0 -e grep -nHE -e ")
+ '(grep-find-command "find . ! \\( -iregex '.*\\(.svn\\|CVS\\|RCS\\|.git\\)\\(/.*\\|$\\)' \\) ! \\( -name '*~' -o -name '#*#' \\) -type f -print0 | xargs -0 -e grep -nHE -e ")
  '(grep-find-template "find . <X> -type f <F> -print0 | xargs -0 -e grep <C> -nHE -e <R>")
  '(grep-template "grep <C> -nHE -e <R> <F>")
  '(mm-inline-text-html-with-w3m-keymap t)
@@ -203,3 +203,8 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
+
+;;; === highlight matching content of a pair of braces
+;;; --------------------------------------------------------------
+(show-paren-mode t)
+(setq show-paren-style 'mixed)

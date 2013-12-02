@@ -2,6 +2,7 @@
 ;; ropemacs requires rope that is a python refactoring library. Just use 'yum
 ;; install python-rope'.
 
+; It has problem in start up
 (require 'pymacs)
 (when (featurep 'python) (unload-feature 'python t)) ; from readme
 
@@ -35,9 +36,6 @@
 ;; Instead above
 (eval-after-load "pymacs"
   '(add-to-list 'pymacs-load-path (concat d-dir-emacs "cvs/ropemacs/")))
-(eval-after-load "pymacs"
-  '(add-to-list 'pymacs-load-path (concat d-dir-emacs "cvs/ropemode/")))
-
 ;  '(add-to-list 'pymacs-load-path "/home/ptmono/.emacs.d/cvs/ropemode/ropemode/"))
 ;;--------------------------------------------------------------------------------  
 

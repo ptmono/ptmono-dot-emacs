@@ -39,10 +39,10 @@
 	   (error "INPUT can be a string or a symbol.")
 	   )))
     ak))
-      
-	    
 
-    
+
+
+
 
 ;;; === String
 ;;; --------------------------------------------------------------
@@ -137,7 +137,7 @@ e.g)
   (if y
       (setq variable (nth y variable)))
   (if z
-      (setq variable (nth z variable))) 
+      (setq variable (nth z variable)))
 
 이것은 2 nil 3 같은 경우에는 잘못된 답을 리턴하므로 따로 error
 handlling이 필요하다.
@@ -196,7 +196,7 @@ VARIABLE is a string. VARIABLES_FILE is the name variables file.
 	  (re-search-forward (concat "^" variable " \\(" d-lib-variables-value-regexp "\\)") nil t)
 	  (setq value (match-string 1))))
     nil))
-  
+
 
 
 (defun d-lib-var-add (variable value &optional variables-file)
@@ -387,8 +387,8 @@ MATCHED-WINDOW is the window to be not matched."
   (condition-case nil
       (nth 3 (nth 0 (window-tree)))
     (error nil)))
-      
-  
+
+
 (defun d-window-other-window/get-target ()
   (let* ((splited-windowp (d-window-info/splited-windowp))
 	 (current-window (selected-window))
@@ -408,24 +408,63 @@ MATCHED-WINDOW is the window to be not matched."
 	   (nth 0 (d-window/get-not-matched right-windows current-window))))))
 
 (defun d-window-open-other-window (buffer-name)
-  "Open BUFFER-NAME other window. And return the target window."
+  "Open BUFFER-NAME other window. And return the target window.
+If on one window, the target will be the horizontal splited other
+window. If on the horizontal splited two window, then the target
+will be vertically splited other window.
+
++----------+   	 +-----+-----+
+|          |	 |     |     |
+|   ccc    | --> | ccc | ttt |
+|          |   	 |     |     |
++----------+   	 +-----+-----+
+
++----+-----+   	 +-----+-----+
+|    |     |   	 |     | ccc |
+|    | ccc | --> |     +-----+
+|    |     |   	 |     | ttt |
++----+-----+   	 +-----+-----+
+
+where
+ - ccc = current buffer
+ - ttt = target buffer that will be opened
+"
   (interactive)
   (let* ((splited-windowp (d-window-info/splited-windowp))
-	 (target (d-window-other-window/get-target)))
+	 (target (d-window-other-window/get-target))
+	 ;; width = char-width * the number of char of width
+	 (frame-width (* (frame-width) (frame-char-width)))
+	 )
 
-    (cond ((not splited-windowp)
+    (cond ((< frame-width 1000)
+	   ;; note type
+	   (unless (d-window-info/splited-windowp)
+	     (split-window-vertically))
+	   (setq target (nth 3 (nth 0 (window-tree))))
+	   (condition-case nil
+	       (set-window-buffer target buffer-name)
+	     (error nil)))
+
+	  ((not splited-windowp)
 	   (split-window-horizontally)
 	   (setq target (nth 3 (nth 0 (window-tree))))
-	   (set-window-buffer target buffer-name))
+	   (condition-case nil
+	       (set-window-buffer target buffer-name)
+	     (error nil)))
 
-	  ;; This window is vertically separated
+	   ;; This window is vertically separated
 	  (target
-	   (set-window-buffer target buffer-name))
-	  
+	   (condition-case nil
+	       (set-window-buffer target buffer-name)
+	     (error nil)))
+
 	  (t
 	   (split-window-vertically)
 	   (setq target (d-window-other-window/get-target))
-	   (set-window-buffer target buffer-name)))
+	   (condition-case nil
+	       (set-window-buffer target buffer-name)
+	     (error nil))
+	   ))
     target))
 
 (defun d-other-window (buffer-name)
@@ -436,6 +475,33 @@ MATCHED-WINDOW is the window to be not matched."
 
 
 
+
+
+
+
+(defun d-window-delete-other-vertical ()
+  "Merge vertically separated windows. It means that delete the
+vertically separated other window."
+  (interactive)
+  (let* ((current-window (selected-window))
+	 (target (d-window-open-other-window nil))
+	 )
+    (progn
+      (delete-window target)
+      (select-window current-window)
+      )))
+
+
+
+
+;; fromhttp://caisah.info/emacs-for-python/
+(defun d-window-toggle-fullscreen ()
+  (interactive)
+  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+	    		 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
+  (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
+	    		 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
+)
 
 
 ;;; === Text
@@ -519,9 +585,9 @@ shell-command-read-minibuffer is used for completion"
     (kill-buffer buffer-name))
   (get-buffer-create buffer-name))
 
-    
-  
-  
+
+
+
 
 
 ;;; === Screenshot
@@ -540,7 +606,7 @@ shell-command-read-minibuffer is used for completion"
 
 (defun d-libs-image/unsetDir ()
   (setq d-libs-image/dir nil))
-  
+
 
 (defun d-libs-image-max-number ()
   "Same code with d-citation-max-number. The function created for
@@ -580,7 +646,7 @@ shell-command-read-minibuffer is used for completion"
       b)))
 
 
-  
+
 
 (defun d-libs-image-max-number-plus-one()
   "Return function d-citaion-max-number + 1"
@@ -627,7 +693,7 @@ shell-command-read-minibuffer is used for completion"
 (defun d-libs/detect-end-process-and-kill-buffer (process-name buffer-name second)
   (let* ((pid (get-process process-name)))
     (if pid
-	(run-at-time (format "%d sec" second) nil 
+	(run-at-time (format "%d sec" second) nil
 		     'd-libs/detect-end-process-and-kill-buffer process-name buffer-name second)
       (kill-buffer buffer-name))))
 
@@ -653,5 +719,13 @@ shell-command-read-minibuffer is used for completion"
     (find-file "~/plans/worknote2.muse"))
   )
 
-(provide 'd-library)
 
+(defun d-random-number (max)
+  (let ((n (random max)))
+    (if (= n 0)
+	(let ((n (random (length random-numbers))))
+	  (elt random-numbers n))
+      (number-to-string n))))
+
+
+(provide 'd-library)

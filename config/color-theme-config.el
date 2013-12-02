@@ -141,6 +141,9 @@ other ones; I hope you like it."
      						  :height 1.2
      						  :width normal))))
 
+     (py-variable-name-face ((t (:foreground: "#c0c0c0" :background nil))))
+     (py-number-face ((t (:foreground: "#c0c0c0" :background nil))))
+
      ;; Etc
      (mmm-default-submode-face ((t (:background "black"))))
      (d-calendar-today-color ((t (:foreground "sienna" :underline "red" :weight bold))))

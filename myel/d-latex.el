@@ -21,6 +21,12 @@
  - t : docview in emacs
  - ViewerName : such as evince, xpdf etc")
 
+(defvar d-latex-cmd-dir "/usr/local/texlive/2013/bin/x86_64-linux/")
+(defvar d-latex-cmd-latex (concat d-latex-cmd-dir "latex"))
+(defvar d-latex-cmd-pdflatex (concat d-latex-cmd-dir "pdflatex"))
+(defvar d-latex-cmd-dvipdfmx (concat d-latex-cmd-dir "dvipdfmx"))
+
+
 
 (defun d-latex-test()
   (interactive)
@@ -41,12 +47,12 @@
   (if d-latex-use-pdflatex
       (setq process (start-process "mytest"
 				   d-latex-process-buffer-name 
-				   "pdflatex"
+				   d-latex-cmd-pdflatex
 				   (concat d-latex-filename ".tex")))
     ;; start-process returns the process object
     (setq process (start-process "mytest" 
 				 d-latex-process-buffer-name 
-				 "latex" 
+				 d-latex-cmd-latex
 				 (concat d-latex-filename ".tex"))))
 
   (set-process-filter process 'd-latex-wait-filter)
@@ -57,7 +63,7 @@
   (unless d-latex-use-pdflatex
     (setq process (start-process "mytest" 
 				 d-latex-process-buffer-name 
-				 "dvipdfmx" 
+				 d-latex-cmd-dvipdfmx
 				 (concat d-latex-filename ".dvi")))
 
     (d-latex-wait-for-result2 process "dvipdfmx has a problem"))

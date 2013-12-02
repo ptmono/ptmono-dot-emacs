@@ -195,11 +195,14 @@
 (setq default-abbrev-mode t) ;obsolete variable use 'abbrev-mode
 
 
+(custom-set-variables
+ '(save-abbrevs t)) 			;To disable a message "Save abbrevs (y or n)"
+
 ;;; === For global
 ;;; --------------------------------------------------------------
-(define-abbrev global-abbrev-table "ddtoc" "* Table Of Contents\n\n<contents>\n")
-(define-abbrev global-abbrev-table "ddfootnote" "Footnotes::\n [1]")
-(define-abbrev global-abbrev-table "ddsrc" "")
+;; (define-abbrev global-abbrev-table "ddtoc" "* Table Of Contents\n\n<contents>\n")
+;; (define-abbrev global-abbrev-table "ddfootnote" "Footnotes::\n [1]")
+;; (define-abbrev global-abbrev-table "ddsrc" "")
 
 
 ;;; === For muse and planner
@@ -336,7 +339,7 @@
 ;;; --------------------------------------------------------------
 (d-def-skeleton "python" ddheader
   nil
-  "#!/usr/bin/python"\n
+  "#!/usr/bin/env python"\n
   "# coding: utf-8"\n
   \n
   \n
@@ -485,6 +488,7 @@ the if condition."
   :regexp "\\(?:^\\|[^/]\\)\\<\\([[:word:]/]+\\)\\W*"
   ;; Only expand in code.
   :enable-function (lambda () (not (python-in-string/comment))))
+
 
 (eval-when-compile
   ;; Define a user-level skeleton and add it to the abbrev table.

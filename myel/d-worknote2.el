@@ -669,6 +669,13 @@ akak
 	  anchor)
       nil)))
 
+
+(defun d-worknote-section-numbering ()
+  "I lost the source. It is M-x dal-section-numbering. Re-write this"
+  (interactive)
+  (dal-section-numbering))
+
+
 ;;; parag
 
 
@@ -992,6 +999,19 @@ TODO:
     (insert (d-worknote-firefox-get-filter (concat "[[" url "][" title "]]")))))
 
 
+;; https://developer.mozilla.org/en-US/docs/Code_snippets/Tabbed_browser
+;; 
+(defun d-worknote-firefox-open-new-tab(url)
+  ""
+  (interactive)
+  (let* ((cmd (concat "var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].getService(Components.interfaces.nsIWindowMediator).getMostRecentWindow('navigator:browser'); win.gBrowser.selectedTab = win.gBrowser.addTab(\"" url "\")")))
+    (message cmd)
+    (comint-send-string (inferior-moz-process) cmd)
+    (sleep-for 0.2)
+    (delete-process "*Moz*")
+    (kill-buffer "*Moz*")))
+
+
 (defun d-worknote-firefox-get-url-filterUnwantedTexts (text)
   (setq text (replace-regexp-in-string " \(Build [0-9]\\{14\\}\)" "" text))
   (setq text (replace-regexp-in-string ":" "" text))
@@ -1049,6 +1069,9 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
     ;(replace-regexp-in-string " - Swiftfox" "" (match-string 1))
     ;(replace-regexp-in-string " - Mozilla Firefox" "" (match-string 1))
     ))
+
+(defun d-worknote-firefox-get-moz-return ()
+  (d-worknote-firefox-get-parse))
 
 (defun d-worknote-firefox-get-filter (string)
   "url need some filtering"
@@ -1341,6 +1364,16 @@ http://en.wikipedia.org/wiki/Basic_Latin_Unicode_block"
     ("vspace" d-worknote/insert/latex-vspace)
     ("latex-vspace" d-worknote/insert/latex-vspace)
     ("latex-calendar" d-worknote/insert/latex-calendar)
+    ("latex-math-image" d-latex-math-preview-insert-image) 
+    ("latex-math-symbol" latex-math-preview-insert-symbol)
+    ("latex-math-symbol-text" latex-math-preview-insert-text-symbol)
+    ("pcode" "<pre><code>\n\n</code></pre>")
+    ("ask-code" d-worknote-ask-insert-code)
+    ("ask-doctest" d-worknote-insert-doctest-with-ask)
+    ("code" d-worknote-ask-insert-code-paste)
+    ("py-doctest-example" d-worknote-insert-doctest-with-example)
+    ("pex" d-worknote-insert-doctest-with-example)
+    ("py-doctest-askpy" d-worknote-insert-doctest-with-ask)
   ""))
 
 (defun d-worknote/insert ()
@@ -1598,6 +1631,51 @@ User -> (Use the application) : A small label
   (interactive)
   (let* ((target-name (concat (d-citation-image/get-new-image-name-without-extension) ".png")))
   (shell-command-to-string (concat "cp " d-worknote-plantuml/temp-png " " target-name))))
+
+
+
+;;; === askpython
+;;; --------------------------------------------------------------
+
+(defun d-worknote-ask-insert-code ()
+  (interactive)
+  (let* (cur-pos)
+    (insert "<pre><code>")
+    (setq cur-pos (point))
+    (insert "</code></pre>")
+    (goto-char cur-pos)))
+
+(defun d-worknote-ask-insert-code-paste ()
+  (interactive)
+  (d-worknote-ask-insert-code)
+  ;(newline)
+  (yank))
+
+
+
+(defun d-worknote-insert-tag (tag)
+  (interactive)
+  (let* (cur-pos)
+    (insert (concat "<" tag ">"))
+    (setq cur-pos (point))
+    (insert "</" tag ">")
+    (goto-char cur-pos)
+    (newline)
+))
+
+(defun d-worknote-insert-killring0-without-startspaces ()
+  (insert (replace-regexp-in-string "^ *" "" (current-kill 0))))
+
+(defun d-worknote-insert-doctest-with-example ()
+  (interactive)
+  (d-worknote-insert-tag "example")
+  (d-worknote-insert-killring0-without-startspaces))
+
+
+(defun d-worknote-insert-doctest-with-ask ()
+  (interactive)
+  (d-worknote-ask-insert-code)
+  (d-worknote-insert-killring0-without-startspaces))
 
 
 (provide 'd-worknote2)
