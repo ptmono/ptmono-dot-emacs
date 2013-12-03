@@ -25,3 +25,11 @@ init-load.el.prev
 .ignoresvn
 ac-comphist.dat
 bookmarks
+/.abbrev_defs
+/.emacs.bmk
+/ChangeLog
+/abbrev_defs
+/ede-projects.el
+/files
+/imgs
+/tramp
