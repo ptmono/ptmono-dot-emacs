@@ -20,11 +20,11 @@
 (setq package-enable-at-startup nil)
 
 (setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-	("marmalade" . "http://marmalade-repo.org/packages/")
+      '(;("gnu" . "http://elpa.gnu.org/packages/")
+	;("marmalade" . "http://marmalade-repo.org/packages/")
 	;; melpa uses version controled versions like github.
-	("melpa" . "http://melpa.milkbox.net/packages/")
-	("org" . "http://orgmode.org/elpa/")
+	;("melpa" . "http://melpa.milkbox.net/packages/")
+	;("org" . "http://orgmode.org/elpa/")
 	))
 
 (setq package-load-list
@@ -272,8 +272,8 @@ d-init-package/3rd-pkg-list."
 
 	(t
 	 (d-init-package/load d-init-package/3rd-pkg-list)
-	 (d-init-package/load d-init-package/linux-only-pkg-list)
 	 (d-init-package/load d-init-package/config-list)
+	 (d-init-package/load d-init-package/linux-only-pkg-list)
 	 (d-init-package/load d-init-package/my-pkg-list))))
 
 (defun d-init-package/pkgs-we-need ()
@@ -386,9 +386,17 @@ is the list of package."
   "Replace package-update-load-path"
   (interactive)
   (dolist (pkg package-alist)
-    (let* ((pkg-name(symbol-name (car pkg)))
-	   (pkg-version (package-version-join (package-desc-vers (cdr pkg))))
-	   (pkg-dir (package--dir pkg-name pkg-version)))
+    (let* ((pkg-name (symbol-name (car pkg)))
+	   ;; package.el has different function for version 0.9 and 1.
+	   ;; linux side is version 1. package-desc-version, package-desc-dir
+	   (pkg-version (cond ((fboundp 'package-desc-version)
+			       (package-version-join (package-desc-version (car (cdr pkg)))))
+			      ((fboundp 'package-desc-vers)
+			       (pkg-version (package-version-join (package-desc-vers (cdr pkg)))))))
+	   (pkg-dir (cond ((fboundp 'package-desc-dir)
+			   (package-desc-dir (car (cdr pkg))))
+			  ((fboundp 'package--dir)
+			   (package--dir pkg-name pkg-version)))))
       (add-to-list 'load-path pkg-dir))))
 
 
