@@ -1,11 +1,11 @@
 # compress modules. cvs, etc, etc2, info, elpa, font, snippets
 zip:
-	python init.py compress
+	python datas/utils_cmd.py compress
 
 unzip:
-	python init.py extract
+	python datas/utils_cmd.py extract
 
 
 commit_imgs:
-	python init.py commitImgs
+	python datas/utils_cmd.py commitImgs
 
