@@ -9,6 +9,7 @@ from subprocess import Popen
 
 class Vars:
     compress_dirs = ['cvs', 'etc', 'info', 'elpa', 'etc2', 'font', 'snippets']
+    datas_dir = 'datas'
 
 class Cmds:
     '''
@@ -23,7 +24,7 @@ class Cmds:
             if not os.path.exists(d):
                 print "There is no %s directory." % d
             else:
-                cmd = "tar -zcvf %s.tar.gz %s" % (d, d)
+                cmd = "tar -zcvf %s.tar.gz %s" % (Vars.datas_dir+d, d)
                 p = Popen(cmd, shell=True)
                 out, err = p.communicate()
                 results.append(cmd)
@@ -44,9 +45,9 @@ class Cmds:
                 print "There is no %s file." % filename
             else:
                 if os.name == 'nt':
-                    cmd = "tar zxvfo %s" % filename
+                    cmd = "tar zxvf %s" % Vars.datas_dir+filename
                 else:
-                    cmd = "tar -zxvfo %s" % filename
+                    cmd = "tar -zxvf %s" % Vars.datas_dir+filename
                 p = Popen(cmd, shell=True)
                 out, err = p.communicate()
 
